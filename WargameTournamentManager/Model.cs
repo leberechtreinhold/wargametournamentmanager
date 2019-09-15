@@ -176,7 +176,7 @@ namespace WargameTournamentManager
                 rankedPlayers.Add(rankedPlayer);
             }
 
-            rankedPlayers.Sort((x, y) => ((int)x[1]).CompareTo((int)y[1]));
+            rankedPlayers.Sort((x, y) => -1*((int)x[1]).CompareTo((int)y[1]));
             foreach (var playerRow in rankedPlayers)
             {
                 Ranking.Rows.Add(playerRow);
