@@ -64,14 +64,15 @@ namespace WargameTournamentManager
         }
     }
 
-    public sealed class RoundConverter : IValueConverter
+    public sealed class GetRoundActiveOrNot : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (value == null) return null;
-            var round = (KeyValuePair<int, IList<Matchup>>)value;
+            var round = value as Round;
+            if (round == null) return null;
 
-            return "Ronda " + round.Key;
+            if (round.Active) return "Ronda en curso";
+            else return "NOTA: Ronda no activa, no se pueden editar los resultados de los enfrentamientos.";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

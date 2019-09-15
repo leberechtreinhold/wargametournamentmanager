@@ -8,6 +8,7 @@
     <UserControl.Resources>
         <local:GetMatchupName x:Key="GetMatchupName"/>
         <local:GetMatchupResult x:Key="GetMatchupResult"/>
+        <local:GetRoundActiveOrNot x:Key="GetRoundActiveOrNot"/>
     </UserControl.Resources>
     <Grid>
         <TabControl Margin="20" 
@@ -22,12 +23,16 @@
             <TabControl.ContentTemplate>
                 <DataTemplate>
                     <StackPanel>
+                        <Label FontStyle="Italic">
+                            <Label.Content>
+                                <Binding Converter="{StaticResource GetRoundActiveOrNot}" />
+                            </Label.Content>
+                        </Label>
                         <DataGrid ItemsSource="{Binding Matchups}" 
                                           Margin="10,20,10,0" 
                                           AutoGenerateColumns="False" 
                                           CanUserAddRows="false" 
-                                          Style="{StaticResource AzureDataGrid}"
-                                          IsEnabled="{Binding Active}">
+                                          Style="{StaticResource AzureDataGrid}">
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Enfrentamiento" IsReadOnly="True">
                                     <DataGridTextColumn.Binding>

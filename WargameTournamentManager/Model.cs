@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 
 namespace WargameTournamentManager
 {
@@ -14,10 +16,10 @@ namespace WargameTournamentManager
 
     public class Configuration
     {
-        public uint NumberRounds { get; set; }
-        public uint PointsPerWin { get; set; }
-        public uint PointsPerLoss { get; set; }
-        public uint PointsPerDraw { get; set; }
+        public int NumberRounds { get; set; }
+        public int PointsPerWin { get; set; }
+        public int PointsPerLoss { get; set; }
+        public int PointsPerDraw { get; set; }
         public IList<string> Tags { get; set; }
 
         public Configuration()
@@ -36,10 +38,11 @@ namespace WargameTournamentManager
         public string Name { get; set; }
         public string Game { get; set; }
         public string Date { get; set; }
-        public int CurrentRound { get; set; } 
+        public int CurrentRound { get; set; }
         public IList<Player> Players { get; set; }
         public IList<Round> Rounds { get; set; }
         public Configuration Config { get; set; }
+        public DataTable Ranking { get; set; }
 
         public Tournament()
         {
@@ -51,6 +54,8 @@ namespace WargameTournamentManager
             CurrentRound = 2;
 
             Players = new List<Player> { new Player(), new Player(), new Player(), new Player() };
+
+            CreateRanking();
 
             Rounds = new List<Round>();
 
@@ -129,7 +134,84 @@ namespace WargameTournamentManager
             round3.Active = false;
             round3.Matchups = new List<Matchup>();
             Rounds.Add(round3);
+
+            UpdateRanking();
         }
+
+        private void CreateRanking()
+        {
+            Ranking = new DataTable();
+            Ranking.Columns.Add("Nombre");
+            Ranking.Columns.Add("Puntuación");
+            Ranking.Columns.Add("Facción");
+            foreach (var tag in Config.Tags)
+            {
+                Ranking.Columns.Add(tag);
+            }
+        }
+
+        private void UpdateRanking()
+        {
+            Ranking.Rows.Clear();
+            var rankedPlayers = new List<object[]>(Players.Count);
+            int columns = Ranking.Columns.Count;
+            foreach (var player in Players)
+            {
+                var rankedPlayer = new object[columns];
+                (int score, Dictionary<string, int> scorePerTag) = CalculatePlayerScore(player.Id);
+                rankedPlayer[0] = player.Name;
+                rankedPlayer[1] = score;
+                rankedPlayer[2] = player.Faction;
+
+                int i = 3;
+                foreach(var tagScore in scorePerTag)
+                {
+                    // TODO We should check that the column order is the same
+                    // as the one we are adding here, because its not guaranteed
+                    // for a dict to do so
+                    rankedPlayer[i] = tagScore.Value;
+                    i++;
+                }
+
+                rankedPlayers.Add(rankedPlayer);
+            }
+
+            rankedPlayers.Sort((x, y) => ((int)x[1]).CompareTo((int)y[1]));
+            foreach (var playerRow in rankedPlayers)
+            {
+                Ranking.Rows.Add(playerRow);
+            }
+        }
+
+        private (int, Dictionary<string, int>) CalculatePlayerScore(int playerId)
+        {
+            int score = 0;
+            var scorePerTag = new Dictionary<string, int>();
+            foreach (var round in Rounds)
+            {
+                foreach (var matchup in round.Matchups)
+                {
+                    if (matchup.PlayerBelongsToMatchup(playerId))
+                    {
+                        if (matchup.CurrentResult == Result.STILL_PLAYING)
+                            continue;
+                        else
+                        {
+                            if (matchup.CurrentResult == Result.DRAW)
+                                score += Config.PointsPerDraw;
+                            else if (matchup.IsWinner(playerId))
+                                score += Config.PointsPerWin;
+                            else
+                                score += Config.PointsPerLoss;
+
+                            matchup.UpdateTags(playerId, scorePerTag);
+                        }
+                    }
+                }
+            }
+            return (score, scorePerTag);
+        }
+
     }
 
     // For easily accesible RNG, not threadsafe
@@ -196,5 +278,31 @@ namespace WargameTournamentManager
 
         public int Player2Id { get; set; }
         public Dictionary<string, int> Player2Tags { get; set; }
+
+        public bool PlayerBelongsToMatchup(int playerId)
+        {
+            return playerId == Player1Id || playerId == Player2Id;
+        }
+
+        public bool IsWinner(int playerId)
+        {
+            return CurrentResult != Result.DRAW
+                && CurrentResult != Result.STILL_PLAYING
+                && (CurrentResult == Result.PLAYER1_WIN && playerId == Player1Id
+                 || CurrentResult == Result.PLAYER1_LOSS && playerId == Player2Id);
+        }
+
+        public void UpdateTags(int playerId, Dictionary<string, int> scorePerTag)
+        {
+            if (CurrentResult == Result.STILL_PLAYING) return;
+            if (playerId != Player1Id && playerId != Player2Id) throw new ArgumentException();
+
+            var tags = playerId == Player1Id ? Player1Tags : Player2Tags;
+            foreach (var tag in tags)
+            {
+                if (!scorePerTag.ContainsKey(tag.Key)) scorePerTag[tag.Key] = 0;
+                scorePerTag[tag.Key] += tag.Value;
+            }
+        }
     }
 }

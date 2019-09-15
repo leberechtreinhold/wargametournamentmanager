@@ -57,23 +57,11 @@
                         <TextBox Text="{Binding Name}" IsEnabled="False" />
                     </StackPanel>
                     <StackPanel>
-                        <DataGrid ItemsSource="{Binding Players}" Margin="10,20,10,0" AutoGenerateColumns="False" CanUserAddRows="false" Style="{StaticResource AzureDataGrid}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Name}" Header="Nombre" />
-                                <DataGridTextColumn Header="Puntuación" >
-                                    <DataGridTextColumn.Binding>
-                                        <MultiBinding>
-                                            <Binding Path="Player1Id" />
-                                            <Binding Path="Player2Id" />
-                                            <Binding Path="currentTournament">
-                                                <Binding.RelativeSource>
-                                                    <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
-                                                </Binding.RelativeSource>
-                                            </Binding>
-                                        </MultiBinding>
-                                    </DataGridTextColumn.Binding>
-                                </DataGridTextColumn>
-                            </DataGrid.Columns>
+                        <DataGrid ItemsSource="{Binding Ranking}"
+                                  Margin="10,20,10,0" 
+                                  AutoGenerateColumns="True" 
+                                  CanUserAddRows="false" 
+                                  Style="{StaticResource AzureDataGrid}">
                         </DataGrid>
                     </StackPanel>
                 </StackPanel>
