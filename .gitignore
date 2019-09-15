@@ -1,0 +1,4 @@
+WargameTournamentManager/obj/*
+WargameTournamentManager/bin/*
+packages/*
+.vs/*
