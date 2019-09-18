@@ -3,6 +3,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
         xmlns:local="clr-namespace:WargameTournamentManager"
         mc:Ignorable="d"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
@@ -10,10 +11,62 @@
     <Grid>
         <TabControl>
             <TabItem Header="Torneo">
-                <StackPanel Margin="20"  HorizontalAlignment="Center" VerticalAlignment="Center">
-                    <Button Content="Cargar fichero de Torneo" Margin="20" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
-                    <Button Content="Crear nuevo Torneo" Margin="20" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
-                </StackPanel>
+                <Grid>
+                    <simpleChildWindow:ChildWindow 
+                        x:Name="createTournamentWindow"
+                        Title="Crear Torneo"
+                        Padding="20"
+                        ShowCloseButton="True">
+
+                        <simpleChildWindow:ChildWindow.OverlayBrush>
+                            <SolidColorBrush Opacity="0" Color="{StaticResource Gray2}" />
+                        </simpleChildWindow:ChildWindow.OverlayBrush>
+
+                        <StackPanel Margin="20">
+                            <StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Label Content="Nombre"/>
+                                    <TextBox Text="{Binding Name}" Width="200" Controls:TextBoxHelper.Watermark="Nombre del torneo" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Label Content="Juego"/>
+                                    <TextBox Text="{Binding Game}" Width="200" Controls:TextBoxHelper.Watermark="De Bellis Antiquitatis" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Label Content="Número de rondas"/>
+                                    <Controls:NumericUpDown Minimum="0" Maximum="10" 
+                                                            Value="{Binding Config.NumberRounds}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Label Content="Puntos por victoria"/>
+                                    <Controls:NumericUpDown Minimum="0" Maximum="20000"
+                                                            Value="{Binding Config.PointsPerWin}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Label Content="Puntos por empate"/>
+                                    <Controls:NumericUpDown Minimum="0" Maximum="20000"
+                                                            Value="{Binding Config.PointsPerDraw}" />
+                                </StackPanel>
+                                <StackPanel Orientation="Horizontal" Margin="5">
+                                    <Label Content="Puntos por derrota"/>
+                                    <Controls:NumericUpDown Minimum="0" Maximum="20000"
+                                                            Value="{Binding Config.PointsPerLoss}" />
+                                </StackPanel>
+                            </StackPanel>
+                        </StackPanel>
+                    </simpleChildWindow:ChildWindow>
+                    <StackPanel Margin="20"  HorizontalAlignment="Center" VerticalAlignment="Center">
+                        <Button Content="Cargar fichero de Torneo" 
+                                Margin="20" 
+                                Controls:ButtonHelper.PreserveTextCase="True" 
+                                Style="{StaticResource AccentedSquareButtonStyle}" />
+                        <Button Content="Crear nuevo Torneo" 
+                                Margin="20" 
+                                Controls:ButtonHelper.PreserveTextCase="True" 
+                                Style="{StaticResource AccentedSquareButtonStyle}" 
+                                Click="CreateNewTournament_Click"/>
+                    </StackPanel>
+                </Grid>
             </TabItem>
             <TabItem Header="Jugadores" DataContext="{Binding currentTournament}">
                 <StackPanel Margin="20" >

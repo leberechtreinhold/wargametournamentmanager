@@ -13,7 +13,6 @@ namespace WargameTournamentManager
         DRAW
     }
 
-
     public class Configuration
     {
         public int NumberRounds { get; set; }
@@ -25,14 +24,21 @@ namespace WargameTournamentManager
         public Configuration()
         {
             Tags = new List<string>();
+
+            NumberRounds = 3;
+
+            PointsPerWin = 3;
+            PointsPerDraw = 2;
+            PointsPerLoss = 1;
         }
 
         public static Configuration CreateTestConfiguration()
         {
             Configuration config = new Configuration();
 
-            config.NumberRounds = 3;
+            config.NumberRounds = 5;
 
+            // DBA Style! Draw is worse than Loss
             config.PointsPerWin = 3;
             config.PointsPerLoss = 1;
             config.PointsPerDraw = 0;

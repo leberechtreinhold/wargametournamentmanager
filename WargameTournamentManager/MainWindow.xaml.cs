@@ -30,6 +30,11 @@ namespace WargameTournamentManager
             InitializeComponent();
             this.DataContext = this;
         }
+
+        private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
+        {
+            createTournamentWindow.IsOpen = true; 
+        }
     }
 
     public sealed class GetMatchupName : IMultiValueConverter
