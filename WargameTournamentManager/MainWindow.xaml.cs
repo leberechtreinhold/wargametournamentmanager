@@ -26,7 +26,7 @@ namespace WargameTournamentManager
 
         public MainWindow()
         {
-            currentTournament = new Tournament();
+            currentTournament = Tournament.CreateTestTournament();
             InitializeComponent();
             this.DataContext = this;
         }

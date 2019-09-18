@@ -24,15 +24,25 @@ namespace WargameTournamentManager
 
         public Configuration()
         {
-            NumberRounds = 3;
+            Tags = new List<string>();
+        }
 
-            PointsPerWin = 3;
-            PointsPerLoss = 1;
-            PointsPerDraw = 0;
+        public static Configuration CreateTestConfiguration()
+        {
+            Configuration config = new Configuration();
 
-            Tags = new List<string> { "Plaquetas eliminadas", "General eliminado", "Campamento saqueado" };
+            config.NumberRounds = 3;
+
+            config.PointsPerWin = 3;
+            config.PointsPerLoss = 1;
+            config.PointsPerDraw = 0;
+
+            config.Tags = new List<string> { "Plaquetas eliminadas", "General eliminado", "Campamento saqueado" };
+
+            return config;
         }
     }
+
     public class Tournament
     {
         public string Name { get; set; }
@@ -47,17 +57,26 @@ namespace WargameTournamentManager
         public Tournament()
         {
             Config = new Configuration();
-
-            Name = "TestTournament";
-            Game = "TestGame";
-            Date = "Oct 10, 2017";
-            CurrentRound = 2;
-
-            Players = new List<Player> { new Player(), new Player(), new Player(), new Player() };
-
-            CreateRanking();
-
+            Players = new List<Player>();
             Rounds = new List<Round>();
+        }
+
+        public static Tournament CreateTestTournament()
+        {
+            var tournament = new Tournament();
+
+            tournament.Config = Configuration.CreateTestConfiguration();
+
+            tournament.Name = "TestTournament";
+            tournament.Game = "TestGame";
+            tournament.Date = "Oct 10, 2017";
+            tournament.CurrentRound = 2;
+
+            tournament.Players = new List<Player> { new Player(), new Player(), new Player(), new Player() };
+
+            tournament.Rounds = new List<Round>();
+
+            tournament.CreateRanking();
 
             // Round has finished, player0 has won against player 1, and player2 and player3 has a draw
             var round1 = new Round();
@@ -92,7 +111,7 @@ namespace WargameTournamentManager
                               },
                               Round = 1, Table = 2, CurrentResult = Result.DRAW },
             };
-            Rounds.Add(round1);
+            tournament.Rounds.Add(round1);
 
             // Round 2 is in progress, player3 has won against player1, and player0 is still playing against playing player2           
             var round2 = new Round();
@@ -127,15 +146,17 @@ namespace WargameTournamentManager
                               },
                               Round = 2, Table = 1, CurrentResult = Result.STILL_PLAYING},
             };
-            Rounds.Add(round2);
+            tournament.Rounds.Add(round2);
 
             var round3 = new Round();
             round3.Number = 3;
             round3.Active = false;
             round3.Matchups = new List<Matchup>();
-            Rounds.Add(round3);
+            tournament.Rounds.Add(round3);
 
-            UpdateRanking();
+            tournament.UpdateRanking();
+
+            return tournament;
         }
 
         private void CreateRanking()
