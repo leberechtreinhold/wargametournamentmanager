@@ -52,6 +52,7 @@
                                     <Controls:NumericUpDown Minimum="0" Maximum="20000"
                                                             Value="{Binding Config.PointsPerLoss}" />
                                 </StackPanel>
+                                <Button Content="Save" Click="SaveTournament_Click"></Button>
                             </StackPanel>
                         </StackPanel>
                     </simpleChildWindow:ChildWindow>

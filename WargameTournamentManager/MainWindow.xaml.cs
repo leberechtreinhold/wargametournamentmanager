@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,6 +15,8 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using Microsoft.Win32;
+using Newtonsoft.Json;
 
 namespace WargameTournamentManager
 {
@@ -34,6 +37,24 @@ namespace WargameTournamentManager
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
         {
             createTournamentWindow.IsOpen = true; 
+        }
+
+        private void SaveTournament_Click(object sender, RoutedEventArgs e)
+        {
+            SaveFileDialog savefile = new SaveFileDialog();
+            // Tournament file
+            savefile.FileName = "tournament" + currentTournament.Name + ".tour";
+            savefile.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
+
+            bool? saved = savefile.ShowDialog();
+            if (saved == true)
+            {
+                string json = JsonConvert.SerializeObject(currentTournament);
+                using (StreamWriter sw = new StreamWriter(savefile.FileName))
+                {
+                    sw.Write(json);
+                }
+            }
         }
     }
 
