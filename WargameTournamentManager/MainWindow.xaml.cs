@@ -54,6 +54,21 @@ namespace WargameTournamentManager
                 {
                     sw.Write(json);
                 }
+                createTournamentWindow.IsOpen = false;
+            }
+        }
+
+        private void LoadTournament_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            openFileDialog.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
+
+            bool? loaded = openFileDialog.ShowDialog();
+
+            if (loaded == true)
+            {
+                string json = File.ReadAllText(openFileDialog.FileName);
+                currentTournament = JsonConvert.DeserializeObject<Tournament>(json);
             }
         }
     }

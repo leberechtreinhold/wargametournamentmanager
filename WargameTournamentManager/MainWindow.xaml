@@ -60,7 +60,8 @@
                         <Button Content="Cargar fichero de Torneo" 
                                 Margin="20" 
                                 Controls:ButtonHelper.PreserveTextCase="True" 
-                                Style="{StaticResource AccentedSquareButtonStyle}" />
+                                Style="{StaticResource AccentedSquareButtonStyle}" 
+                                Click="LoadTournament_Click"/>
                         <Button Content="Crear nuevo Torneo" 
                                 Margin="20" 
                                 Controls:ButtonHelper.PreserveTextCase="True" 
