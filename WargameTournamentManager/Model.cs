@@ -32,6 +32,19 @@ namespace WargameTournamentManager
             PointsPerLoss = 1;
         }
 
+        public Configuration Clone()
+        {
+            Configuration clone = new Configuration();
+            clone.NumberRounds = NumberRounds;
+            clone.PointsPerWin = PointsPerWin;
+            clone.PointsPerDraw = PointsPerDraw;
+            clone.PointsPerLoss = PointsPerLoss;
+
+            clone.Tags = clone.Tags.Concat(Tags).ToList();
+
+            return clone;
+        }
+
         public static Configuration CreateTestConfiguration()
         {
             Configuration config = new Configuration();
@@ -65,6 +78,27 @@ namespace WargameTournamentManager
             Config = new Configuration();
             Players = new List<Player>();
             Rounds = new List<Round>();
+        }
+
+        public Tournament Clone()
+        {
+            Tournament clone = new Tournament();
+            clone.Name = Name;
+            clone.Game = Game;
+            clone.Date = Date;
+            clone.CurrentRound = CurrentRound;
+            foreach(var player in Players)
+            {
+                clone.Players.Add(player.Clone());
+            }
+            foreach(var round in Rounds)
+            {
+                clone.Rounds.Add(round.Clone());
+            }
+            clone.Config = Config.Clone();
+            clone.CreateRanking();
+            clone.UpdateRanking();
+            return clone;
         }
 
         public static Tournament CreateTestTournament()
@@ -249,6 +283,7 @@ namespace WargameTournamentManager
         public static Random random = new Random();
         public static int index = 0;
     }
+
     public class Player
     {
         private static int CurrentId = 0;
@@ -265,6 +300,20 @@ namespace WargameTournamentManager
             Id = CurrentId;
             CurrentId++;
             Name = GetRandomName();
+        }
+
+        public Player Clone()
+        {
+            Player clone = new Player();
+            clone.Id = Id;
+            clone.Name = Name;
+            clone.City = City;
+            clone.Club = Club;
+            clone.Contact = Contact;
+            clone.Faction = Faction;
+            clone.Paid = Paid;
+
+            return clone;
         }
 
         private static string GetRandomName()
@@ -292,6 +341,18 @@ namespace WargameTournamentManager
             Active = false;
             Matchups = new List<Matchup>();
         }
+
+        public Round Clone()
+        {
+            Round clone = new Round();
+            clone.Number = Number;
+            clone.Active = Active;
+            foreach (var matchup in Matchups)
+            {
+                clone.Matchups.Add(matchup.Clone());
+            }
+            return clone;
+        }
     }
 
     public class Matchup
@@ -305,6 +366,20 @@ namespace WargameTournamentManager
 
         public int Player2Id { get; set; }
         public Dictionary<string, int> Player2Tags { get; set; }
+
+        public Matchup Clone()
+        {
+            Matchup clone = new Matchup();
+            clone.Table = Table;
+            clone.Round = Round;
+            clone.CurrentResult = CurrentResult;
+            clone.Player1Id = Player1Id;
+            clone.Player1Tags = new Dictionary<string, int>(Player1Tags);
+            clone.Player2Id = Player2Id;
+            clone.Player2Tags = new Dictionary<string, int>(Player2Tags);
+
+            return clone;
+        }
 
         public bool PlayerBelongsToMatchup(int playerId)
         {
