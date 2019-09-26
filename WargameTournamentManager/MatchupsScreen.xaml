@@ -1,14 +1,12 @@
 ﻿<UserControl x:Class="WargameTournamentManager.MatchupsScreen"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
-             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:local="clr-namespace:WargameTournamentManager">
     <UserControl.Resources>
-        <local:GetMatchupName x:Key="GetMatchupName"/>
-        <local:GetMatchupResult x:Key="GetMatchupResult"/>
-        <local:GetRoundActiveOrNot x:Key="GetRoundActiveOrNot"/>
+        <local:GetMatchupNameConverter x:Key="GetMatchupNameConverter"/>
+        <local:GetMatchupResultConverter x:Key="GetMatchupResultConverter"/>
+        <local:GetRoundActiveOrNotConverter x:Key="GetRoundActiveOrNotConverter"/>
     </UserControl.Resources>
     <Grid>
         <TabControl Margin="20" 
@@ -25,7 +23,7 @@
                     <StackPanel>
                         <Label FontStyle="Italic">
                             <Label.Content>
-                                <Binding Converter="{StaticResource GetRoundActiveOrNot}" />
+                                <Binding Converter="{StaticResource GetRoundActiveOrNotConverter}" />
                             </Label.Content>
                         </Label>
                         <DataGrid ItemsSource="{Binding Matchups}" 
@@ -36,7 +34,7 @@
                             <DataGrid.Columns>
                                 <DataGridTextColumn Header="Enfrentamiento" IsReadOnly="True">
                                     <DataGridTextColumn.Binding>
-                                        <MultiBinding Converter="{StaticResource GetMatchupName}">
+                                        <MultiBinding Converter="{StaticResource GetMatchupNameConverter}">
                                             <Binding Path="Player1Id" />
                                             <Binding Path="Player2Id" />
                                             <Binding Path="currentTournament">
@@ -49,7 +47,7 @@
                                 </DataGridTextColumn>
                                 <DataGridTextColumn Header="Resultado" IsReadOnly="True">
                                     <DataGridTextColumn.Binding>
-                                        <MultiBinding Converter="{StaticResource GetMatchupResult}">
+                                        <MultiBinding Converter="{StaticResource GetMatchupResultConverter}">
                                             <Binding Mode="OneWay"/>
                                             <Binding Mode="OneWay" Path="currentTournament">
                                                 <Binding.RelativeSource>

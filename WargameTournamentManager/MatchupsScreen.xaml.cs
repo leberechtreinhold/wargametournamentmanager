@@ -32,7 +32,7 @@ namespace WargameTournamentManager
         }
     }
 
-    public sealed class GetMatchupResult : IMultiValueConverter
+    public sealed class GetMatchupResultConverter : IMultiValueConverter
     {
         public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
         {
@@ -64,7 +64,7 @@ namespace WargameTournamentManager
         }
     }
 
-    public sealed class GetRoundActiveOrNot : IValueConverter
+    public sealed class GetRoundActiveOrNotConverter : IValueConverter
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -77,7 +77,31 @@ namespace WargameTournamentManager
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
     }
+
+    public sealed class GetMatchupNameConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length != 3) return null;
+
+            var player1Id = values[0] as int?;
+            var player2Id = values[1] as int?;
+            Tournament tournament = values[2] as Tournament;
+            if (player1Id == null || player2Id == null || tournament == null)
+                return null;
+
+            var player1 = tournament.Players[(int)player1Id];
+            var player2 = tournament.Players[(int)player2Id];
+            return string.Format("{0} vs {1}", player1.Name, player2.Name);
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
 }
