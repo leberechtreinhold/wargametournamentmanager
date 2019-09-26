@@ -16,6 +16,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 
@@ -45,11 +46,27 @@ namespace WargameTournamentManager
 
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
         {
+            createTournamentWindow.DataContext = this.creationTournament;
             createTournamentWindow.IsOpen = true;
         }
 
         private void SaveTournament_Click(object sender, RoutedEventArgs e)
         {
+            if (string.IsNullOrWhiteSpace(creationTournament.Name))
+            {
+                this.ShowMessageAsync("Error", "Por favor, inserta un nombre para el torneo");
+                return;
+            }
+            if (string.IsNullOrWhiteSpace(creationTournament.Game))
+            {
+                this.ShowMessageAsync("Error", "Por favor, inserta el nombre del juego");
+                return;
+            }
+            if (creationTournament.Config.NumberRounds < 1 || creationTournament.Config.NumberRounds > 10)
+            {
+                this.ShowMessageAsync("Error", "El número de rondas es inválido, debe estar entre 1 y 10.");
+                return;
+            }
             SaveFileDialog savefile = new SaveFileDialog();
             // Tournament file
             savefile.FileName = "tournament" + creationTournament.Name + ".tour";
@@ -64,14 +81,14 @@ namespace WargameTournamentManager
                     sw.Write(json);
                 }
                 createTournamentWindow.IsOpen = false;
-            }
 
-            currentTournament = creationTournament.Clone();
-            creationTournament = new Tournament();
-            CreateNewTournamentButton.IsEnabled = false;
-            LoadTournamentButton.IsEnabled = false;
-            MainTab.SelectedIndex = MainTab.SelectedIndex + 1;
-            OnPropertyChanged("currentTournament");
+                currentTournament = creationTournament.Clone();
+                creationTournament = new Tournament();
+                CreateNewTournamentButton.IsEnabled = false;
+                LoadTournamentButton.IsEnabled = false;
+                MainTab.SelectedIndex = MainTab.SelectedIndex + 1;
+                OnPropertyChanged("currentTournament");
+            }
         }
 
         private void LoadTournament_Click(object sender, RoutedEventArgs e)

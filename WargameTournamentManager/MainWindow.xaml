@@ -21,7 +21,8 @@
                         x:Name="createTournamentWindow"
                         Title="Crear Torneo"
                         Padding="20"
-                        ShowCloseButton="True">
+                        ShowCloseButton="True"
+                        DataContext="{Binding creationTournament}">
 
                         <simpleChildWindow:ChildWindow.OverlayBrush>
                             <SolidColorBrush Opacity="0" Color="{StaticResource Gray2}" />
@@ -39,26 +40,30 @@
                                     <Label Content="Juego"/>
                                     <TextBox Text="{Binding Game}" 
                                              Width="200" 
-                                             Controls:TextBoxHelper.Watermark="De Bellis Antiquitatis" />
+                                             Controls:TextBoxHelper.Watermark="Nombre del juego" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Número de rondas"/>
                                     <Controls:NumericUpDown Minimum="0" Maximum="10" 
+                                                            Width="100"
                                                             Value="{Binding Config.NumberRounds}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Puntos por victoria"/>
                                     <Controls:NumericUpDown Minimum="0" Maximum="20000"
+                                                            Width="100"
                                                             Value="{Binding Config.PointsPerWin}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Puntos por empate"/>
                                     <Controls:NumericUpDown Minimum="0" Maximum="20000"
+                                                            Width="100"
                                                             Value="{Binding Config.PointsPerDraw}" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Puntos por derrota"/>
                                     <Controls:NumericUpDown Minimum="0" Maximum="20000"
+                                                            Width="100"
                                                             Value="{Binding Config.PointsPerLoss}" />
                                 </StackPanel>
                                 <Button Content="Save" Click="SaveTournament_Click"></Button>
