@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -23,7 +24,7 @@ namespace WargameTournamentManager
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
-    public partial class MainWindow : MetroWindow
+    public partial class MainWindow : MetroWindow, INotifyPropertyChanged
     {
         public Tournament currentTournament { get; set; }
         public Tournament creationTournament { get; set; }
@@ -36,28 +37,41 @@ namespace WargameTournamentManager
             this.DataContext = this;
         }
 
+        void OnPropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
         {
-            createTournamentWindow.IsOpen = true; 
+            createTournamentWindow.IsOpen = true;
         }
 
         private void SaveTournament_Click(object sender, RoutedEventArgs e)
         {
             SaveFileDialog savefile = new SaveFileDialog();
             // Tournament file
-            savefile.FileName = "tournament" + currentTournament.Name + ".tour";
+            savefile.FileName = "tournament" + creationTournament.Name + ".tour";
             savefile.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
 
             bool? saved = savefile.ShowDialog();
             if (saved == true)
             {
-                string json = JsonConvert.SerializeObject(currentTournament);
+                string json = JsonConvert.SerializeObject(creationTournament);
                 using (StreamWriter sw = new StreamWriter(savefile.FileName))
                 {
                     sw.Write(json);
                 }
                 createTournamentWindow.IsOpen = false;
             }
+
+            currentTournament = creationTournament.Clone();
+            creationTournament = new Tournament();
+            CreateNewTournamentButton.IsEnabled = false;
+            LoadTournamentButton.IsEnabled = false;
+            MainTab.SelectedIndex = MainTab.SelectedIndex + 1;
+            OnPropertyChanged("currentTournament");
         }
 
         private void LoadTournament_Click(object sender, RoutedEventArgs e)
@@ -72,6 +86,11 @@ namespace WargameTournamentManager
                 string json = File.ReadAllText(openFileDialog.FileName);
                 currentTournament = JsonConvert.DeserializeObject<Tournament>(json);
             }
+
+            CreateNewTournamentButton.IsEnabled = false;
+            LoadTournamentButton.IsEnabled = false;
+            MainTab.SelectedIndex = MainTab.SelectedIndex + 1;
+            OnPropertyChanged("currentTournament");
         }
     }
 

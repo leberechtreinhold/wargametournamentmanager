@@ -14,9 +14,9 @@
     </Controls:MetroWindow.Resources>
 
     <Grid>
-        <TabControl>
+        <TabControl x:Name="MainTab">
             <TabItem Header="Torneo" IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
-                <Grid>
+                <Grid DataContext="creationTournament">
                     <simpleChildWindow:ChildWindow 
                         x:Name="createTournamentWindow"
                         Title="Crear Torneo"
@@ -66,12 +66,14 @@
                         </StackPanel>
                     </simpleChildWindow:ChildWindow>
                     <StackPanel Margin="20"  HorizontalAlignment="Center" VerticalAlignment="Center">
-                        <Button Content="Cargar fichero de Torneo" 
+                        <Button x:Name="LoadTournamentButton"
+                                Content="Cargar fichero de Torneo" 
                                 Margin="20" 
                                 Controls:ButtonHelper.PreserveTextCase="True" 
                                 Style="{StaticResource AccentedSquareButtonStyle}" 
                                 Click="LoadTournament_Click"/>
-                        <Button Content="Crear nuevo Torneo" 
+                        <Button x:Name="CreateNewTournamentButton"
+                                Content="Crear nuevo Torneo" 
                                 Margin="20" 
                                 Controls:ButtonHelper.PreserveTextCase="True" 
                                 Style="{StaticResource AccentedSquareButtonStyle}" 
