@@ -26,10 +26,12 @@ namespace WargameTournamentManager
     public partial class MainWindow : MetroWindow
     {
         public Tournament currentTournament { get; set; }
+        public Tournament creationTournament { get; set; }
 
         public MainWindow()
         {
-            currentTournament = Tournament.CreateTestTournament();
+            creationTournament = new Tournament();
+            currentTournament = null;
             InitializeComponent();
             this.DataContext = this;
         }
@@ -73,26 +75,17 @@ namespace WargameTournamentManager
         }
     }
 
-    public sealed class GetMatchupName : IMultiValueConverter
+    public class TournamentActiveConverter : IValueConverter
     {
-        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            if (values.Length != 3) return null;
-
-            var player1Id = values[0] as int?;
-            var player2Id = values[1] as int?;
-            Tournament tournament = values[2] as Tournament;
-            if (player1Id == null || player2Id == null || tournament == null)
-                return null;
-
-            var player1 = tournament.Players[(int)player1Id];
-            var player2 = tournament.Players[(int)player2Id];
-            return string.Format("{0} vs {1}", player1.Name, player2.Name);
+            var tournament = value as Tournament;
+            return tournament != null;
         }
 
-        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
     }
 

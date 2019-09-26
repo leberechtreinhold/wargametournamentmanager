@@ -8,9 +8,14 @@
         mc:Ignorable="d"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
         Title="Gestor de Torneos para Wargames" Height="450" Width="800">
+    
+    <Controls:MetroWindow.Resources>
+        <local:TournamentActiveConverter x:Key="TournamentActiveConverter"/>
+    </Controls:MetroWindow.Resources>
+
     <Grid>
         <TabControl>
-            <TabItem Header="Torneo">
+            <TabItem Header="Torneo" IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <Grid>
                     <simpleChildWindow:ChildWindow 
                         x:Name="createTournamentWindow"
@@ -26,11 +31,15 @@
                             <StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Nombre"/>
-                                    <TextBox Text="{Binding Name}" Width="200" Controls:TextBoxHelper.Watermark="Nombre del torneo" />
+                                    <TextBox Text="{Binding Name}" 
+                                             Width="200" 
+                                             Controls:TextBoxHelper.Watermark="Nombre del torneo" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Juego"/>
-                                    <TextBox Text="{Binding Game}" Width="200" Controls:TextBoxHelper.Watermark="De Bellis Antiquitatis" />
+                                    <TextBox Text="{Binding Game}" 
+                                             Width="200" 
+                                             Controls:TextBoxHelper.Watermark="De Bellis Antiquitatis" />
                                 </StackPanel>
                                 <StackPanel Orientation="Horizontal" Margin="5">
                                     <Label Content="Número de rondas"/>
@@ -70,8 +79,9 @@
                     </StackPanel>
                 </Grid>
             </TabItem>
-            <TabItem Header="Jugadores" DataContext="{Binding currentTournament}">
-                <StackPanel Margin="20" >
+            <TabItem Header="Jugadores" 
+                     IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
+                <StackPanel Margin="20" DataContext="{Binding currentTournament}">
                     <StackPanel Orientation="Horizontal" >
                         <Label Content="Name"/>
                         <TextBox Text="{Binding Name}" IsEnabled="False" />
@@ -102,11 +112,13 @@
                     </StackPanel>
                 </StackPanel>
             </TabItem>
-            <TabItem Header="Enfrentamientos">
+            <TabItem Header="Enfrentamientos"
+                     IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <local:MatchupsScreen />
             </TabItem>
-            <TabItem Header="Ranking" DataContext="{Binding currentTournament}">
-                <StackPanel Margin="20" >
+            <TabItem Header="Ranking" 
+                     IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
+                <StackPanel Margin="20" DataContext="{Binding currentTournament}">
                     <StackPanel Orientation="Horizontal" >
                         <Label Content="Name"/>
                         <TextBox Text="{Binding Name}" IsEnabled="False" />
