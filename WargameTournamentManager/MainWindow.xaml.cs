@@ -44,7 +44,7 @@ namespace WargameTournamentManager
             gMainWindow = this;
         }
 
-        void OnPropertyChanged(string property)
+        public void OnPropertyChanged(string property)
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }

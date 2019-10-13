@@ -77,7 +77,7 @@ namespace WargameTournamentManager
                 CreateNewTournamentButton.IsEnabled = false;
                 LoadTournamentButton.IsEnabled = false;
                 MainWindow.gMainWindow.MainTab.SelectedIndex += 1;
-                OnPropertyChanged("currentTournament");
+                MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
             }
         }
 
@@ -97,13 +97,7 @@ namespace WargameTournamentManager
             CreateNewTournamentButton.IsEnabled = false;
             LoadTournamentButton.IsEnabled = false;
             MainWindow.gMainWindow.MainTab.SelectedIndex = MainWindow.gMainWindow.MainTab.SelectedIndex + 1;
-            OnPropertyChanged("currentTournament");
+            MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
         }
-
-        void OnPropertyChanged(string property)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
-        }
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }
