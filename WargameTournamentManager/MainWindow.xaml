@@ -20,36 +20,7 @@
             </TabItem>
             <TabItem Header="Jugadores" 
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
-                <StackPanel Margin="20" DataContext="{Binding currentTournament}">
-                    <StackPanel Orientation="Horizontal" >
-                        <Label Content="Name"/>
-                        <TextBox Text="{Binding Name}" IsEnabled="False" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Fecha"/>
-                        <TextBox Text="{Binding Date}" IsEnabled="False" />
-                    </StackPanel>
-                    <StackPanel Orientation="Horizontal">
-                        <Label Content="Juego"/>
-                        <TextBox Text="{Binding Game}" IsEnabled="False" />
-                    </StackPanel>
-                    <StackPanel>
-                        <DataGrid ItemsSource="{Binding Players}" Margin="10,20,10,0" AutoGenerateColumns="False" CanUserAddRows="false" Style="{StaticResource AzureDataGrid}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Binding="{Binding Name}" Header="Nombre" />
-                                <DataGridTextColumn Binding="{Binding City}" Header="Ciudad" />
-                                <DataGridTextColumn Binding="{Binding Club}" Header="Club" />
-                                <DataGridTextColumn Binding="{Binding Contact}" Header="Contacto" />
-                                <DataGridTextColumn Binding="{Binding Faction}" Header="Facción" />
-                                <DataGridCheckBoxColumn Binding="{Binding Paid}" Header="Inscripción pagada" />
-                            </DataGrid.Columns>
-                        </DataGrid>
-                        <StackPanel Orientation="Horizontal">
-                            <Button Content="Borrar seleccionados" Margin="20" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
-                            <Button Content="Añadir nuevo jugador" Margin="20" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
-                        </StackPanel>
-                    </StackPanel>
-                </StackPanel>
+                <local:PlayersScreen DataContext="{Binding currentTournament}"/>
             </TabItem>
             <TabItem Header="Enfrentamientos"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
