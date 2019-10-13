@@ -27,15 +27,21 @@ namespace WargameTournamentManager
     /// </summary>
     public partial class MainWindow : MetroWindow, INotifyPropertyChanged
     {
+        internal static MainWindow gMainWindow;
+
         public Tournament currentTournament { get; set; }
-        public Tournament creationTournament { get; set; }
 
         public MainWindow()
         {
-            creationTournament = new Tournament();
             currentTournament = null;
             InitializeComponent();
             this.DataContext = this;
+            this.Loaded += OnLoad;
+        }
+
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            gMainWindow = this;
         }
 
         void OnPropertyChanged(string property)
@@ -44,71 +50,6 @@ namespace WargameTournamentManager
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
-        {
-            createTournamentWindow.DataContext = this.creationTournament;
-            createTournamentWindow.IsOpen = true;
-        }
-
-        private void SaveTournament_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(creationTournament.Name))
-            {
-                this.ShowMessageAsync("Error", "Por favor, inserta un nombre para el torneo");
-                return;
-            }
-            if (string.IsNullOrWhiteSpace(creationTournament.Game))
-            {
-                this.ShowMessageAsync("Error", "Por favor, inserta el nombre del juego");
-                return;
-            }
-            if (creationTournament.Config.NumberRounds < 1 || creationTournament.Config.NumberRounds > 10)
-            {
-                this.ShowMessageAsync("Error", "El número de rondas es inválido, debe estar entre 1 y 10.");
-                return;
-            }
-            SaveFileDialog savefile = new SaveFileDialog();
-            // Tournament file
-            savefile.FileName = "tournament" + creationTournament.Name + ".tour";
-            savefile.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
-
-            bool? saved = savefile.ShowDialog();
-            if (saved == true)
-            {
-                string json = JsonConvert.SerializeObject(creationTournament);
-                using (StreamWriter sw = new StreamWriter(savefile.FileName))
-                {
-                    sw.Write(json);
-                }
-                createTournamentWindow.IsOpen = false;
-
-                currentTournament = creationTournament.Clone();
-                creationTournament = new Tournament();
-                CreateNewTournamentButton.IsEnabled = false;
-                LoadTournamentButton.IsEnabled = false;
-                MainTab.SelectedIndex = MainTab.SelectedIndex + 1;
-                OnPropertyChanged("currentTournament");
-            }
-        }
-
-        private void LoadTournament_Click(object sender, RoutedEventArgs e)
-        {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            openFileDialog.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
-
-            bool? loaded = openFileDialog.ShowDialog();
-
-            if (loaded == true)
-            {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                currentTournament = JsonConvert.DeserializeObject<Tournament>(json);
-            }
-
-            CreateNewTournamentButton.IsEnabled = false;
-            LoadTournamentButton.IsEnabled = false;
-            MainTab.SelectedIndex = MainTab.SelectedIndex + 1;
-            OnPropertyChanged("currentTournament");
-        }
     }
 
     public class TournamentActiveConverter : IValueConverter
