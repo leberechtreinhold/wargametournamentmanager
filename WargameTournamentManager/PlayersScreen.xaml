@@ -8,6 +8,70 @@
     </UserControl.Resources>
 
     <Grid>
+        <simpleChildWindow:ChildWindow 
+                        x:Name="editPlayerWindow"
+                        Title="Editar jugador"
+                        Padding="20"
+                        ShowCloseButton="True"
+                        DataContext="{Binding editingPlayer}">
+
+            <simpleChildWindow:ChildWindow.OverlayBrush>
+                <SolidColorBrush Opacity="0" Color="{StaticResource Gray2}" />
+            </simpleChildWindow:ChildWindow.OverlayBrush>
+
+            <Grid Margin="20">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="Auto" />
+                </Grid.ColumnDefinitions>
+                <Label Grid.Row="0" Grid.Column="0" Margin="5" 
+                                   Content="Nombre"/>
+                <TextBox Grid.Row="0" Grid.Column="1" Margin="5" 
+                                     Text="{Binding Name}" Width="200" 
+                                     Controls:TextBoxHelper.Watermark="Nombre" />
+                <Label Grid.Row="1" Grid.Column="0" Margin="5" 
+                                   Content="Ciudad"/>
+                <TextBox Grid.Row="1" Grid.Column="1" Margin="5" 
+                                     Text="{Binding City}" Width="200" />
+                <Label Grid.Row="2" Grid.Column="0" Margin="5" 
+                                   Content="Club"/>
+                <TextBox Grid.Row="2" Grid.Column="1" Margin="5" 
+                                     Text="{Binding Club}" Width="200" />
+                <Label Grid.Row="3" Grid.Column="0" Margin="5" 
+                                   Content="Contacto"/>
+                <TextBox Grid.Row="3" Grid.Column="1" Margin="5" 
+                                     Text="{Binding Contact}" Width="200"
+                                     Controls:TextBoxHelper.Watermark="Mail o tlf" />
+                <Label Grid.Row="4" Grid.Column="0" Margin="5" 
+                                   Content="Facción"/>
+                <TextBox Grid.Row="4" Grid.Column="1" Margin="5" 
+                                     Text="{Binding Contact}" Width="200" />
+                <Label Grid.Row="5" Grid.Column="0" Margin="5" 
+                                   Content="Facción"/>
+                <TextBox Grid.Row="5" Grid.Column="1" Margin="5" 
+                                     Text="{Binding Faction}" Width="200" />
+                <Label Grid.Row="6" Grid.Column="0" Margin="5" 
+                                   Content="Pagado"/>
+                <Controls:ToggleSwitch Grid.Row="6" Grid.Column="1" Margin="5"
+                                       IsChecked="False" OnLabel="Sí" OffLabel="No"/>
+                
+                <Button Grid.Row="7" Grid.Column="1" Margin="20" 
+                                    Content="Save" Click="SavePlayer_Click">
+
+                </Button>
+            </Grid>
+        </simpleChildWindow:ChildWindow>
         <StackPanel Margin="20">
             <StackPanel Orientation="Horizontal" >
                 <Label Content="Name"/>
@@ -22,7 +86,12 @@
                 <TextBox Text="{Binding Game}" IsEnabled="False" />
             </StackPanel>
             <StackPanel>
-                <DataGrid ItemsSource="{Binding Players}" Margin="10,20,10,0" AutoGenerateColumns="False" CanUserAddRows="false" Style="{StaticResource AzureDataGrid}">
+                <DataGrid Name="playerListDataGrid" 
+                          ItemsSource="{Binding Players}" 
+                          Margin="10,20,10,0" 
+                          AutoGenerateColumns="False" 
+                          CanUserAddRows="false" 
+                          Style="{StaticResource AzureDataGrid}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}" Header="Nombre" />
                         <DataGridTextColumn Binding="{Binding City}" Header="Ciudad" />
@@ -33,8 +102,15 @@
                     </DataGrid.Columns>
                 </DataGrid>
                 <StackPanel Orientation="Horizontal">
-                    <Button Content="Borrar seleccionados" Margin="20" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
-                    <Button Content="Añadir nuevo jugador" Margin="20" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
+                    <Button Content="Borrar seleccionados" 
+                            Margin="20" 
+                            Controls:ButtonHelper.PreserveTextCase="True" 
+                            Style="{StaticResource AccentedSquareButtonStyle}" />
+                    <Button Content="Añadir nuevo jugador" 
+                            Margin="20" 
+                            Click="AddPlayer_Click"
+                            Controls:ButtonHelper.PreserveTextCase="True" 
+                            Style="{StaticResource AccentedSquareButtonStyle}" />
                 </StackPanel>
             </StackPanel>
         </StackPanel>

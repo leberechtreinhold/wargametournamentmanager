@@ -1,5 +1,7 @@
-﻿using System;
+﻿using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -18,11 +20,57 @@ namespace WargameTournamentManager
     /// <summary>
     /// Interaction logic for PlayersScreen.xaml
     /// </summary>
-    public partial class PlayersScreen : UserControl
+    public partial class PlayersScreen : UserControl, INotifyPropertyChanged
     {
+        public Player editingPlayer { get; set; }
+
         public PlayersScreen()
         {
+            editingPlayer = new Player();
             InitializeComponent();
         }
+
+        private void AddPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            editingPlayer = new Player();
+            editPlayerWindow.DataContext = this.editingPlayer;
+            editPlayerWindow.IsOpen = true;
+        }
+
+        private void EditPlayer_Click(object sender, RoutedEventArgs e)
+        {
+            editingPlayer = new Player();
+            editPlayerWindow.DataContext = this.editingPlayer;
+            editPlayerWindow.IsOpen = true;
+        }
+
+        private void SavePlayer_Click(object sender, RoutedEventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(editingPlayer.Name))
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "Por favor, inserta un nombre para el jugador");
+                return;
+            }
+            if (!MainWindow.gMainWindow.currentTournament.CanAddPlayerName(editingPlayer.Name))
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "Este jugador ya ha sido introducido. Por favor, cambia el nombre a este jugador.");
+                return;
+            }
+
+            MainWindow.gMainWindow.currentTournament.AddPlayer(editingPlayer.Clone());
+            editingPlayer = new Player();
+            
+            MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+            playerListDataGrid.ItemsSource = null;
+            playerListDataGrid.ItemsSource = MainWindow.gMainWindow.currentTournament.Players;
+            // TODO Save
+            editPlayerWindow.IsOpen = false;
+        }
+
+        public void OnPropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

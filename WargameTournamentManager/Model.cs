@@ -112,7 +112,7 @@ namespace WargameTournamentManager
             tournament.Date = "Oct 10, 2017";
             tournament.CurrentRound = 2;
 
-            tournament.Players = new List<Player> { new Player(), new Player(), new Player(), new Player() };
+            tournament.Players = new List<Player> { new Player(true), new Player(true), new Player(true), new Player(true) };
 
             tournament.Rounds = new List<Round>();
 
@@ -273,6 +273,21 @@ namespace WargameTournamentManager
             return (score, scorePerTag);
         }
 
+        public bool CanAddPlayer(Player newPlayer)
+        {
+            return !Players.Any(p => p.Name == newPlayer.Name);
+        }
+
+        public bool CanAddPlayerName(string newPlayerName)
+        {
+            return !Players.Any(p => p.Name == newPlayerName);
+        }
+
+        public void AddPlayer(Player newPlayer)
+        {
+            // TODO: Validate there are no rounds running et al
+            Players.Add(newPlayer);
+        }
     }
 
     // For easily accesible RNG, not threadsafe
@@ -295,11 +310,11 @@ namespace WargameTournamentManager
         public string Faction { get; set; }
         public bool Paid { get; set; }
 
-        public Player()
+        public Player(bool autogenerate = false)
         {
             Id = CurrentId;
             CurrentId++;
-            Name = GetRandomName();
+            if (autogenerate) Name = GetRandomName();
         }
 
         public Player Clone()
