@@ -92,12 +92,12 @@ namespace WargameTournamentManager
             {
                 string json = File.ReadAllText(openFileDialog.FileName);
                 MainWindow.gMainWindow.currentTournament = JsonConvert.DeserializeObject<Tournament>(json);
-            }
 
-            CreateNewTournamentButton.IsEnabled = false;
-            LoadTournamentButton.IsEnabled = false;
-            MainWindow.gMainWindow.MainTab.SelectedIndex = MainWindow.gMainWindow.MainTab.SelectedIndex + 1;
-            MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+                CreateNewTournamentButton.IsEnabled = false;
+                LoadTournamentButton.IsEnabled = false;
+                MainWindow.gMainWindow.MainTab.SelectedIndex = MainWindow.gMainWindow.MainTab.SelectedIndex + 1;
+                MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+            }
         }
     }
 }
