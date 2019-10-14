@@ -5,8 +5,10 @@
             xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
              xmlns:local="clr-namespace:WargameTournamentManager">
     <UserControl.Resources>
+        <local:PlayerListLockedConverter x:Key="PlayerListLockedConverter"/>
+        <local:PlayerListUnlockedConverter x:Key="PlayerListUnlockedConverter"/>
+        <local:PlayerListLockToggleConverter x:Key="PlayerListLockToggleConverter"/>
     </UserControl.Resources>
-
     <Grid>
         <simpleChildWindow:ChildWindow 
                         x:Name="editPlayerWindow"
@@ -65,7 +67,7 @@
                                    Content="Pagado"/>
                 <Controls:ToggleSwitch Grid.Row="6" Grid.Column="1" Margin="5"
                                        IsChecked="False" OnLabel="Sí" OffLabel="No"/>
-                
+
                 <Button Grid.Row="7" Grid.Column="1" Margin="20" 
                                     Content="Save" Click="SavePlayer_Click">
 
@@ -105,15 +107,17 @@
                     <Button Content="Borrar seleccionados" 
                             DockPanel.Dock="Left"
                             Margin="20" 
+                            IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
                             Controls:ButtonHelper.PreserveTextCase="True" 
                             Style="{StaticResource AccentedSquareButtonStyle}" />
                     <Button Content="Añadir nuevo jugador" 
                             DockPanel.Dock="Left"
                             Margin="20" 
                             Click="AddPlayer_Click"
+                            IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
                             Controls:ButtonHelper.PreserveTextCase="True" 
                             Style="{StaticResource AccentedSquareButtonStyle}" />
-                    <Button Content="Cerrar lista de jugadores" 
+                    <Button Content="{Binding PlayerListLocked, Converter={StaticResource PlayerListLockToggleConverter}}"
                             DockPanel.Dock="Right"
                             Click="PlayerListLock_Click"
                             Margin="20" 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -104,6 +105,7 @@ namespace WargameTournamentManager
             editingPlayer = new Player();
             
             MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+            OnPropertyChanged("currentTournament");
             playerListDataGrid.ItemsSource = null;
             playerListDataGrid.ItemsSource = MainWindow.gMainWindow.currentTournament.Players;
             // TODO Save
@@ -115,5 +117,52 @@ namespace WargameTournamentManager
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
         public event PropertyChangedEventHandler PropertyChanged;
+    }
+
+    public class PlayerListLockedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return MainWindow.gMainWindow.currentTournament.PlayerListLocked;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+
+    public class PlayerListUnlockedConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            return !MainWindow.gMainWindow.currentTournament.PlayerListLocked;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
+
+    public class PlayerListLockToggleConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (MainWindow.gMainWindow.currentTournament.PlayerListLocked)
+            {
+                return "Abrir la lista de jugadores";
+            }
+            else
+            {
+                return "Cerrar lista de jugadores";
+            }
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
     }
 }
