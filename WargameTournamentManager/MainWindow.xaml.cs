@@ -66,4 +66,17 @@ namespace WargameTournamentManager
         }
     }
 
+    public class TournamentInactiveConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            var tournament = value as Tournament;
+            return tournament == null;
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }

@@ -11,11 +11,13 @@
 
     <Controls:MetroWindow.Resources>
         <local:TournamentActiveConverter x:Key="TournamentActiveConverter"/>
+        <local:TournamentInactiveConverter x:Key="TournamentInactiveConverter"/>
     </Controls:MetroWindow.Resources>
 
     <Grid>
         <TabControl x:Name="MainTab">
-            <TabItem Header="Torneo" IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
+            <TabItem Header="Torneo" 
+                     IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentInactiveConverter}}">
                 <local:CreateTournamentScreen/>
             </TabItem>
             <TabItem Header="Jugadores" 
