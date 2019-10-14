@@ -44,6 +44,49 @@ namespace WargameTournamentManager
             editPlayerWindow.IsOpen = true;
         }
 
+        private void PlayerListLock_Click(object sender, RoutedEventArgs e)
+        {
+            if (MainWindow.gMainWindow.currentTournament.PlayerListLocked)
+            {
+                UnlockPlayerList();
+            }
+            else
+            {
+                LockPlayerList();
+            }
+        }
+
+        private async void LockPlayerList()
+        {
+            var option = await MainWindow.gMainWindow.ShowMessageAsync("Aviso", 
+                "Si bloqueas la lista de jugadores ya no podrás añadir ni "
+                + "eliminar ningún jugador, aunque seguirás pudiendo editar " 
+                + "los detalles de estos. ¿Quieres continuar?", 
+                MessageDialogStyle.AffirmativeAndNegative);
+            if (option == MessageDialogResult.Affirmative)
+            {
+                MainWindow.gMainWindow.currentTournament.PlayerListLocked = true;
+                MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+            }
+
+        }
+
+        private async void UnlockPlayerList()
+        {
+            var option = await MainWindow.gMainWindow.ShowMessageAsync("Aviso",
+                "Si se desbloqueas la lista de jugadores podrás añadir y "
+                + "eliminar jugadores, pero todos los resultados de juego, "
+                + "incluyendo rondas y emparejamientos, serán eliminados. "
+                + "¿Quieres continuar?",
+                MessageDialogStyle.AffirmativeAndNegative);
+            if (option == MessageDialogResult.Affirmative)
+            {
+                MainWindow.gMainWindow.currentTournament.PlayerListLocked = false;
+                MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+            }
+
+        }
+
         private void SavePlayer_Click(object sender, RoutedEventArgs e)
         {
             if (string.IsNullOrWhiteSpace(editingPlayer.Name))

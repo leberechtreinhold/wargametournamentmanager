@@ -101,17 +101,25 @@
                         <DataGridCheckBoxColumn Binding="{Binding Paid}" Header="Inscripción pagada" />
                     </DataGrid.Columns>
                 </DataGrid>
-                <StackPanel Orientation="Horizontal">
+                <DockPanel LastChildFill="False">
                     <Button Content="Borrar seleccionados" 
+                            DockPanel.Dock="Left"
                             Margin="20" 
                             Controls:ButtonHelper.PreserveTextCase="True" 
                             Style="{StaticResource AccentedSquareButtonStyle}" />
                     <Button Content="Añadir nuevo jugador" 
+                            DockPanel.Dock="Left"
                             Margin="20" 
                             Click="AddPlayer_Click"
                             Controls:ButtonHelper.PreserveTextCase="True" 
                             Style="{StaticResource AccentedSquareButtonStyle}" />
-                </StackPanel>
+                    <Button Content="Cerrar lista de jugadores" 
+                            DockPanel.Dock="Right"
+                            Click="PlayerListLock_Click"
+                            Margin="20" 
+                            Controls:ButtonHelper.PreserveTextCase="True" 
+                            Style="{StaticResource AccentedSquareButtonStyle}" />
+                </DockPanel>
             </StackPanel>
         </StackPanel>
     </Grid>

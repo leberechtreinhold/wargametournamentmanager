@@ -69,6 +69,7 @@ namespace WargameTournamentManager
         public string Date { get; set; }
         public int CurrentRound { get; set; }
         public IList<Player> Players { get; set; }
+        public bool PlayerListLocked { get; set; }
         public IList<Round> Rounds { get; set; }
         public Configuration Config { get; set; }
         public DataTable Ranking { get; set; }
@@ -78,6 +79,7 @@ namespace WargameTournamentManager
             Config = new Configuration();
             Players = new List<Player>();
             Rounds = new List<Round>();
+            PlayerListLocked = false;
         }
 
         public Tournament Clone()
@@ -87,6 +89,7 @@ namespace WargameTournamentManager
             clone.Game = Game;
             clone.Date = Date;
             clone.CurrentRound = CurrentRound;
+            clone.PlayerListLocked = PlayerListLocked;
             foreach(var player in Players)
             {
                 clone.Players.Add(player.Clone());
@@ -113,6 +116,7 @@ namespace WargameTournamentManager
             tournament.CurrentRound = 2;
 
             tournament.Players = new List<Player> { new Player(true), new Player(true), new Player(true), new Player(true) };
+            tournament.PlayerListLocked = true;
 
             tournament.Rounds = new List<Round>();
 
