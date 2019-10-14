@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Data;
 using System.Linq;
 
@@ -62,7 +63,7 @@ namespace WargameTournamentManager
         }
     }
 
-    public class Tournament
+    public class Tournament : INotifyPropertyChanged
     {
         public string Name { get; set; }
         public string Game { get; set; }
@@ -90,19 +91,33 @@ namespace WargameTournamentManager
             clone.Date = Date;
             clone.CurrentRound = CurrentRound;
             clone.PlayerListLocked = PlayerListLocked;
-            foreach(var player in Players)
+            foreach (var player in Players)
             {
                 clone.Players.Add(player.Clone());
             }
-            foreach(var round in Rounds)
+            foreach (var round in Rounds)
             {
                 clone.Rounds.Add(round.Clone());
             }
             clone.Config = Config.Clone();
             clone.CreateRanking();
             clone.UpdateRanking();
+
+            if (clone.Rounds.Count == 0)
+            {
+                for (int i = 0; i < clone.Config.NumberRounds; i++)
+                {
+                    clone.Rounds.Add(new Round(i + 1));
+                }
+            }
             return clone;
         }
+
+        public void OnPropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public static Tournament CreateTestTournament()
         {
@@ -229,7 +244,7 @@ namespace WargameTournamentManager
                 rankedPlayer[2] = player.Faction;
 
                 int i = 3;
-                foreach(var tagScore in scorePerTag)
+                foreach (var tagScore in scorePerTag)
                 {
                     // TODO We should check that the column order is the same
                     // as the one we are adding here, because its not guaranteed
@@ -241,7 +256,7 @@ namespace WargameTournamentManager
                 rankedPlayers.Add(rankedPlayer);
             }
 
-            rankedPlayers.Sort((x, y) => -1*((int)x[1]).CompareTo((int)y[1]));
+            rankedPlayers.Sort((x, y) => -1 * ((int)x[1]).CompareTo((int)y[1]));
             foreach (var playerRow in rankedPlayers)
             {
                 Ranking.Rows.Add(playerRow);
@@ -291,6 +306,21 @@ namespace WargameTournamentManager
         {
             // TODO: Validate there are no rounds running et al
             Players.Add(newPlayer);
+            OnPropertyChanged("Players");
+        }
+
+        public void LockPlayerList()
+        {
+            // TODO: Validations
+            PlayerListLocked = true;
+            OnPropertyChanged("PlayerListLocked");
+        }
+
+        public void UnlockPlayerList()
+        {
+            // TODO: Validations
+            PlayerListLocked = false;
+            OnPropertyChanged("PlayerListLocked");
         }
     }
 
@@ -357,6 +387,12 @@ namespace WargameTournamentManager
         public Round()
         {
             Number = 0;
+            Active = false;
+            Matchups = new List<Matchup>();
+        }
+        public Round(int number)
+        {
+            Number = number;
             Active = false;
             Matchups = new List<Matchup>();
         }
