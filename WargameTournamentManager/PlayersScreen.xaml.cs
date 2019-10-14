@@ -66,7 +66,7 @@ namespace WargameTournamentManager
                 MessageDialogStyle.AffirmativeAndNegative);
             if (option == MessageDialogResult.Affirmative)
             {
-                MainWindow.gMainWindow.currentTournament.PlayerListLocked = true;
+                MainWindow.gMainWindow.currentTournament.LockPlayerList();
                 MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
             }
 
@@ -82,8 +82,7 @@ namespace WargameTournamentManager
                 MessageDialogStyle.AffirmativeAndNegative);
             if (option == MessageDialogResult.Affirmative)
             {
-                MainWindow.gMainWindow.currentTournament.PlayerListLocked = false;
-                MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+                MainWindow.gMainWindow.currentTournament.UnlockPlayerList();
             }
 
         }
@@ -103,11 +102,12 @@ namespace WargameTournamentManager
 
             MainWindow.gMainWindow.currentTournament.AddPlayer(editingPlayer.Clone());
             editingPlayer = new Player();
-            
-            MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
-            OnPropertyChanged("currentTournament");
-            playerListDataGrid.ItemsSource = null;
-            playerListDataGrid.ItemsSource = MainWindow.gMainWindow.currentTournament.Players;
+            OnPropertyChanged("editingPlayer");
+
+            // For some reason, despite AddPlayer being notifiable and raising the change
+            // on players, the datagrid doesnt refresh automatically...
+            playerListDataGrid.Items.Refresh();
+
             // TODO Save
             editPlayerWindow.IsOpen = false;
         }
