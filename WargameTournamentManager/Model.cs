@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -63,6 +64,19 @@ namespace WargameTournamentManager
         }
     }
 
+    internal class PlayerResult
+    {
+        public Player player { get; private set; }
+        public int score { get; private set; }
+        public Dictionary<string, int> scorePerTag { get; private set; }
+
+        public PlayerResult(Player _player, int _score, Dictionary<string, int> _scorePerTag)
+        {
+            player = _player;
+            score = _score;
+            scorePerTag = _scorePerTag;
+        }
+    }
     public class Tournament : INotifyPropertyChanged
     {
         public string Name { get; set; }
@@ -75,12 +89,19 @@ namespace WargameTournamentManager
         public Configuration Config { get; set; }
         public DataTable Ranking { get; set; }
 
+        // From top score to bottom, a cached list of players with
+        // the score, used for the Ranking. Always autocalculated
+        [JsonIgnoreAttribute]
+        private IList<PlayerResult> cachedRankingResults;
+
         public Tournament()
         {
             Config = new Configuration();
             Players = new List<Player>();
             Rounds = new List<Round>();
             PlayerListLocked = false;
+
+            cachedRankingResults = new List<PlayerResult>();
         }
 
         public Tournament Clone()
@@ -227,21 +248,35 @@ namespace WargameTournamentManager
             }
         }
 
+        private void CalculateRanking()
+        {
+            List<PlayerResult> results = new List<PlayerResult>();
+            foreach (var player in Players)
+            {
+                (int score, Dictionary<string, int> scorePerTag) = CalculatePlayerScore(player.Id);
+                results.Add(new PlayerResult(player, score, scorePerTag));
+            }
+            results.Sort((x, y) => -1 * (x.score).CompareTo(y.score));
+            cachedRankingResults = results;
+        }
+
         private void UpdateRanking()
         {
+            CalculateRanking();
+
             Ranking.Rows.Clear();
             var rankedPlayers = new List<object[]>(Players.Count);
             int columns = Ranking.Columns.Count;
-            foreach (var player in Players)
+
+            foreach (var playerResult in cachedRankingResults)
             {
                 var rankedPlayer = new object[columns];
-                (int score, Dictionary<string, int> scorePerTag) = CalculatePlayerScore(player.Id);
-                rankedPlayer[0] = player.Name;
-                rankedPlayer[1] = score;
-                rankedPlayer[2] = player.Faction;
+                rankedPlayer[0] = playerResult.player.Name;
+                rankedPlayer[1] = playerResult.score;
+                rankedPlayer[2] = playerResult.player.Faction;
 
                 int i = 3;
-                foreach (var tagScore in scorePerTag)
+                foreach (var tagScore in playerResult.scorePerTag)
                 {
                     // TODO We should check that the column order is the same
                     // as the one we are adding here, because its not guaranteed
@@ -253,7 +288,6 @@ namespace WargameTournamentManager
                 rankedPlayers.Add(rankedPlayer);
             }
 
-            rankedPlayers.Sort((x, y) => -1 * ((int)x[1]).CompareTo((int)y[1]));
             foreach (var playerRow in rankedPlayers)
             {
                 Ranking.Rows.Add(playerRow);
