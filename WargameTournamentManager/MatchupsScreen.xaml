@@ -11,7 +11,7 @@
     <Grid>
         <TabControl Margin="20" 
                             ItemsSource="{Binding currentTournament.Rounds}"
-                            Controls:TabControlHelper.Underlined="TabItems"
+                            Controls:TabControlHelper.Underlined="TabPanel"
                             TabStripPlacement="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate>
@@ -20,53 +20,61 @@
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
                 <DataTemplate>
-                    <StackPanel>
-                        <Label FontStyle="Italic">
-                            <Label.Content>
-                                <Binding Converter="{StaticResource GetRoundActiveOrNotConverter}" />
-                            </Label.Content>
-                        </Label>
-                        <DataGrid ItemsSource="{Binding Matchups}" 
+                    <DockPanel LastChildFill="False">
+                        <StackPanel DockPanel.Dock="Top">
+                            <Label FontStyle="Italic">
+                                <Label.Content>
+                                    <Binding Converter="{StaticResource GetRoundActiveOrNotConverter}" />
+                                </Label.Content>
+                            </Label>
+                            <DataGrid ItemsSource="{Binding Matchups}" 
                                           Margin="10,20,10,0" 
                                           AutoGenerateColumns="False" 
                                           CanUserAddRows="false" 
                                           Style="{StaticResource AzureDataGrid}">
-                            <DataGrid.Columns>
-                                <DataGridTextColumn Header="Enfrentamiento" IsReadOnly="True">
-                                    <DataGridTextColumn.Binding>
-                                        <MultiBinding Converter="{StaticResource GetMatchupNameConverter}">
-                                            <Binding Path="Player1Id" />
-                                            <Binding Path="Player2Id" />
-                                            <Binding Path="currentTournament">
-                                                <Binding.RelativeSource>
-                                                    <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
-                                                </Binding.RelativeSource>
-                                            </Binding>
-                                        </MultiBinding>
-                                    </DataGridTextColumn.Binding>
-                                </DataGridTextColumn>
-                                <DataGridTextColumn Header="Resultado" IsReadOnly="True">
-                                    <DataGridTextColumn.Binding>
-                                        <MultiBinding Converter="{StaticResource GetMatchupResultConverter}">
-                                            <Binding Mode="OneWay"/>
-                                            <Binding Mode="OneWay" Path="currentTournament">
-                                                <Binding.RelativeSource>
-                                                    <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
-                                                </Binding.RelativeSource>
-                                            </Binding>
-                                        </MultiBinding>
-                                    </DataGridTextColumn.Binding>
-                                </DataGridTextColumn>
-                                <DataGridTemplateColumn>
-                                    <DataGridTemplateColumn.CellTemplate>
-                                        <DataTemplate>
-                                            <Button Click="Button_Click" Content="Detalles" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
-                                        </DataTemplate>
-                                    </DataGridTemplateColumn.CellTemplate>
-                                </DataGridTemplateColumn>
-                            </DataGrid.Columns>
-                        </DataGrid>
-                    </StackPanel>
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Enfrentamiento" IsReadOnly="True">
+                                        <DataGridTextColumn.Binding>
+                                            <MultiBinding Converter="{StaticResource GetMatchupNameConverter}">
+                                                <Binding Path="Player1Id" />
+                                                <Binding Path="Player2Id" />
+                                                <Binding Path="currentTournament">
+                                                    <Binding.RelativeSource>
+                                                        <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
+                                                    </Binding.RelativeSource>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </DataGridTextColumn.Binding>
+                                    </DataGridTextColumn>
+                                    <DataGridTextColumn Header="Resultado" IsReadOnly="True">
+                                        <DataGridTextColumn.Binding>
+                                            <MultiBinding Converter="{StaticResource GetMatchupResultConverter}">
+                                                <Binding Mode="OneWay"/>
+                                                <Binding Mode="OneWay" Path="currentTournament">
+                                                    <Binding.RelativeSource>
+                                                        <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
+                                                    </Binding.RelativeSource>
+                                                </Binding>
+                                            </MultiBinding>
+                                        </DataGridTextColumn.Binding>
+                                    </DataGridTextColumn>
+                                    <DataGridTemplateColumn>
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Click="Button_Click" Content="Detalles" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </StackPanel>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom">
+                            <Button Content="Calcular emparejamientos" 
+                                    Margin="20" 
+                                    Controls:ButtonHelper.PreserveTextCase="True" 
+                                    Style="{StaticResource AccentedSquareButtonStyle}" />
+                        </StackPanel>
+                    </DockPanel>
                 </DataTemplate>
             </TabControl.ContentTemplate>
         </TabControl>

@@ -49,7 +49,6 @@ namespace WargameTournamentManager
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
         public event PropertyChangedEventHandler PropertyChanged;
-
     }
 
     public class TournamentActiveConverter : IValueConverter
