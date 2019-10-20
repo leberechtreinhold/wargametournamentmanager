@@ -344,7 +344,7 @@ namespace WargameTournamentManager
         {
             if (Players.Count % 2 != 0)
                 throw new InvalidOperationException("No se puede bloquear la lista de jugadores con un número impar.");
-            if (Players.Count % 2 == 0)
+            if (Players.Count == 0)
                 throw new InvalidOperationException("No se puede bloquear la lista de jugadores sin tener al menos uno.");
             PlayerListLocked = true;
             OnPropertyChanged("PlayerListLocked");
@@ -367,11 +367,23 @@ namespace WargameTournamentManager
             UpdateRanking();
         }
 
+        // This matches using by id, without regards about repetition or whatever
+        // Testing only
+        public void GenerateMatchupById()
+        {
+            var round = Rounds[CurrentRound];
+            round.Matchups = new List<Matchup>();
+            int n_matchups =  Players.Count / 2;
+            for (int i = 0; i < n_matchups; i+=2)
+            {
+                round.Matchups.Add(new Matchup(round.Number, i, i + 1, Config.Tags));
+            }
+            round.OnPropertyChanged("Matchups");
+        }
     }
 
     // For easily accesible RNG, not threadsafe
     // Only used for testing
-
     public static class Globals
     {
         public static Random random = new Random();
@@ -423,7 +435,7 @@ namespace WargameTournamentManager
         }
     }
 
-    public class Round
+    public class Round : INotifyPropertyChanged
     {
         public int Number { get; set; }
         public bool Active { get; set; }
@@ -442,6 +454,12 @@ namespace WargameTournamentManager
             Matchups = new List<Matchup>();
         }
 
+        public void OnPropertyChanged(string property)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
+        }
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public Round Clone()
         {
             Round clone = new Round();
@@ -458,7 +476,7 @@ namespace WargameTournamentManager
     public class Matchup
     {
         public uint Table { get; set; }
-        public uint Round { get; set; }
+        public int Round { get; set; }
         public Result CurrentResult { get; set; }
 
         public int Player1Id { get; set; }
@@ -466,6 +484,29 @@ namespace WargameTournamentManager
 
         public int Player2Id { get; set; }
         public Dictionary<string, int> Player2Tags { get; set; }
+
+        public Matchup()
+        {
+            Player1Tags = new Dictionary<string, int>();
+            Player2Tags = new Dictionary<string, int>();
+        }
+
+        public Matchup(int round, int player1Id, int player2Id, IList<string> tags)
+        {
+            Round = round;
+            CurrentResult = Result.STILL_PLAYING;
+
+            Player1Id = player1Id;
+            Player2Id = player2Id;
+            Player1Tags = new Dictionary<string, int>();
+            Player2Tags = new Dictionary<string, int>();
+
+            foreach(var tag in tags)
+            {
+                Player1Tags.Add(tag, 0);
+                Player2Tags.Add(tag, 0);
+            }
+        }
 
         public Matchup Clone()
         {

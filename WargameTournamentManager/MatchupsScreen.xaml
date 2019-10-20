@@ -10,9 +10,10 @@
     </UserControl.Resources>
     <Grid>
         <TabControl Margin="20" 
-                            ItemsSource="{Binding currentTournament.Rounds}"
-                            Controls:TabControlHelper.Underlined="TabPanel"
-                            TabStripPlacement="Left">
+                    Name="TabRounds"
+                    ItemsSource="{Binding currentTournament.Rounds}"
+                    Controls:TabControlHelper.Underlined="TabPanel"
+                    TabStripPlacement="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate>
                     <Label Content="{Binding Number}" ContentStringFormat="Ronda {0}"/>
@@ -28,10 +29,11 @@
                                 </Label.Content>
                             </Label>
                             <DataGrid ItemsSource="{Binding Matchups}" 
-                                          Margin="10,20,10,0" 
-                                          AutoGenerateColumns="False" 
-                                          CanUserAddRows="false" 
-                                          Style="{StaticResource AzureDataGrid}">
+                                      Name="MatchupRound"
+                                      Margin="10,20,10,0" 
+                                      AutoGenerateColumns="False" 
+                                      CanUserAddRows="false" 
+                                      Style="{StaticResource AzureDataGrid}">
                                 <DataGrid.Columns>
                                     <DataGridTextColumn Header="Enfrentamiento" IsReadOnly="True">
                                         <DataGridTextColumn.Binding>
@@ -61,7 +63,9 @@
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Button Click="Button_Click" Content="Detalles" Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
+                                                <Button Click="OnDetailsMatchupClick" 
+                                                        Content="Detalles" 
+                                                        Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -70,6 +74,7 @@
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom">
                             <Button Content="Calcular emparejamientos" 
+                                    Click="OnGeneratePairingsClick"
                                     Margin="20" 
                                     Controls:ButtonHelper.PreserveTextCase="True" 
                                     Style="{StaticResource AccentedSquareButtonStyle}" />

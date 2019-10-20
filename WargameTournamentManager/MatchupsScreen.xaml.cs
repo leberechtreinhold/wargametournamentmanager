@@ -26,9 +26,14 @@ namespace WargameTournamentManager
             InitializeComponent();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
+        private void OnDetailsMatchupClick(object sender, RoutedEventArgs e)
         {
 
+        }
+
+        private void OnGeneratePairingsClick(object sender, RoutedEventArgs e)
+        {
+            MainWindow.gMainWindow.currentTournament.GenerateMatchupById();
         }
     }
 
