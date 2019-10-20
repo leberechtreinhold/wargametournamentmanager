@@ -58,14 +58,16 @@ namespace WargameTournamentManager
             bool? saved = savefile.ShowDialog();
             if (saved == true)
             {
-                string json = JsonConvert.SerializeObject(creationTournament);
+                MainWindow.gMainWindow.currentTournament = creationTournament.Clone();
+                creationTournament = new Tournament();
+
+                string json = JsonConvert.SerializeObject(MainWindow.gMainWindow.currentTournament);
                 using (StreamWriter sw = new StreamWriter(savefile.FileName))
                 {
                     sw.Write(json);
                 }
                 createTournamentWindow.IsOpen = false;
 
-                MainWindow.gMainWindow.currentTournament = creationTournament.Clone();
                 creationTournament = new Tournament();
                 CreateNewTournamentButton.IsEnabled = false;
                 LoadTournamentButton.IsEnabled = false;

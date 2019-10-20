@@ -105,10 +105,7 @@ namespace WargameTournamentManager
 
             if (clone.Rounds.Count == 0)
             {
-                for (int i = 0; i < clone.Config.NumberRounds; i++)
-                {
-                    clone.Rounds.Add(new Round(i + 1));
-                }
+                clone.ResetRounds();
             }
             return clone;
         }
@@ -325,6 +322,17 @@ namespace WargameTournamentManager
             PlayerListLocked = false;
             OnPropertyChanged("PlayerListLocked");
         }
+
+        public void ResetRounds()
+        {
+            Rounds = new List<Round>();
+            for (int i = 0; i < Config.NumberRounds; i++)
+            {
+                Rounds.Add(new Round(i + 1));
+            }
+            UpdateRanking();
+        }
+
     }
 
     // For easily accesible RNG, not threadsafe
