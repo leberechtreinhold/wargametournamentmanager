@@ -77,6 +77,9 @@ namespace WargameTournamentManager
         private void LoadTournament_Click(object sender, RoutedEventArgs e)
         {
             OpenFileDialog openFileDialog = new OpenFileDialog();
+            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WargameTournamentManager");
+            Directory.CreateDirectory(folder);
+            openFileDialog.InitialDirectory = folder;
             openFileDialog.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
 
             bool? loaded = openFileDialog.ShowDialog();
