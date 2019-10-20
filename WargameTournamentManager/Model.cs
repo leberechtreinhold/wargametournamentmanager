@@ -311,7 +311,10 @@ namespace WargameTournamentManager
 
         public void LockPlayerList()
         {
-            // TODO: Validations
+            if (Players.Count % 2 != 0)
+                throw new InvalidOperationException("No se puede bloquear la lista de jugadores con un número impar.");
+            if (Players.Count % 2 == 0)
+                throw new InvalidOperationException("No se puede bloquear la lista de jugadores sin tener al menos uno.");
             PlayerListLocked = true;
             OnPropertyChanged("PlayerListLocked");
         }

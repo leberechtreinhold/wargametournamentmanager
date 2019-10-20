@@ -66,8 +66,15 @@ namespace WargameTournamentManager
                 MessageDialogStyle.AffirmativeAndNegative);
             if (option == MessageDialogResult.Affirmative)
             {
-                MainWindow.gMainWindow.currentTournament.LockPlayerList();
-                MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+                try
+                {
+                    MainWindow.gMainWindow.currentTournament.LockPlayerList();
+                    MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
+                }
+                catch (InvalidOperationException ex)
+                {
+                    await MainWindow.gMainWindow.ShowMessageAsync("Error", ex.Message);
+                }
             }
 
         }
