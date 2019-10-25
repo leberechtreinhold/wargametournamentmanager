@@ -24,16 +24,26 @@ namespace WargameTournamentManager
         public int PointsPerLoss { get; set; }
         public int PointsPerDraw { get; set; }
         public IList<string> Tags { get; set; }
+        private string _tagsStr;
+        public string TagsStr
+        {
+            get { return _tagsStr; }
+            set
+            {
+                _tagsStr = value;
+                UpdateTags();
+            }
+        }
 
         public Configuration()
         {
-            Tags = new List<string>();
-
-            NumberRounds = 3;
+            NumberRounds = 5;
 
             PointsPerWin = 3;
-            PointsPerDraw = 2;
+            PointsPerDraw = 0;
             PointsPerLoss = 1;
+
+            TagsStr = "Campamentos, Generales";
         }
 
         public Configuration Clone()
@@ -43,10 +53,27 @@ namespace WargameTournamentManager
             clone.PointsPerWin = PointsPerWin;
             clone.PointsPerDraw = PointsPerDraw;
             clone.PointsPerLoss = PointsPerLoss;
-
-            clone.Tags = clone.Tags.Concat(Tags).ToList();
+            clone.TagsStr = TagsStr;
 
             return clone;
+        }
+
+        private void UpdateTags()
+        {
+            if (Tags == null)
+            {
+                Tags = new List<string>();
+            }
+            else
+            {
+                Tags.Clear();
+            }
+
+            var tags = TagsStr.Split(',');
+            foreach (var tag in tags)
+            {
+                Tags.Add(tag.Trim());
+            }
         }
 
         public static Configuration CreateTestConfiguration()
