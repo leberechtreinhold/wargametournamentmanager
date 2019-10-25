@@ -153,7 +153,6 @@ namespace WargameTournamentManager
                 clone.Rounds.Add(round.Clone());
             }
             clone.Config = Config.Clone();
-            clone.CreateRanking();
             clone.UpdateRanking();
 
             if (clone.Rounds.Count == 0)
@@ -184,8 +183,6 @@ namespace WargameTournamentManager
             tournament.PlayerListLocked = true;
 
             tournament.Rounds = new List<Round>();
-
-            tournament.CreateRanking();
 
             // Round has finished, player0 has won against player 1, and player2 and player3 has a draw
             var round1 = new Round();
@@ -268,7 +265,7 @@ namespace WargameTournamentManager
             return tournament;
         }
 
-        private void CreateRanking()
+        private void CreateRankingColumns()
         {
             Ranking = new DataTable();
             Ranking.Columns.Add("Nombre");
@@ -296,7 +293,7 @@ namespace WargameTournamentManager
         {
             CalculateRanking();
 
-            Ranking.Rows.Clear();
+            CreateRankingColumns();
             var rankedPlayers = new List<object[]>(Players.Count);
             int columns = Ranking.Columns.Count;
 
@@ -324,6 +321,7 @@ namespace WargameTournamentManager
             {
                 Ranking.Rows.Add(playerRow);
             }
+            OnPropertyChanged("Ranking");
         }
 
         private (int, Dictionary<string, int>) CalculatePlayerScore(int playerId)
@@ -371,6 +369,7 @@ namespace WargameTournamentManager
             Players.Add(newPlayer);
             OnPropertyChanged("Players");
 
+            UpdateRanking();
             Save();
         }
 
