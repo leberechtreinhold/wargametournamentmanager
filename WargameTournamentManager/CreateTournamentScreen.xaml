@@ -65,7 +65,7 @@
                 <DatePicker Grid.Row="2"
                          Grid.Column="1"
                          Margin="5"
-                         Text="{Binding Date}"
+                         Text="{Binding Date, Mode=TwoWay}"
                          Width="200"
                          Controls:TextBoxHelper.Watermark="31/12/2099" />
 
