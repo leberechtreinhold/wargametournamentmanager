@@ -41,6 +41,8 @@ namespace WargameTournamentManager
 
         private void SaveMatchup_Click(object sender, RoutedEventArgs e)
         {
+            EditingMatchup.UpdateMatchupWithView();
+            editMatchupWindow.IsOpen = false;
         }
 
         private void GeneratePairings_Click(object sender, RoutedEventArgs e)
@@ -58,6 +60,8 @@ namespace WargameTournamentManager
         public Matchup SourceMatchup { get; set; }
         public Tournament SourceTournament { get; set; }
         public DataTable Tags { get; set; }
+        public int IndexCurrentResult { get; set; }
+
         public List<string> Results
         {
             get
@@ -69,13 +73,6 @@ namespace WargameTournamentManager
                     string.Format("Victoria de {0}", Player2Name),
                     "Empate"
                 };
-            }
-        }
-        public int IndexCurrentResult
-        {
-            get
-            {
-                return (int)SourceMatchup.CurrentResult;
             }
         }
         public string MatchupName
@@ -106,6 +103,8 @@ namespace WargameTournamentManager
         {
             SourceMatchup = _sourceMatchup;
             SourceTournament = _sourceTournament;
+
+            IndexCurrentResult = (int)SourceMatchup.CurrentResult;
             Tags = new DataTable();
             Tags.Columns.Add("Tag");
             Tags.Columns.Add(Player1Name);
@@ -114,6 +113,24 @@ namespace WargameTournamentManager
             {
                 Tags.Rows.Add(tagPair.Key, tagPair.Value, SourceMatchup.Player2Tags[tagPair.Key]);
             }
+        }
+
+        public void UpdateMatchupWithView()
+        {
+            SourceMatchup.CurrentResult = (Result)IndexCurrentResult;
+            // TODO Update tags
+            SourceTournament.Save();
+
+            // Band aid because there should be no need to execute this 
+            // to make the datagrid refresh
+            var round = SourceTournament.Rounds[SourceMatchup.Round - 1];
+            var updated_matchups = new List<Matchup>();
+            foreach (var matchup in round.Matchups)
+            {
+                updated_matchups.Add(matchup);
+            }
+            round.Matchups = updated_matchups;
+            round.OnPropertyChanged("Matchups");
         }
     }
 
