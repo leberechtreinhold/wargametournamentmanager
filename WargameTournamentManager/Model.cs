@@ -373,8 +373,7 @@ namespace WargameTournamentManager
         {
             var round = Rounds[CurrentRound];
             round.Matchups = new List<Matchup>();
-            int n_matchups =  Players.Count / 2;
-            for (int i = 0; i < n_matchups; i+=2)
+            for (int i = 0; i < Players.Count; i+=2)
             {
                 round.Matchups.Add(new Matchup(round.Number, i, i + 1, Config.Tags));
             }
