@@ -5,7 +5,6 @@ using System;
 using System.IO;
 using System.Windows;
 using System.Windows.Controls;
-using Path = System.IO.Path;
 
 namespace WargameTournamentManager
 {
