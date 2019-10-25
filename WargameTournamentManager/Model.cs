@@ -370,6 +370,8 @@ namespace WargameTournamentManager
             // TODO: Validate there are no rounds running et al
             Players.Add(newPlayer);
             OnPropertyChanged("Players");
+
+            Save();
         }
 
         public void LockPlayerList()
@@ -378,15 +380,24 @@ namespace WargameTournamentManager
                 throw new InvalidOperationException("No se puede bloquear la lista de jugadores con un número impar.");
             if (Players.Count == 0)
                 throw new InvalidOperationException("No se puede bloquear la lista de jugadores sin tener al menos uno.");
+
+            SaveWithBackup("prelock");
+
             PlayerListLocked = true;
             OnPropertyChanged("PlayerListLocked");
+
+            Save();
         }
 
         public void UnlockPlayerList()
         {
             // TODO: Validations
+            SaveWithBackup("preunlock");
+
             PlayerListLocked = false;
             OnPropertyChanged("PlayerListLocked");
+
+            Save();
         }
 
         public void ResetRounds()
