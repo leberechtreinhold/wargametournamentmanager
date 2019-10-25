@@ -345,7 +345,7 @@ namespace WargameTournamentManager
                             else
                                 score += Config.PointsPerLoss;
 
-                            matchup.UpdateTags(playerId, scorePerTag);
+                            matchup.UpdateTagTotalCalculation(playerId, scorePerTag);
                         }
                     }
                 }
@@ -652,7 +652,7 @@ namespace WargameTournamentManager
                  || CurrentResult == Result.PLAYER1_LOSS && playerId == Player2Id);
         }
 
-        public void UpdateTags(int playerId, Dictionary<string, int> scorePerTag)
+        public void UpdateTagTotalCalculation(int playerId, Dictionary<string, int> scorePerTag)
         {
             if (CurrentResult == Result.STILL_PLAYING) return;
             if (playerId != Player1Id && playerId != Player2Id) throw new ArgumentException();
