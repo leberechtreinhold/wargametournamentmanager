@@ -104,7 +104,7 @@ namespace WargameTournamentManager
             Players = new List<Player>();
             Rounds = new List<Round>();
             PlayerListLocked = false;
-            FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WargameTournamentManager");
+            FilePath = GetDefaultFilePath();
             FileName = "tournament.tour";
             cachedRankingResults = new List<PlayerResult>();
         }
@@ -383,6 +383,31 @@ namespace WargameTournamentManager
                 round.Matchups.Add(new Matchup(round.Number, i, i + 1, Config.Tags));
             }
             round.OnPropertyChanged("Matchups");
+        }
+
+        private static string GetDefaultFilePath()
+        {
+            return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WargameTournamentManager");
+        }
+
+        // Asks the user for a file to load the tournament file. The user may cancel
+        // this operation because there is a dialog, therefore this may return null
+        public static Tournament LoadAskingForFile()
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            string folder = GetDefaultFilePath();
+            Directory.CreateDirectory(folder);
+            openFileDialog.InitialDirectory = folder;
+            openFileDialog.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
+
+            bool? loaded = openFileDialog.ShowDialog();
+
+            if (loaded == true)
+            {
+                string json = File.ReadAllText(openFileDialog.FileName);
+                return JsonConvert.DeserializeObject<Tournament>(json);
+            }
+            return null;
         }
 
         private void SaveInternal(string directory, string name)

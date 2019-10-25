@@ -62,18 +62,10 @@ namespace WargameTournamentManager
 
         private void LoadTournament_Click(object sender, RoutedEventArgs e)
         {
-            OpenFileDialog openFileDialog = new OpenFileDialog();
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WargameTournamentManager");
-            Directory.CreateDirectory(folder);
-            openFileDialog.InitialDirectory = folder;
-            openFileDialog.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
-
-            bool? loaded = openFileDialog.ShowDialog();
-
-            if (loaded == true)
+            var tournament = Tournament.LoadAskingForFile();
+            if (tournament != null)
             {
-                string json = File.ReadAllText(openFileDialog.FileName);
-                MainWindow.gMainWindow.currentTournament = JsonConvert.DeserializeObject<Tournament>(json);
+                MainWindow.gMainWindow.currentTournament = tournament;
 
                 CreateNewTournamentButton.IsEnabled = false;
                 LoadTournamentButton.IsEnabled = false;
