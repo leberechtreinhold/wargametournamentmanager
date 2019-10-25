@@ -46,29 +46,13 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "El número de rondas es inválido, debe estar entre 1 y 10.");
                 return;
             }
-            SaveFileDialog savefile = new SaveFileDialog();
-            string folder = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WargameTournamentManager");
-            Directory.CreateDirectory(folder);
 
-            // Tournament file
-            savefile.FileName = "tournament" + creationTournament.Name + ".tour";
-            savefile.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
-            savefile.InitialDirectory = folder;
-
-            bool? saved = savefile.ShowDialog();
-            if (saved == true)
+            var clone = creationTournament.Clone();
+            if (clone.SaveAskingForName())
             {
-                MainWindow.gMainWindow.currentTournament = creationTournament.Clone();
+                MainWindow.gMainWindow.currentTournament = clone;
                 creationTournament = new Tournament();
-
-                string json = JsonConvert.SerializeObject(MainWindow.gMainWindow.currentTournament);
-                using (StreamWriter sw = new StreamWriter(savefile.FileName))
-                {
-                    sw.Write(json);
-                }
                 createTournamentWindow.IsOpen = false;
-
-                creationTournament = new Tournament();
                 CreateNewTournamentButton.IsEnabled = false;
                 LoadTournamentButton.IsEnabled = false;
                 MainWindow.gMainWindow.MainTab.SelectedIndex += 1;

@@ -1,8 +1,10 @@
-﻿using Newtonsoft.Json;
+﻿using Microsoft.Win32;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.IO;
 using System.Linq;
 
 namespace WargameTournamentManager
@@ -88,6 +90,8 @@ namespace WargameTournamentManager
         public IList<Round> Rounds { get; set; }
         public Configuration Config { get; set; }
         public DataTable Ranking { get; set; }
+        public string FilePath { get; set; }
+        public string FileName { get; set; }
 
         // From top score to bottom, a cached list of players with
         // the score, used for the Ranking. Always autocalculated
@@ -100,7 +104,8 @@ namespace WargameTournamentManager
             Players = new List<Player>();
             Rounds = new List<Round>();
             PlayerListLocked = false;
-
+            FilePath = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), "WargameTournamentManager");
+            FileName = "tournament.tour";
             cachedRankingResults = new List<PlayerResult>();
         }
 
@@ -373,11 +378,62 @@ namespace WargameTournamentManager
         {
             var round = Rounds[CurrentRound];
             round.Matchups = new List<Matchup>();
-            for (int i = 0; i < Players.Count; i+=2)
+            for (int i = 0; i < Players.Count; i += 2)
             {
                 round.Matchups.Add(new Matchup(round.Number, i, i + 1, Config.Tags));
             }
             round.OnPropertyChanged("Matchups");
+        }
+
+        private void SaveInternal(string directory, string name)
+        {
+            Directory.CreateDirectory(directory);
+
+            string json = JsonConvert.SerializeObject(this);
+            using (StreamWriter sw = new StreamWriter(Path.Combine(directory, name)))
+            {
+                sw.Write(json);
+            }
+        }
+
+        public void Save()
+        {
+            SaveInternal(FilePath, FileName);
+        }
+
+        public void SaveWithBackup(string backupInfo)
+        {
+            var oldFilename = Path.GetFileNameWithoutExtension(FileName);
+            var oldExtension = Path.GetExtension(FileName);
+
+            string name = string.Format("{0}_{1}_{2}{3}",
+                oldFilename, backupInfo, DateTime.Now.ToString("yyyy_MM_dd_HH_mm_ss"), oldExtension);
+            SaveInternal(FilePath, name);
+            Save();
+        }
+
+        // In this case the user chooses a name from a dialog. They may choose to cancel
+        // the operation by closing the dialog, and in that case the method returns false
+        public bool SaveAskingForName()
+        {
+            Directory.CreateDirectory(FilePath);
+            SaveFileDialog savefile = new SaveFileDialog();
+
+            // Tournament file
+            savefile.FileName = "tournament" + Name + ".tour";
+            savefile.Filter = "Tournament files (*.tour)|*.tour|All files (*.*)|*.*";
+            savefile.InitialDirectory = FilePath;
+
+            bool? saved = savefile.ShowDialog();
+            if (saved != true)
+            {
+                return false;
+            }
+
+            FilePath = Path.GetDirectoryName(savefile.FileName);
+            FileName = Path.GetFileName(savefile.FileName);
+            Save();
+            return true;
         }
     }
 
@@ -500,7 +556,7 @@ namespace WargameTournamentManager
             Player1Tags = new Dictionary<string, int>();
             Player2Tags = new Dictionary<string, int>();
 
-            foreach(var tag in tags)
+            foreach (var tag in tags)
             {
                 Player1Tags.Add(tag, 0);
                 Player2Tags.Add(tag, 0);
