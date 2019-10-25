@@ -29,11 +29,13 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
+                
                 <Label Grid.Row="0"
                        Grid.Column="0"
                        Margin="5"
@@ -44,6 +46,7 @@
                          Text="{Binding Name}"
                          Width="200"
                          Controls:TextBoxHelper.Watermark="Nombre del torneo" />
+                
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        Margin="5"
@@ -54,44 +57,56 @@
                          Text="{Binding Game}"
                          Width="200"
                          Controls:TextBoxHelper.Watermark="Nombre del juego" />
+
                 <Label Grid.Row="2"
                        Grid.Column="0"
                        Margin="5"
+                       Content="Fecha" />
+                <DatePicker Grid.Row="2"
+                         Grid.Column="1"
+                         Margin="5"
+                         Text="{Binding Date}"
+                         Width="200"
+                         Controls:TextBoxHelper.Watermark="31/12/2099" />
+
+                <Label Grid.Row="3"
+                       Grid.Column="0"
+                       Margin="5"
                        Content="Número de rondas" />
-                <Controls:NumericUpDown Grid.Row="2"
+                <Controls:NumericUpDown Grid.Row="3"
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="10"
                                         Width="200"
                                         Margin="5"
                                         Value="{Binding Config.NumberRounds}" />
-                <Label Grid.Row="3"
-                       Grid.Column="0"
-                       Margin="5"
-                       Content="Puntos por victoria" />
-                <Controls:NumericUpDown Grid.Row="3"
-                                        Grid.Column="1"
-                                        Minimum="0"
-                                        Maximum="20000"
-                                        Width="200"
-                                        Margin="5"
-                                        Value="{Binding Config.PointsPerWin}" />
                 <Label Grid.Row="4"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Puntos por empate" />
+                       Content="Puntos por victoria" />
                 <Controls:NumericUpDown Grid.Row="4"
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="20000"
                                         Width="200"
                                         Margin="5"
-                                        Value="{Binding Config.PointsPerDraw}" />
+                                        Value="{Binding Config.PointsPerWin}" />
                 <Label Grid.Row="5"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Puntos por derrota" />
+                       Content="Puntos por empate" />
                 <Controls:NumericUpDown Grid.Row="5"
+                                        Grid.Column="1"
+                                        Minimum="0"
+                                        Maximum="20000"
+                                        Width="200"
+                                        Margin="5"
+                                        Value="{Binding Config.PointsPerDraw}" />
+                <Label Grid.Row="6"
+                       Grid.Column="0"
+                       Margin="5"
+                       Content="Puntos por derrota" />
+                <Controls:NumericUpDown Grid.Row="6"
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="20000"
@@ -99,17 +114,17 @@
                                         Margin="5"
                                         Value="{Binding Config.PointsPerLoss}" />
 
-                <Label Grid.Row="6"
+                <Label Grid.Row="7"
                        Grid.Column="0"
                        Margin="5"
                        Content="Tags" />
-                <TextBox Grid.Row="6"
+                <TextBox Grid.Row="7"
                          Grid.Column="1"
                          Margin="5"
                          Text="{Binding Config.TagsStr}"
                          Width="200" />
                 
-                <Button Grid.Row="7"
+                <Button Grid.Row="8"
                         Grid.Column="1"
                         Margin="20"
                         Content="Save"
