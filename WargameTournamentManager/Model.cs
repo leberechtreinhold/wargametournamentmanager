@@ -106,6 +106,7 @@ namespace WargameTournamentManager
             scorePerTag = _scorePerTag;
         }
     }
+
     public class Tournament : INotifyPropertyChanged
     {
         public string Name { get; set; }
@@ -179,7 +180,7 @@ namespace WargameTournamentManager
             tournament.Date = "Oct 10, 2017";
             tournament.CurrentRound = 2;
 
-            tournament.Players = new List<Player> { new Player(true), new Player(true), new Player(true), new Player(true) };
+            tournament.Players = new List<Player> { new Player(0, true), new Player(1, true), new Player(2, true), new Player(3, true) };
             tournament.PlayerListLocked = true;
 
             tournament.Rounds = new List<Round>();
@@ -289,7 +290,7 @@ namespace WargameTournamentManager
             cachedRankingResults = results;
         }
 
-        private void UpdateRanking()
+        public void UpdateRanking()
         {
             CalculateRanking();
 
@@ -366,6 +367,7 @@ namespace WargameTournamentManager
         public void AddPlayer(Player newPlayer)
         {
             // TODO: Validate there are no rounds running et al
+            newPlayer.Id = Players.Count;
             Players.Add(newPlayer);
             OnPropertyChanged("Players");
 
@@ -509,7 +511,6 @@ namespace WargameTournamentManager
 
     public class Player
     {
-        private static int CurrentId = 0;
         public int Id { get; set; }
         public string Name { get; set; }
         public string City { get; set; }
@@ -518,10 +519,9 @@ namespace WargameTournamentManager
         public string Faction { get; set; }
         public bool Paid { get; set; }
 
-        public Player(bool autogenerate = false)
+        public Player(int id = 0, bool autogenerate = false)
         {
-            Id = CurrentId;
-            CurrentId++;
+            Id = id;
             if (autogenerate) Name = GetRandomName();
         }
 

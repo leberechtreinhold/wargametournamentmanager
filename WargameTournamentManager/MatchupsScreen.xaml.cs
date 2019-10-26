@@ -118,6 +118,7 @@ namespace WargameTournamentManager
         public void UpdateMatchupWithView()
         {
             SourceMatchup.CurrentResult = (Result)IndexCurrentResult;
+            SourceTournament.UpdateRanking();
             // TODO Update tags
             SourceTournament.Save();
 
