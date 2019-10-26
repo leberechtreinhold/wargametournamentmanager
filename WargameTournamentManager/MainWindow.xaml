@@ -32,7 +32,7 @@
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <StackPanel Margin="20" DataContext="{Binding currentTournament}">
                     <StackPanel Orientation="Horizontal" >
-                        <Label Content="Name"/>
+                        <Label Content="Torneo"/>
                         <TextBox Text="{Binding Name}" IsEnabled="False" />
                     </StackPanel>
                     <StackPanel>
