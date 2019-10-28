@@ -183,10 +183,7 @@ namespace WargameTournamentManager
     {
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
-            var round = value as Round;
-            if (round == null) return null;
-
-            if (round.Active) return "Ronda en curso";
+            if ((bool)value) return "Ronda en curso";
             else return "NOTA: Ronda no activa, no se pueden editar los resultados de los enfrentamientos ni generar enfrentamientos.";
         }
 

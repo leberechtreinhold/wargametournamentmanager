@@ -64,10 +64,8 @@
                 <DataTemplate>
                     <DockPanel LastChildFill="False">
                         <StackPanel DockPanel.Dock="Top">
-                            <Label FontStyle="Italic">
-                                <Label.Content>
-                                    <Binding Converter="{StaticResource GetRoundActiveOrNotConverter}" />
-                                </Label.Content>
+                            <Label FontStyle="Italic"
+                                   Content="{Binding Active, Converter={StaticResource GetRoundActiveOrNotConverter}}">
                             </Label>
                             <DataGrid ItemsSource="{Binding Matchups}"
                                       x:Name="MatchupRoundGrid"

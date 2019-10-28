@@ -385,6 +385,14 @@ namespace WargameTournamentManager
             SaveWithBackup("prelock");
 
             PlayerListLocked = true;
+            Rounds.ToList().ForEach((round) =>
+            {
+                round.Active = false;
+                round.OnPropertyChanged("Active");
+            });
+            Rounds.First().Active = true;
+            Rounds.First().OnPropertyChanged("Active");
+
             OnPropertyChanged("PlayerListLocked");
 
             Save();
@@ -396,6 +404,11 @@ namespace WargameTournamentManager
             SaveWithBackup("preunlock");
 
             PlayerListLocked = false;
+            Rounds.ToList().ForEach((round) =>
+            {
+                round.Active = false;
+                round.OnPropertyChanged("Active");
+            });
             OnPropertyChanged("PlayerListLocked");
 
             Save();
