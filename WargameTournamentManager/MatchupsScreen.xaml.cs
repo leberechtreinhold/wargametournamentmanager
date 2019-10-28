@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MahApps.Metro.Controls.Dialogs;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
@@ -47,6 +48,11 @@ namespace WargameTournamentManager
 
         private void GeneratePairings_Click(object sender, RoutedEventArgs e)
         {
+            if (!MainWindow.gMainWindow.currentTournament.PlayerListLocked)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden generar enfrentamientos para una ronda sin que la lista de jugadores esté cerrada.");
+                return;
+            }
             MainWindow.gMainWindow.currentTournament.GenerateMatchupById();
         }
     }

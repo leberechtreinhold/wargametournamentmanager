@@ -5,27 +5,28 @@
              xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
              xmlns:local="clr-namespace:WargameTournamentManager">
     <UserControl.Resources>
-        <local:GetMatchupNameConverter x:Key="GetMatchupNameConverter"/>
-        <local:GetMatchupResultConverter x:Key="GetMatchupResultConverter"/>
-        <local:GetRoundActiveOrNotConverter x:Key="GetRoundActiveOrNotConverter"/>
+        <local:GetMatchupNameConverter x:Key="GetMatchupNameConverter" />
+        <local:GetMatchupResultConverter x:Key="GetMatchupResultConverter" />
+        <local:GetRoundActiveOrNotConverter x:Key="GetRoundActiveOrNotConverter" />
+        <local:PlayerListLockedConverter x:Key="PlayerListLockedConverter" />
     </UserControl.Resources>
     <Grid>
-        <simpleChildWindow:ChildWindow 
-                        x:Name="editMatchupWindow"
-                        Title="Editar enfrentamiento"
-                        Padding="20"
-                        ShowCloseButton="True"
-                        DataContext="{Binding EditingMatchup}">
+        <simpleChildWindow:ChildWindow x:Name="editMatchupWindow"
+                                       Title="Editar enfrentamiento"
+                                       Padding="20"
+                                       ShowCloseButton="True"
+                                       DataContext="{Binding EditingMatchup}">
 
             <simpleChildWindow:ChildWindow.OverlayBrush>
-                <SolidColorBrush Opacity="0" Color="{StaticResource Gray2}" />
+                <SolidColorBrush Opacity="0"
+                                 Color="{StaticResource Gray2}" />
             </simpleChildWindow:ChildWindow.OverlayBrush>
             <StackPanel>
-                <Label Content="{Binding MatchupName, Mode=OneWay}" 
+                <Label Content="{Binding MatchupName, Mode=OneWay}"
                        FontSize="22"
                        HorizontalAlignment="Center"
-                       Margin="20"/>
-                <StackPanel Orientation="Horizontal" 
+                       Margin="20" />
+                <StackPanel Orientation="Horizontal"
                             Margin="10">
                     <Label Content="Resultado:" />
                     <ComboBox Width="200"
@@ -35,27 +36,28 @@
                 </StackPanel>
                 <DataGrid ItemsSource="{Binding Tags}"
                           Margin="10"
-                          AutoGenerateColumns="True" 
-                          CanUserAddRows="false" 
+                          AutoGenerateColumns="True"
+                          CanUserAddRows="false"
                           Style="{StaticResource AzureDataGrid}">
                 </DataGrid>
-                <Button Content="Guardar" 
-                        Margin="20" 
+                <Button Content="Guardar"
+                        Margin="20"
                         Click="SaveMatchup_Click"
                         HorizontalAlignment="Right"
-                        Controls:ButtonHelper.PreserveTextCase="True" 
+                        Controls:ButtonHelper.PreserveTextCase="True"
                         Style="{StaticResource AccentedSquareButtonStyle}">
                 </Button>
             </StackPanel>
         </simpleChildWindow:ChildWindow>
-        <TabControl Margin="20" 
+        <TabControl Margin="20"
                     Name="TabRounds"
                     ItemsSource="{Binding currentTournament.Rounds}"
                     Controls:TabControlHelper.Underlined="TabPanel"
                     TabStripPlacement="Left">
             <TabControl.ItemTemplate>
                 <DataTemplate>
-                    <Label Content="{Binding Number}" ContentStringFormat="Ronda {0}"/>
+                    <Label Content="{Binding Number}"
+                           ContentStringFormat="Ronda {0}" />
                 </DataTemplate>
             </TabControl.ItemTemplate>
             <TabControl.ContentTemplate>
@@ -67,33 +69,38 @@
                                     <Binding Converter="{StaticResource GetRoundActiveOrNotConverter}" />
                                 </Label.Content>
                             </Label>
-                            <DataGrid ItemsSource="{Binding Matchups}" 
+                            <DataGrid ItemsSource="{Binding Matchups}"
                                       x:Name="MatchupRoundGrid"
-                                      Margin="10,20,10,0" 
-                                      AutoGenerateColumns="False" 
-                                      CanUserAddRows="false" 
+                                      Margin="10,20,10,0"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="false"
                                       Style="{StaticResource AzureDataGrid}">
                                 <DataGrid.Columns>
-                                    <DataGridTextColumn Header="Enfrentamiento" IsReadOnly="True">
+                                    <DataGridTextColumn Header="Enfrentamiento"
+                                                        IsReadOnly="True">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource GetMatchupNameConverter}">
                                                 <Binding Path="Player1Id" />
                                                 <Binding Path="Player2Id" />
                                                 <Binding Path="currentTournament">
                                                     <Binding.RelativeSource>
-                                                        <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
+                                                        <RelativeSource Mode="FindAncestor"
+                                                                        AncestorType="{x:Type Window}" />
                                                     </Binding.RelativeSource>
                                                 </Binding>
                                             </MultiBinding>
                                         </DataGridTextColumn.Binding>
                                     </DataGridTextColumn>
-                                    <DataGridTextColumn Header="Resultado" IsReadOnly="True">
+                                    <DataGridTextColumn Header="Resultado"
+                                                        IsReadOnly="True">
                                         <DataGridTextColumn.Binding>
                                             <MultiBinding Converter="{StaticResource GetMatchupResultConverter}">
-                                                <Binding Mode="OneWay"/>
-                                                <Binding Mode="OneWay" Path="currentTournament">
+                                                <Binding Mode="OneWay" />
+                                                <Binding Mode="OneWay"
+                                                         Path="currentTournament">
                                                     <Binding.RelativeSource>
-                                                        <RelativeSource Mode="FindAncestor" AncestorType="{x:Type Window}" />
+                                                        <RelativeSource Mode="FindAncestor"
+                                                                        AncestorType="{x:Type Window}" />
                                                     </Binding.RelativeSource>
                                                 </Binding>
                                             </MultiBinding>
@@ -102,20 +109,27 @@
                                     <DataGridTemplateColumn>
                                         <DataGridTemplateColumn.CellTemplate>
                                             <DataTemplate>
-                                                <Button Click="EditMatchup_Click" 
-                                                        Content="Editar enfrentamiento" 
-                                                        Controls:ButtonHelper.PreserveTextCase="True" Style="{StaticResource AccentedSquareButtonStyle}" />
+                                                <Button Click="EditMatchup_Click"
+                                                        Content="Editar enfrentamiento"
+                                                        Controls:ButtonHelper.PreserveTextCase="True"
+                                                        Style="{StaticResource AccentedSquareButtonStyle}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
                                 </DataGrid.Columns>
                             </DataGrid>
                         </StackPanel>
-                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" DockPanel.Dock="Bottom">
-                            <Button Content="Calcular emparejamientos" 
+                        <StackPanel Orientation="Horizontal"
+                                    HorizontalAlignment="Right"
+                                    DockPanel.Dock="Bottom">
+                            <Button Content="Calcular emparejamientos"
                                     Click="GeneratePairings_Click"
-                                    Margin="20" 
-                                    Controls:ButtonHelper.PreserveTextCase="True" 
+                                    Margin="20"
+                                    Controls:ButtonHelper.PreserveTextCase="True"
+                                    IsEnabled="{Binding 
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, 
+                                        Path=DataContext.currentTournament.PlayerListLocked, 
+                                        Converter={StaticResource PlayerListLockedConverter}}"
                                     Style="{StaticResource AccentedSquareButtonStyle}" />
                         </StackPanel>
                     </DockPanel>
