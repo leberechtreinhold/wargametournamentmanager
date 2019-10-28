@@ -53,6 +53,12 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden generar enfrentamientos para una ronda sin que la lista de jugadores esté cerrada.");
                 return;
             }
+            var selectedRound = ((Button)sender).DataContext as Round;
+            if (!selectedRound.Active)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden generar enfrentamientos para una ronda que no está activa.");
+                return;
+            }
             MainWindow.gMainWindow.currentTournament.GenerateMatchupById();
         }
     }
@@ -181,7 +187,7 @@ namespace WargameTournamentManager
             if (round == null) return null;
 
             if (round.Active) return "Ronda en curso";
-            else return "NOTA: Ronda no activa, no se pueden editar los resultados de los enfrentamientos.";
+            else return "NOTA: Ronda no activa, no se pueden editar los resultados de los enfrentamientos ni generar enfrentamientos.";
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
