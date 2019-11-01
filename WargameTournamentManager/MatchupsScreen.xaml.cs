@@ -59,7 +59,7 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden generar enfrentamientos para una ronda que no está activa.");
                 return;
             }
-            MainWindow.gMainWindow.currentTournament.GenerateMatchupByRandom();
+            MainWindow.gMainWindow.currentTournament.GenerateMatchup();
         }
 
         private async void CloseRound_Click(object sender, RoutedEventArgs e)

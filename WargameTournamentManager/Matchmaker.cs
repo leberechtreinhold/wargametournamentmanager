@@ -58,6 +58,17 @@ namespace WargameTournamentManager
             return matchups;
         }
 
+        public static List<Matchup> GenerateMatchupByStrictSwiss(Tournament tournament, int roundNumber)
+        {
+            var matchups = new List<Matchup>();
+            var results = CalculateRanking(tournament);
+            for (int i = 0; i < results.Count; i += 2)
+            {
+                matchups.Add(new Matchup(roundNumber, results[i].player.Id, results[i + 1].player.Id, tournament.Config.Tags));
+            }
+            return matchups;
+        }
+
         private static DataTable CreateRankingColumns(Configuration config)
         {
             DataTable ranking = new DataTable();

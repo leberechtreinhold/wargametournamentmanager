@@ -257,17 +257,32 @@ namespace WargameTournamentManager
             UpdateRanking();
         }
 
-        public void GenerateMatchupById()
+        public void GenerateMatchup()
+        {
+            if (CurrentRound == 0)
+                GenerateMatchupByRandom();
+            else
+                GenerateMatchupByStrictSwiss();
+        }
+
+        private void GenerateMatchupById()
         {
             var round = Rounds[CurrentRound];
             round.Matchups = Matchmaker.GenerateMatchupById(this, round.Number);
             round.OnPropertyChanged("Matchups");
         }
 
-        public void GenerateMatchupByRandom()
+        private void GenerateMatchupByRandom()
         {
             var round = Rounds[CurrentRound];
             round.Matchups = Matchmaker.GenerateMatchupByRandom(this, round.Number);
+            round.OnPropertyChanged("Matchups");
+        }
+
+        private void GenerateMatchupByStrictSwiss()
+        {
+            var round = Rounds[CurrentRound];
+            round.Matchups = Matchmaker.GenerateMatchupByStrictSwiss(this, round.Number);
             round.OnPropertyChanged("Matchups");
         }
 
