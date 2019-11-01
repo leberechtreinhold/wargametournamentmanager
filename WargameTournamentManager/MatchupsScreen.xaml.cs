@@ -65,6 +65,7 @@ namespace WargameTournamentManager
         private async void CloseRound_Click(object sender, RoutedEventArgs e)
         {
             var selectedRound = ((Button)sender).DataContext as Round;
+            var oldIndex = MainWindow.gMainWindow.currentTournament.CurrentRound;
             try
             {
                 MainWindow.gMainWindow.currentTournament.FinishRound(selectedRound);
@@ -72,6 +73,13 @@ namespace WargameTournamentManager
             catch (InvalidOperationException ex)
             {
                 await MainWindow.gMainWindow.ShowMessageAsync("Error", ex.Message);
+            }
+
+            var newIndex = MainWindow.gMainWindow.currentTournament.CurrentRound;
+            if (oldIndex != newIndex)
+            {
+                TabRounds.SelectedIndex += newIndex;
+                
             }
         }
     }
