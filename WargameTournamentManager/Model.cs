@@ -154,92 +154,10 @@ namespace WargameTournamentManager
         }
         public event PropertyChangedEventHandler PropertyChanged;
 
-        private void CreateRankingColumns()
-        {
-            Ranking = new DataTable();
-            Ranking.Columns.Add("Nombre");
-            Ranking.Columns.Add("Puntuación");
-            Ranking.Columns.Add("Facción");
-            foreach (var tag in Config.Tags)
-            {
-                Ranking.Columns.Add(tag);
-            }
-        }
-
-        private void CalculateRanking()
-        {
-            List<PlayerResult> results = new List<PlayerResult>();
-            foreach (var player in Players)
-            {
-                (int score, Dictionary<string, int> scorePerTag) = CalculatePlayerScore(player.Id);
-                results.Add(new PlayerResult(player, score, scorePerTag));
-            }
-            results.Sort((x, y) => -1 * (x.score).CompareTo(y.score));
-            cachedRankingResults = results;
-        }
-
         public void UpdateRanking()
         {
-            CalculateRanking();
-
-            CreateRankingColumns();
-            var rankedPlayers = new List<object[]>(Players.Count);
-            int columns = Ranking.Columns.Count;
-
-            foreach (var playerResult in cachedRankingResults)
-            {
-                var rankedPlayer = new object[columns];
-                rankedPlayer[0] = playerResult.player.Name;
-                rankedPlayer[1] = playerResult.score;
-                rankedPlayer[2] = playerResult.player.Faction;
-
-                int i = 3;
-                foreach (var tagScore in playerResult.scorePerTag)
-                {
-                    // TODO We should check that the column order is the same
-                    // as the one we are adding here, because its not guaranteed
-                    // for a dict to do so
-                    rankedPlayer[i] = tagScore.Value;
-                    i++;
-                }
-
-                rankedPlayers.Add(rankedPlayer);
-            }
-
-            foreach (var playerRow in rankedPlayers)
-            {
-                Ranking.Rows.Add(playerRow);
-            }
+            Ranking = Matchmaker.GenerateRanking(this);
             OnPropertyChanged("Ranking");
-        }
-
-        private (int, Dictionary<string, int>) CalculatePlayerScore(int playerId)
-        {
-            int score = 0;
-            var scorePerTag = new Dictionary<string, int>();
-            foreach (var round in Rounds)
-            {
-                foreach (var matchup in round.Matchups)
-                {
-                    if (matchup.PlayerBelongsToMatchup(playerId))
-                    {
-                        if (matchup.CurrentResult == Result.STILL_PLAYING)
-                            continue;
-                        else
-                        {
-                            if (matchup.CurrentResult == Result.DRAW)
-                                score += Config.PointsPerDraw;
-                            else if (matchup.IsWinner(playerId))
-                                score += Config.PointsPerWin;
-                            else
-                                score += Config.PointsPerLoss;
-
-                            matchup.UpdateTagTotalCalculation(playerId, scorePerTag);
-                        }
-                    }
-                }
-            }
-            return (score, scorePerTag);
         }
 
         public bool CanAddPlayer(Player newPlayer)

@@ -108,6 +108,7 @@
     </Page>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Matchmaker.cs" />
     <Compile Include="MatchupsScreen.xaml.cs">
       <DependentUpon>MatchupsScreen.xaml</DependentUpon>
     </Compile>
