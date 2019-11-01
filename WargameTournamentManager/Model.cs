@@ -512,6 +512,45 @@ namespace WargameTournamentManager
             Save();
             return true;
         }
+
+        public void FinishRound(Round round)
+        {
+            if (!PlayerListLocked)
+            {
+                throw new InvalidOperationException("No se puede cerrar una ronda sin que la lista de jugadores esté cerrada.");
+            }
+            if (!round.Active)
+            {
+                throw new InvalidOperationException("No se puede cerrar una ronda que no está activa.");
+            }
+            if (round.Number != CurrentRound + 1)
+            {
+                throw new InvalidOperationException("No se puede cerrar una ronda que no sea la actual.");
+            }
+            int n_matchups = round.Matchups.Count;
+            if (n_matchups == 0)
+            {
+                throw new InvalidOperationException("No se puede cerrar una ronda sin enfrentamientos.");
+            }
+            foreach (var matchup in round.Matchups)
+            {
+                if (matchup.CurrentResult == Result.STILL_PLAYING)
+                {
+                    throw new InvalidOperationException("No se puede cerrar una ronda que todavía tiene enfrentamientos sin terminar.");
+                }
+            }
+
+            int index = round.Number - 1;
+            Rounds[index].Active = false;
+            Rounds[index].OnPropertyChanged("Active");
+            if (index < Rounds.Count - 1)
+            {
+                Rounds[index + 1].Active = true;
+                Rounds[index + 1].OnPropertyChanged("Active");
+                CurrentRound = index + 1;
+                OnPropertyChanged("CurrentRound");
+            }
+        }
     }
 
     // For easily accesible RNG, not threadsafe

@@ -61,6 +61,19 @@ namespace WargameTournamentManager
             }
             MainWindow.gMainWindow.currentTournament.GenerateMatchupById();
         }
+
+        private async void CloseRound_Click(object sender, RoutedEventArgs e)
+        {
+            var selectedRound = ((Button)sender).DataContext as Round;
+            try
+            {
+                MainWindow.gMainWindow.currentTournament.FinishRound(selectedRound);
+            }
+            catch (InvalidOperationException ex)
+            {
+                await MainWindow.gMainWindow.ShowMessageAsync("Error", ex.Message);
+            }
+        }
     }
 
     // The matchup is very different from view from the model, because the model is

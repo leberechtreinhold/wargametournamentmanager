@@ -129,6 +129,12 @@
                                         Path=DataContext.currentTournament.PlayerListLocked, 
                                         Converter={StaticResource PlayerListLockedConverter}}"
                                     Style="{StaticResource AccentedSquareButtonStyle}" />
+                            <Button Content="Cerrar ronda"
+                                    Click="CloseRound_Click"
+                                    Margin="20"
+                                    Controls:ButtonHelper.PreserveTextCase="True"
+                                    IsEnabled="{Binding Active}"
+                                    Style="{StaticResource AccentedSquareButtonStyle}" />
                         </StackPanel>
                     </DockPanel>
                 </DataTemplate>
