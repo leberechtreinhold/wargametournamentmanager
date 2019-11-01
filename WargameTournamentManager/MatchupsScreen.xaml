@@ -110,6 +110,9 @@
                                                 <Button Click="EditMatchup_Click"
                                                         Content="Editar enfrentamiento"
                                                         Controls:ButtonHelper.PreserveTextCase="True"
+                                                        IsEnabled="{Binding 
+                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, 
+                                                            Path=DataContext.Active}"
                                                         Style="{StaticResource AccentedSquareButtonStyle}" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
