@@ -68,8 +68,10 @@
                 <Controls:ToggleSwitch Grid.Row="6" Grid.Column="1" Margin="5"
                                        IsChecked="False" OnLabel="Sí" OffLabel="No"/>
 
-                <Button Grid.Row="7" Grid.Column="1" Margin="20" 
-                                    Content="Save" Click="SavePlayer_Click">
+                <Button Grid.Row="7" Grid.Column="1" Margin="20"
+                        Content="Guardar jugador"
+                        Click="SavePlayer_Click"
+                        Style="{StaticResource AccentedSquareButtonStyle}">
 
                 </Button>
             </Grid>
@@ -100,7 +102,22 @@
                         <DataGridTextColumn Binding="{Binding Club}" Header="Club" />
                         <DataGridTextColumn Binding="{Binding Contact}" Header="Contacto" />
                         <DataGridTextColumn Binding="{Binding Faction}" Header="Facción" />
-                        <DataGridCheckBoxColumn Binding="{Binding Paid}" Header="Inscripción pagada" />
+                        <DataGridCheckBoxColumn Binding="{Binding Paid}"
+                                                Header="Inscripción pagada" />
+                        <DataGridTemplateColumn>
+                            <DataGridTemplateColumn.CellTemplate>
+                                <DataTemplate>
+                                    <Button Click="EditPlayer_Click"
+                                            Content="Editar jugador"
+                                            Controls:ButtonHelper.PreserveTextCase="True"
+                                            IsEnabled="{Binding 
+                                                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, 
+                                                Path=DataContext.PlayerListLocked,
+                                                Converter={StaticResource PlayerListUnlockedConverter}}"
+                                            Style="{StaticResource AccentedSquareButtonStyle}" />
+                                </DataTemplate>
+                            </DataGridTemplateColumn.CellTemplate>
+                        </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
                 <DockPanel LastChildFill="False">

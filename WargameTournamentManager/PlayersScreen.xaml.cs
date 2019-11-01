@@ -40,9 +40,51 @@ namespace WargameTournamentManager
 
         private void EditPlayer_Click(object sender, RoutedEventArgs e)
         {
-            editingPlayer = new Player();
+            var player = ((Button)sender).DataContext as Player;
+            if (player == null) return;
+
+            // NEVER EVER edit the same refernece as the one in the viewmodel,
+            // because the user may not want to save changes!
+            editingPlayer = player.Clone();
             editPlayerWindow.DataContext = this.editingPlayer;
             editPlayerWindow.IsOpen = true;
+        }
+
+
+        private void SavePlayer_Click(object sender, RoutedEventArgs e)
+        {
+            // This can be called both when creating a player and when editing
+            // a existing one!
+
+            if (string.IsNullOrWhiteSpace(editingPlayer.Name))
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "Por favor, inserta un nombre para el jugador");
+                return;
+            }
+            if (!MainWindow.gMainWindow.currentTournament.CanAddPlayerName(editingPlayer.Name, editingPlayer.Id))
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "Este nombre de jugador ya ha sido introducido. Por favor, cambia el nombre a este jugador.");
+                return;
+            }
+
+            if (editingPlayer.Id == -1)
+            {
+                MainWindow.gMainWindow.currentTournament.AddPlayer(editingPlayer.Clone());
+            }
+            else
+            {
+                MainWindow.gMainWindow.currentTournament.UpdatePlayerData(editingPlayer);
+            }
+            
+            editingPlayer = new Player();
+            OnPropertyChanged("editingPlayer");
+
+            // For some reason, despite AddPlayer being notifiable and raising the change
+            // on players, the datagrid doesnt refresh automatically...
+            PlayerListDataGrid.Items.Refresh();
+
+            // TODO Save
+            editPlayerWindow.IsOpen = false;
         }
 
         private void DeleteSelected_Click(object sender, RoutedEventArgs e)
@@ -104,31 +146,6 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.currentTournament.UnlockPlayerList();
             }
 
-        }
-
-        private void SavePlayer_Click(object sender, RoutedEventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(editingPlayer.Name))
-            {
-                MainWindow.gMainWindow.ShowMessageAsync("Error", "Por favor, inserta un nombre para el jugador");
-                return;
-            }
-            if (!MainWindow.gMainWindow.currentTournament.CanAddPlayerName(editingPlayer.Name))
-            {
-                MainWindow.gMainWindow.ShowMessageAsync("Error", "Este jugador ya ha sido introducido. Por favor, cambia el nombre a este jugador.");
-                return;
-            }
-
-            MainWindow.gMainWindow.currentTournament.AddPlayer(editingPlayer.Clone());
-            editingPlayer = new Player();
-            OnPropertyChanged("editingPlayer");
-
-            // For some reason, despite AddPlayer being notifiable and raising the change
-            // on players, the datagrid doesnt refresh automatically...
-            PlayerListDataGrid.Items.Refresh();
-
-            // TODO Save
-            editPlayerWindow.IsOpen = false;
         }
 
         public void OnPropertyChanged(string property)

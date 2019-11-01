@@ -359,9 +359,10 @@ namespace WargameTournamentManager
             return !Players.Any(p => p.Name == newPlayer.Name);
         }
 
-        public bool CanAddPlayerName(string newPlayerName)
+        // Check if theres any other player that is not playerId with that name
+        public bool CanAddPlayerName(string newPlayerName, int playerId)
         {
-            return !Players.Any(p => p.Name == newPlayerName);
+            return !Players.Any(p => p.Name == newPlayerName && p.Id != playerId);
         }
 
         public void AddPlayer(Player newPlayer)
@@ -387,6 +388,15 @@ namespace WargameTournamentManager
             OnPropertyChanged("Players");
 
             UpdateRanking();
+            Save();
+        }
+
+        // Given a player info data, edits the current object with that id with that data
+        // BUT never changes the reference and doesnt change the input
+        public void UpdatePlayerData(Player inputPlayer)
+        {
+            var player = Players.First(p => p.Id == inputPlayer.Id);
+            player.UpdateData(inputPlayer);
             Save();
         }
 
@@ -595,7 +605,7 @@ namespace WargameTournamentManager
         public string Faction { get; set; }
         public bool Paid { get; set; }
 
-        public Player(int id = 0, bool autogenerate = false)
+        public Player(int id = -1, bool autogenerate = false)
         {
             Id = id;
             if (autogenerate) Name = GetRandomName();
@@ -613,6 +623,18 @@ namespace WargameTournamentManager
             clone.Paid = Paid;
 
             return clone;
+        }
+
+        // Like Clone but without changing the refs!
+        public void UpdateData(Player data)
+        {
+            Id = data.Id;
+            Name = data.Name;
+            City = data.City;
+            Club = data.Club;
+            Contact = data.Contact;
+            Faction = data.Faction;
+            Paid = data.Paid;
         }
 
         private static string GetRandomName()
