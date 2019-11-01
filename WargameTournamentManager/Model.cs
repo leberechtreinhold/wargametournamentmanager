@@ -76,21 +76,7 @@ namespace WargameTournamentManager
             }
         }
     }
-
-    internal class PlayerResult
-    {
-        public Player player { get; private set; }
-        public int score { get; private set; }
-        public Dictionary<string, int> scorePerTag { get; private set; }
-
-        public PlayerResult(Player _player, int _score, Dictionary<string, int> _scorePerTag)
-        {
-            player = _player;
-            score = _score;
-            scorePerTag = _scorePerTag;
-        }
-    }
-
+    
     public class Tournament : INotifyPropertyChanged
     {
         public string Name { get; set; }
@@ -106,8 +92,6 @@ namespace WargameTournamentManager
 
         // From top score to bottom, a cached list of players with
         // the score, used for the Ranking. Always autocalculated
-        [JsonIgnoreAttribute]
-        private IList<PlayerResult> cachedRankingResults;
         [JsonIgnoreAttribute]
         public DataTable Ranking { get; set; }
 

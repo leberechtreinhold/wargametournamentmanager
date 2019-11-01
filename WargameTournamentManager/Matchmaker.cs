@@ -7,23 +7,6 @@ using System.Threading.Tasks;
 
 namespace WargameTournamentManager
 {
-    public static class ExtensionMethods
-    {
-        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
-        {
-            T[] elements = source.ToArray();
-            for (int i = elements.Length - 1; i >= 0; i--)
-            {
-                // Swap element "i" with a random earlier element it (or itself)
-                // ... except we don't really need to swap it fully, as we can
-                // return it immediately, and afterwards it's irrelevant.
-                int swapIndex = rng.Next(i + 1);
-                yield return elements[swapIndex];
-                elements[swapIndex] = elements[i];
-            }
-        }
-    }
-
     public static class Matchmaker
     {
         public static DataTable GenerateRanking(Tournament tournament)
@@ -154,4 +137,36 @@ namespace WargameTournamentManager
             }
         }
     }
+
+    public static class ExtensionMethods
+    {
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
+        {
+            T[] elements = source.ToArray();
+            for (int i = elements.Length - 1; i >= 0; i--)
+            {
+                // Swap element "i" with a random earlier element it (or itself)
+                // ... except we don't really need to swap it fully, as we can
+                // return it immediately, and afterwards it's irrelevant.
+                int swapIndex = rng.Next(i + 1);
+                yield return elements[swapIndex];
+                elements[swapIndex] = elements[i];
+            }
+        }
+    }
+
+    internal class PlayerResult
+    {
+        public Player player { get; private set; }
+        public int score { get; private set; }
+        public Dictionary<string, int> scorePerTag { get; private set; }
+
+        public PlayerResult(Player _player, int _score, Dictionary<string, int> _scorePerTag)
+        {
+            player = _player;
+            score = _score;
+            scorePerTag = _scorePerTag;
+        }
+    }
+
 }
