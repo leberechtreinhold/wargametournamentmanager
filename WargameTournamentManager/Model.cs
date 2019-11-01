@@ -545,6 +545,7 @@ namespace WargameTournamentManager
                 }
             }
 
+            SaveWithBackup("pre_round_" + round.Number + "_finish");
             int index = round.Number - 1;
             Rounds[index].Active = false;
             Rounds[index].OnPropertyChanged("Active");
@@ -555,6 +556,7 @@ namespace WargameTournamentManager
                 CurrentRound = index + 1;
                 OnPropertyChanged("CurrentRound");
             }
+            Save();
         }
     }
 
