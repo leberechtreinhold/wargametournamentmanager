@@ -43,7 +43,7 @@ namespace WargameTournamentManager
             PointsPerDraw = 0;
             PointsPerLoss = 1;
 
-            TagsStr = "Campamentos, Generales";
+            TagsStr = "DiferenciaPeanas, Campamentos, Generales";
         }
 
         public Configuration Clone()
