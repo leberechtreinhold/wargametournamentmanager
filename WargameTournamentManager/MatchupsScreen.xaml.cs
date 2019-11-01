@@ -151,6 +151,14 @@ namespace WargameTournamentManager
         public void UpdateMatchupWithView()
         {
             SourceMatchup.CurrentResult = (Result)IndexCurrentResult;
+            foreach (DataRow row in Tags.Rows)
+            {
+                var tagname = (string)row["Tag"];
+                var player1 =  int.Parse((string)row[Player1Name]);
+                var player2 = int.Parse((string)row[Player2Name]);
+                SourceMatchup.Player1Tags[tagname] = player1;
+                SourceMatchup.Player2Tags[tagname] = player2;
+            }
             SourceTournament.UpdateRanking();
             // TODO Update tags
             SourceTournament.Save();
