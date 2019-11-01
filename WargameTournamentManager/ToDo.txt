@@ -1,6 +1,6 @@
 ﻿[X] Add the childwindow package and the JSON reader
 [x] Add the create new tournament 
-[ ] Implement LoadTournament
+[X] Implement LoadTournament
 [ ] Add visualization of current Tournament settings, Maybe?
 [ ] Model should save on changes! Doing backups. Changes are: Lock players, Create Matchups for rounds
 [ ] Player screen: Add the edit detail button (should save w/out backup)
@@ -12,5 +12,5 @@
 				   Should not have any player still playing in previous round
 [ ] Rounds screen: Add matchup results in window (maybe better visualization as well?)
 [ ] Globally, change the menu to left vertical instead of top horizontal, maybe?
-[ ] You shouldn't access other screens w/out loading/creating a tournament.
-[ ] Create tournament screen, change to grid Maybe?
+[X] You shouldn't access other screens w/out loading/creating a tournament.
+[X] Create tournament screen, change to grid Maybe?
