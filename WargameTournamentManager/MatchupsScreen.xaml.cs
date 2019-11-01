@@ -78,7 +78,7 @@ namespace WargameTournamentManager
             var newIndex = MainWindow.gMainWindow.currentTournament.CurrentRound;
             if (oldIndex != newIndex)
             {
-                TabRounds.SelectedIndex += newIndex;
+                TabRounds.SelectedIndex = newIndex;
                 
             }
         }
