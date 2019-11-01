@@ -45,6 +45,18 @@ namespace WargameTournamentManager
             editPlayerWindow.IsOpen = true;
         }
 
+        private void DeleteSelected_Click(object sender, RoutedEventArgs e)
+        {
+            if (PlayerListDataGrid.SelectedItems == null || PlayerListDataGrid.SelectedItems.Count == 0)
+                return;
+
+            foreach(Player player in PlayerListDataGrid.SelectedItems)
+            {
+                MainWindow.gMainWindow.currentTournament.DeletePlayer(player.Id);
+            }
+            PlayerListDataGrid.Items.Refresh();
+        }
+
         private void PlayerListLock_Click(object sender, RoutedEventArgs e)
         {
             if (MainWindow.gMainWindow.currentTournament.PlayerListLocked)
@@ -113,7 +125,7 @@ namespace WargameTournamentManager
 
             // For some reason, despite AddPlayer being notifiable and raising the change
             // on players, the datagrid doesnt refresh automatically...
-            playerListDataGrid.Items.Refresh();
+            PlayerListDataGrid.Items.Refresh();
 
             // TODO Save
             editPlayerWindow.IsOpen = false;

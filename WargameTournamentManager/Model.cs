@@ -366,9 +366,24 @@ namespace WargameTournamentManager
 
         public void AddPlayer(Player newPlayer)
         {
-            // TODO: Validate there are no rounds running et al
-            newPlayer.Id = Players.Count;
+            if (Players.Count == 0)
+                newPlayer.Id = 0;
+            else
+                newPlayer.Id = Players.Max(player => player.Id) + 1;
+
             Players.Add(newPlayer);
+            OnPropertyChanged("Players");
+
+            UpdateRanking();
+            Save();
+        }
+
+        public void DeletePlayer(int playerId)
+        {
+            // Assume that there is no matchup going on, otherwise this
+            // breaks becuase the matchup will point to a bad id!
+            int index = Players.ToList().FindIndex(player => player.Id == playerId);
+            Players.RemoveAt(index);
             OnPropertyChanged("Players");
 
             UpdateRanking();
@@ -400,7 +415,6 @@ namespace WargameTournamentManager
 
         public void UnlockPlayerList()
         {
-            // TODO: Validations
             SaveWithBackup("preunlock");
 
             PlayerListLocked = false;
@@ -408,6 +422,9 @@ namespace WargameTournamentManager
             {
                 round.Active = false;
                 round.OnPropertyChanged("Active");
+                round.Matchups = new List<Matchup>();
+                round.OnPropertyChanged("Matchups");
+
             });
             OnPropertyChanged("PlayerListLocked");
 
