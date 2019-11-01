@@ -75,22 +75,6 @@ namespace WargameTournamentManager
                 Tags.Add(tag.Trim());
             }
         }
-
-        public static Configuration CreateTestConfiguration()
-        {
-            Configuration config = new Configuration();
-
-            config.NumberRounds = 5;
-
-            // DBA Style! Draw is worse than Loss
-            config.PointsPerWin = 3;
-            config.PointsPerLoss = 1;
-            config.PointsPerDraw = 0;
-
-            config.Tags = new List<string> { "Plaquetas eliminadas", "General eliminado", "Campamento saqueado" };
-
-            return config;
-        }
     }
 
     internal class PlayerResult
@@ -168,103 +152,6 @@ namespace WargameTournamentManager
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
         public event PropertyChangedEventHandler PropertyChanged;
-
-        public static Tournament CreateTestTournament()
-        {
-            var tournament = new Tournament();
-
-            tournament.Config = Configuration.CreateTestConfiguration();
-
-            tournament.Name = "TestTournament";
-            tournament.Game = "TestGame";
-            tournament.Date = "Oct 10, 2017";
-            tournament.CurrentRound = 2;
-
-            tournament.Players = new List<Player> { new Player(0, true), new Player(1, true), new Player(2, true), new Player(3, true) };
-            tournament.PlayerListLocked = true;
-
-            tournament.Rounds = new List<Round>();
-
-            // Round has finished, player0 has won against player 1, and player2 and player3 has a draw
-            var round1 = new Round();
-            round1.Number = 1;
-            round1.Active = false;
-            round1.Matchups = new List<Matchup>
-            {
-                new Matchup { Player1Id = 0,
-                              Player1Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 1 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 0 }
-                              },
-                              Player2Id = 1,
-                              Player2Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 4 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 1 }
-                              },
-                              Round = 1, Table = 1, CurrentResult = Result.PLAYER1_LOSS },
-                new Matchup { Player1Id = 2,
-                              Player1Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 2 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 0 }
-                              },
-                              Player2Id = 3,
-                              Player2Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 3 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 0 }
-                              },
-                              Round = 1, Table = 2, CurrentResult = Result.DRAW },
-            };
-            tournament.Rounds.Add(round1);
-
-            // Round 2 is in progress, player3 has won against player1, and player0 is still playing against playing player2           
-            var round2 = new Round();
-            round2.Number = 2;
-            round2.Active = true;
-            round2.Matchups = new List<Matchup>
-            {
-                new Matchup { Player1Id = 3,
-                              Player1Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 2 },
-                                  { "General eliminado", 1 },
-                                  { "Campamento saqueado", 0 }
-                              },
-                              Player2Id = 1,
-                              Player2Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 4 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 1 }
-                              },
-                              Round = 2, Table = 2, CurrentResult = Result.PLAYER1_WIN},
-                new Matchup { Player1Id = 2,
-                              Player1Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 0 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 0 }
-                              },
-                              Player2Id = 0,
-                              Player2Tags = new Dictionary<string, int> {
-                                  { "Plaquetas eliminadas", 0 },
-                                  { "General eliminado", 0 },
-                                  { "Campamento saqueado", 0 }
-                              },
-                              Round = 2, Table = 1, CurrentResult = Result.STILL_PLAYING},
-            };
-            tournament.Rounds.Add(round2);
-
-            var round3 = new Round();
-            round3.Number = 3;
-            round3.Active = false;
-            round3.Matchups = new List<Matchup>();
-            tournament.Rounds.Add(round3);
-
-            tournament.UpdateRanking();
-
-            return tournament;
-        }
 
         private void CreateRankingColumns()
         {
@@ -587,14 +474,6 @@ namespace WargameTournamentManager
         }
     }
 
-    // For easily accesible RNG, not threadsafe
-    // Only used for testing
-    public static class Globals
-    {
-        public static Random random = new Random();
-        public static int index = 0;
-    }
-
     public class Player
     {
         public int Id { get; set; }
@@ -635,18 +514,6 @@ namespace WargameTournamentManager
             Contact = data.Contact;
             Faction = data.Faction;
             Paid = data.Paid;
-        }
-
-        private static string GetRandomName()
-        {
-            var names = new List<string> {
-                "Paco", "Manolo", "José", "Javier", "Jesús", "Iker", "Ion",
-                "Miguel", "Sergio", "Daniel", "David", "Aquiles", "Menon",
-                "Pericles", "Heracles", "Demetrius", "Poliperconte", "Antipatro",
-                "Seleuco", "Perdicas"};
-            int index = Globals.random.Next(names.Count);
-            Globals.index++;
-            return names[index] + Globals.index;
         }
     }
 
