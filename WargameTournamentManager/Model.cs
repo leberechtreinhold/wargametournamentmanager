@@ -257,16 +257,17 @@ namespace WargameTournamentManager
             UpdateRanking();
         }
 
-        // This matches using by id, without regards about repetition or whatever
-        // Testing only
         public void GenerateMatchupById()
         {
             var round = Rounds[CurrentRound];
-            round.Matchups = new List<Matchup>();
-            for (int i = 0; i < Players.Count; i += 2)
-            {
-                round.Matchups.Add(new Matchup(round.Number, i, i + 1, Config.Tags));
-            }
+            round.Matchups = Matchmaker.GenerateMatchupById(this, round.Number);
+            round.OnPropertyChanged("Matchups");
+        }
+
+        public void GenerateMatchupByRandom()
+        {
+            var round = Rounds[CurrentRound];
+            round.Matchups = Matchmaker.GenerateMatchupByRandom(this, round.Number);
             round.OnPropertyChanged("Matchups");
         }
 

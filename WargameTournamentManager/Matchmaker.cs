@@ -7,6 +7,23 @@ using System.Threading.Tasks;
 
 namespace WargameTournamentManager
 {
+    public static class ExtensionMethods
+    {
+        public static IEnumerable<T> Shuffle<T>(this IEnumerable<T> source, Random rng)
+        {
+            T[] elements = source.ToArray();
+            for (int i = elements.Length - 1; i >= 0; i--)
+            {
+                // Swap element "i" with a random earlier element it (or itself)
+                // ... except we don't really need to swap it fully, as we can
+                // return it immediately, and afterwards it's irrelevant.
+                int swapIndex = rng.Next(i + 1);
+                yield return elements[swapIndex];
+                elements[swapIndex] = elements[i];
+            }
+        }
+    }
+
     public static class Matchmaker
     {
         public static DataTable GenerateRanking(Tournament tournament)
@@ -15,6 +32,30 @@ namespace WargameTournamentManager
             var results = CalculateRanking(tournament);
             FillRankingData(tournament, ranking, results);
             return ranking;
+        }
+
+        // This matches using by id, without regards about repetition or whatever
+        // Testing only
+        public static List<Matchup> GenerateMatchupById(Tournament tournament, int roundNumber)
+        {
+            var matchups = new List<Matchup>();
+            for (int i = 0; i < tournament.Players.Count; i += 2)
+            {
+                matchups.Add(new Matchup(roundNumber, i, i + 1, tournament.Config.Tags));
+            }
+            return matchups;
+        }
+
+        public static List<Matchup> GenerateMatchupByRandom(Tournament tournament, int roundNumber)
+        {
+            var matchups = new List<Matchup>();
+            // Use current time as seed
+            var players = tournament.Players.Shuffle(new Random()).ToList();
+            for (int i = 0; i < players.Count; i += 2)
+            {
+                matchups.Add(new Matchup(roundNumber, players[i].Id, players[i + 1].Id, tournament.Config.Tags));
+            }
+            return matchups;
         }
 
         private static DataTable CreateRankingColumns(Configuration config)
