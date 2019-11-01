@@ -101,7 +101,6 @@ namespace WargameTournamentManager
         public bool PlayerListLocked { get; set; }
         public IList<Round> Rounds { get; set; }
         public Configuration Config { get; set; }
-        public DataTable Ranking { get; set; }
         public string FilePath { get; set; }
         public string FileName { get; set; }
 
@@ -109,6 +108,8 @@ namespace WargameTournamentManager
         // the score, used for the Ranking. Always autocalculated
         [JsonIgnoreAttribute]
         private IList<PlayerResult> cachedRankingResults;
+        [JsonIgnoreAttribute]
+        public DataTable Ranking { get; set; }
 
         public Tournament()
         {
@@ -376,6 +377,7 @@ namespace WargameTournamentManager
                 // therefore, update it
                 tournament.FileName = Path.GetFileName(openFileDialog.FileName);
                 tournament.FilePath = Path.GetDirectoryName(openFileDialog.FileName);
+                tournament.UpdateRanking();
                 return tournament;
             }
             return null;
@@ -484,10 +486,9 @@ namespace WargameTournamentManager
         public string Faction { get; set; }
         public bool Paid { get; set; }
 
-        public Player(int id = -1, bool autogenerate = false)
+        public Player(int id = -1)
         {
             Id = id;
-            if (autogenerate) Name = GetRandomName();
         }
 
         public Player Clone()
