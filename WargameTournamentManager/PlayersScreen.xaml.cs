@@ -83,7 +83,6 @@ namespace WargameTournamentManager
             // on players, the datagrid doesnt refresh automatically...
             PlayerListDataGrid.Items.Refresh();
 
-            // TODO Save
             editPlayerWindow.IsOpen = false;
         }
 
