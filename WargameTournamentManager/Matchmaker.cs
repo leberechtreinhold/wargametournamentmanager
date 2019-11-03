@@ -41,6 +41,8 @@ namespace WargameTournamentManager
             return matchups;
         }
 
+        // Strict swiss is that players with the most points get matched against each other
+        // Difference between strict or not is that there may be repeats
         public static List<Matchup> GenerateMatchupByStrictSwiss(Tournament tournament, int roundNumber)
         {
             var matchups = new List<Matchup>();
@@ -50,6 +52,51 @@ namespace WargameTournamentManager
                 matchups.Add(new Matchup(roundNumber, results[i].player.Id, results[i + 1].player.Id, tournament.Config.Tags));
             }
             return matchups;
+        }
+
+        public static List<Matchup> GenerateMatchupBySwiss(Tournament tournament, int roundNumber)
+        {
+            var matchups = new List<Matchup>();
+            var results = CalculateRanking(tournament);
+            while (results.Count > 0)
+            {
+                int player1 = results[0].player.Id;
+                int player2 = results[1].player.Id;
+                int i = 2;
+                while (PlayersHavePlayedTogether(tournament, player1, player2)
+                       && i < results.Count)
+                {
+                    player2 = results[i].player.Id;
+                    i++;
+                }
+                if (i == results.Count)
+                {
+                    i = 1;
+                    player2 = results[i].player.Id;
+                }
+                matchups.Add(new Matchup(roundNumber, player1, player2, tournament.Config.Tags));
+                results.RemoveAt(i);
+                results.RemoveAt(0);
+            }
+            return matchups;
+        }
+
+        private static bool PlayersHavePlayedTogether(Tournament t, int player1Id, int player2Id)
+        {
+            foreach (var round in t.Rounds)
+            {
+                foreach (var matchup in round.Matchups)
+                {
+                    if (matchup.PlayerBelongsToMatchup(player1Id))
+                    {
+                        if (matchup.PlayerBelongsToMatchup(player2Id))
+                            return true;
+                        else
+                            break;
+                    }
+                }
+            }
+            return false;
         }
 
         private static DataTable CreateRankingColumns(Configuration config)

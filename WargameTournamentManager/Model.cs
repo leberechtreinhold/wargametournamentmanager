@@ -103,7 +103,6 @@ namespace WargameTournamentManager
             PlayerListLocked = false;
             FilePath = GetDefaultFilePath();
             FileName = "tournament.tour";
-            cachedRankingResults = new List<PlayerResult>();
         }
 
         public Tournament Clone()
@@ -246,7 +245,7 @@ namespace WargameTournamentManager
             if (CurrentRound == 0)
                 GenerateMatchupByRandom();
             else
-                GenerateMatchupByStrictSwiss();
+                GenerateMatchupBySwiss();
         }
 
         private void GenerateMatchupById()
@@ -267,6 +266,13 @@ namespace WargameTournamentManager
         {
             var round = Rounds[CurrentRound];
             round.Matchups = Matchmaker.GenerateMatchupByStrictSwiss(this, round.Number);
+            round.OnPropertyChanged("Matchups");
+        }
+
+        private void GenerateMatchupBySwiss()
+        {
+            var round = Rounds[CurrentRound];
+            round.Matchups = Matchmaker.GenerateMatchupBySwiss(this, round.Number);
             round.OnPropertyChanged("Matchups");
         }
 
