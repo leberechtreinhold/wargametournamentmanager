@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -42,6 +43,11 @@ namespace WargameTournamentManager
         private void OnLoad(object sender, RoutedEventArgs e)
         {
             gMainWindow = this;
+        }
+
+        private void ExportRanking_Click(object sender, RoutedEventArgs e)
+        {
+            currentTournament.ExportRankingAskingUser();
         }
 
         public void OnPropertyChanged(string property)

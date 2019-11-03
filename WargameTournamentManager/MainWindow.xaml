@@ -43,6 +43,14 @@
                                   Style="{StaticResource AzureDataGrid}">
                         </DataGrid>
                     </StackPanel>
+                    <DockPanel LastChildFill="False">
+                        <Button DockPanel.Dock="Right"
+                                Content="Exportar Ranking"
+                                Click="ExportRanking_Click"
+                                Margin="20"
+                                Controls:ButtonHelper.PreserveTextCase="True"
+                                Style="{StaticResource AccentedSquareButtonStyle}" />
+                    </DockPanel>
                 </StackPanel>
             </TabItem>
         </TabControl>

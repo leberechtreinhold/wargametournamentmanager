@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace WargameTournamentManager
 {
@@ -76,7 +77,7 @@ namespace WargameTournamentManager
             }
         }
     }
-    
+
     public class Tournament : INotifyPropertyChanged
     {
         public string Name { get; set; }
@@ -397,6 +398,39 @@ namespace WargameTournamentManager
                 OnPropertyChanged("CurrentRound");
             }
             Save();
+        }
+
+        public void ExportRankingAskingUser()
+        {
+            IEnumerable<string> columnNames = Ranking.Columns
+                .Cast<DataColumn>()
+                .Select(column => column.ColumnName);
+
+            StringBuilder content = new StringBuilder();
+            content.AppendLine(string.Join(",", columnNames));
+
+            foreach (DataRow row in Ranking.Rows)
+            {
+                IEnumerable<string> fields = row.ItemArray.Select(field => field.ToString());
+                content.AppendLine(string.Join(",", fields));
+            }
+
+            File.WriteAllText("test.csv", content.ToString());
+
+            Directory.CreateDirectory(FilePath);
+            SaveFileDialog csvFile = new SaveFileDialog();
+
+            // Tournament file
+            csvFile.FileName = "tournament" + Name + ".csv";
+            csvFile.Filter = "*.csv|All files (*.*)|*.*";
+
+            bool? saved = csvFile.ShowDialog();
+            if (saved != true)
+            {
+                return;
+            }
+
+            File.WriteAllText(csvFile.FileName, content.ToString());
         }
     }
 
