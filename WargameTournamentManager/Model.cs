@@ -429,7 +429,7 @@ namespace WargameTournamentManager
 
             // Tournament file
             csvFile.FileName = "tournament" + Name + ".csv";
-            csvFile.Filter = "*.csv|All files (*.*)|*.*";
+            csvFile.Filter = "CSV Files (*.csv)|*.csv|All files (*.*)|*.*";
 
             bool? saved = csvFile.ShowDialog();
             if (saved != true)
