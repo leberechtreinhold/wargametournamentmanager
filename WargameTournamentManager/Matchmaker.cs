@@ -81,6 +81,24 @@ namespace WargameTournamentManager
             return matchups;
         }
 
+        public static List<Matchup> GenerateMatchupByCityClub(Tournament tournament, int roundNumber)
+        {
+            var pairings = MatchmakerCityClubHelper.MakeMatchmaking(tournament.Players);
+            HashSet<Player> matchedPlayers = new HashSet<Player>();
+
+            var matchups = new List<Matchup>();
+            foreach (var pairing in pairings)
+            {
+                if (!matchedPlayers.Contains(pairing.Key))
+                {
+                    matchups.Add(new Matchup(roundNumber, pairing.Key.Id, pairing.Value.Id, tournament.Config.Tags));
+                    matchedPlayers.Add(pairing.Key);
+                    matchedPlayers.Add(pairing.Value);
+                }
+            }
+            return matchups;
+        }
+        
         private static bool PlayersHavePlayedTogether(Tournament t, int player1Id, int player2Id)
         {
             foreach (var round in t.Rounds)
@@ -181,6 +199,222 @@ namespace WargameTournamentManager
             foreach (var playerRow in rankedPlayers)
             {
                 ranking.Rows.Add(playerRow);
+            }
+        }
+
+
+
+        // Despite looking like a super easy problem, making a matchmaking where
+        // each player has different criteria is a surprisingly complex
+        // pairing problem, and we need to precalculate a lot of values.
+        // It's easier with a proper datastructure in a class
+        internal class MatchmakerCityClubHelper
+        {
+            IList<Player> players;
+            double[,] values;
+            Dictionary<Player, Player> playerMatchups;
+            Dictionary<Player, double> playerValue;
+            Dictionary<Player, int> playerReverseIndex;
+            const double maxPairingValue = 1;
+
+            MatchmakerCityClubHelper(IList<Player> _players)
+            {
+                players = _players;
+                playerMatchups = new Dictionary<Player, Player>();
+                playerValue = new Dictionary<Player, double>();
+
+                int nPlayers = players.Count;
+                playerReverseIndex = new Dictionary<Player, int>();
+                for (int i = 0; i < nPlayers; i++)
+                {
+                    playerReverseIndex[players[i]] = i;
+                }
+
+                values = new double[nPlayers, nPlayers];
+                for (int i = 0; i < nPlayers; i++)
+                {
+                    for (int j = 0; j < nPlayers; j++)
+                    {
+                        if (players[i] == players[j]) values[i, j] = -1;
+                        else
+                        {
+                            // Aggregate all properties
+                            values[i, j] = 0;
+                            if (players[i].Club != players[j].Club) values[i, j] += 0.5;
+                            if (players[i].Faction != players[j].Faction) values[i, j] += 0.5;
+                        }
+                    }
+                }
+            }
+
+            void AddPairing(Player p1, Player p2, double value)
+            {
+                if (p1 == p2) throw new InvalidOperationException();
+                if (playerMatchups.ContainsKey(p1) || playerMatchups.ContainsKey(p2)) throw new InvalidOperationException();
+
+                playerMatchups[p1] = p2;
+                playerMatchups[p2] = p1;
+                playerValue[p1] = value;
+                playerValue[p2] = value;
+            }
+
+            bool HasPairing(Player p)
+            {
+                return playerValue.ContainsKey(p);
+            }
+
+            Player RivalOf(Player p)
+            {
+                return playerMatchups[p];
+            }
+
+            int RivalIndex(Player p)
+            {
+                return playerReverseIndex[RivalOf(p)];
+            }
+
+            double PairingValue(Player p)
+            {
+                return playerValue[p];
+            }
+
+            void RemovePairing(Player p)
+            {
+                var p2 = playerMatchups[p];
+                playerMatchups.Remove(p);
+                playerMatchups.Remove(p2);
+                playerValue.Remove(p);
+                playerValue.Remove(p2);
+            }
+
+            bool MakeMatchSwappingIfBetter(Player p1, Player p2, double value)
+            {
+                bool p1_paired = HasPairing(p1);
+                bool p2_paired = HasPairing(p2);
+
+                if (!p1_paired && !p2_paired)
+                {
+                    //Console.WriteLine(string.Format("Adding [{0} vs {1}] ({2})", p1, p2, value));
+                    AddPairing(p1, p2, value);
+                    return true;
+                }
+                else if (p1_paired && p2_paired)
+                {
+                    var current_pairing_value = PairingValue(p1) + PairingValue(p2);
+                    var rival_pairing_value = values[RivalIndex(p1), RivalIndex(p2)];
+                    var swapped_pairing_value = value + rival_pairing_value;
+                    if (swapped_pairing_value > current_pairing_value)
+                    {
+                        var rival_p1 = RivalOf(p1);
+                        var rival_p2 = RivalOf(p2);
+                        //Console.WriteLine(string.Format("Swapping [{0} vs {1}] & [{2} vs {3}] ({4}) for [{5} vs {6}] & [{7} vs {8}] ({9})",
+                        //    p1, rival_p1, p2, rival_p2, current_pairing_value,
+                        //    p1, p2, rival_p1, rival_p2, swapped_pairing_value));
+                        RemovePairing(p1);
+                        RemovePairing(p2);
+                        AddPairing(p1, p2, value);
+                        AddPairing(rival_p1, rival_p2, rival_pairing_value);
+                        return true;
+                    }
+                    return false;
+                }
+                else if (p1_paired && !p2_paired)
+                {
+                    var current_pairing_value = PairingValue(p1);
+                    var swapped_pairing_value = value;
+                    if (swapped_pairing_value > current_pairing_value)
+                    {
+                        var rival_p1 = RivalOf(p1);
+                        //Console.WriteLine(string.Format("Swapping [{0} vs {1}] & {2} ({3}) for [{4} vs {5}] & {6} ({7})",
+                        //    p1, rival_p1, p2, current_pairing_value,
+                        //    p1, p2, rival_p1, swapped_pairing_value));
+                        RemovePairing(p1);
+                        AddPairing(p1, p2, value);
+                        return true;
+                    }
+                    return false;
+                }
+                else /*if (!p1_paired && p2_paired)*/
+                {
+                    var current_pairing_value = PairingValue(p2);
+                    var swapped_pairing_value = value;
+                    if (swapped_pairing_value > current_pairing_value)
+                    {
+                        var rival_p2 = RivalOf(p2);
+                        //Console.WriteLine(string.Format("Swapping {0} & [{1} vs{2}] ({3}) for [{4} vs {5}] & {6} ({7})",
+                        //    p1, p2, rival_p2, current_pairing_value,
+                        //    p1, p2, rival_p2, swapped_pairing_value));
+                        RemovePairing(p2);
+                        AddPairing(p1, p2, value);
+                        return true;
+                    }
+                    return false;
+                }
+            }
+            /*
+            List<string> players = new List<string> { "a", "b", "c", "d", "e", "f", "g", "h" };
+            double[,] values = new double[,]
+            {
+                         a    b    c    d    e    f    g    h 
+                  a   {  -1,   0, 0.5,   1,   1,   1,   1,   1},
+                  b   {   0,  -1, 0.5,   1,   1,   1,   1,   1},
+                  c   { 0.5, 0.5,  -1, 0.5,   1,   1,   1,   1},
+                  d   {   1,   1, 0.5,  -1, 0.5,   1,   1,   1},
+                  e   {   1,   1,   1, 0.5,  -1,   1,   1,   1},
+                  f   {   1,   1,   1,   1,   1,  -1,   1,   1},
+                  g   {   1,   1,   1,   1,   1,   1,  -1, 0.5},
+                  h   {   1,   1,   1,   1,   1,   1, 0.5,  -1},
+            };
+            Should return A vs H, B vs E, C vs F, d vs G, total value 8 (max)
+            */
+            Dictionary<Player, Player> CalculatePairings()
+            {
+                int nPlayers = players.Count;
+
+                for (int i = 0; i < nPlayers; i++)
+                {
+                    var p1 = players[i];
+                    double current_max_p1 = -1;
+
+                    for (int j = 0; j < nPlayers; j++)
+                    {
+                        var p2 = players[j];
+                        if (p1 == p2) continue;
+
+                        Console.WriteLine("Checking " + p1 + " vs " + p2);
+                        var pairing_value = values[i, j];
+                        if (pairing_value > current_max_p1)
+                        {
+                            var matched = MakeMatchSwappingIfBetter(p1, p2, pairing_value);
+                            if (matched)
+                            {
+                                current_max_p1 = pairing_value;
+                                if (current_max_p1 == maxPairingValue)
+                                    break;
+                            }
+                        }
+                    }
+                }
+                return playerMatchups;
+            }
+
+            public string ListMatchups()
+            {
+                StringBuilder sb = new StringBuilder();
+                double total_value = 0;
+                foreach (var kv in playerMatchups)
+                {
+                    sb.AppendFormat(" {0} vs {1} ({2})\n", kv.Key, kv.Value, PairingValue(kv.Key));
+                    total_value += PairingValue(kv.Key);
+                }
+                sb.AppendFormat("Total value: {0}", total_value);
+                return sb.ToString();
+            }
+
+            public static Dictionary<Player, Player> MakeMatchmaking(IList<Player> players)
+            {
+                var calculator = new MatchmakerCityClubHelper(players);
+                return calculator.CalculatePairings();
             }
         }
     }

@@ -244,7 +244,7 @@ namespace WargameTournamentManager
         public void GenerateMatchup()
         {
             if (CurrentRound == 0)
-                GenerateMatchupByRandom();
+                GenerateMatchupByCityClub();
             else
                 GenerateMatchupBySwiss();
         }
@@ -274,6 +274,13 @@ namespace WargameTournamentManager
         {
             var round = Rounds[CurrentRound];
             round.Matchups = Matchmaker.GenerateMatchupBySwiss(this, round.Number);
+            round.OnPropertyChanged("Matchups");
+        }
+
+        private void GenerateMatchupByCityClub()
+        {
+            var round = Rounds[CurrentRound];
+            round.Matchups = Matchmaker.GenerateMatchupByCityClub(this, round.Number);
             round.OnPropertyChanged("Matchups");
         }
 
