@@ -241,7 +241,7 @@ namespace WargameTournamentManager
                             // Aggregate all properties
                             values[i, j] = 0;
                             if (players[i].Club != players[j].Club) values[i, j] += 0.5;
-                            if (players[i].Faction != players[j].Faction) values[i, j] += 0.5;
+                            if (players[i].City != players[j].City) values[i, j] += 0.5;
                         }
                     }
                 }
