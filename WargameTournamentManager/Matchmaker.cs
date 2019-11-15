@@ -61,19 +61,17 @@ namespace WargameTournamentManager
             while (results.Count > 0)
             {
                 int player1 = results[0].player.Id;
-                int player2 = results[1].player.Id;
-                int i = 2;
-                while (PlayersHavePlayedTogether(tournament, player1, player2)
-                       && i < results.Count)
+                int i = 1;
+                while (i < results.Count
+                       && PlayersHavePlayedTogether(tournament, player1, results[i].player.Id))
                 {
-                    player2 = results[i].player.Id;
                     i++;
                 }
                 if (i == results.Count)
                 {
                     i = 1;
-                    player2 = results[i].player.Id;
                 }
+                int player2 = results[i].player.Id;
                 matchups.Add(new Matchup(roundNumber, player1, player2, tournament.Config.Tags));
                 results.RemoveAt(i);
                 results.RemoveAt(0);
@@ -214,6 +212,8 @@ namespace WargameTournamentManager
             score = _score;
             scorePerTag = _scorePerTag;
         }
+
+        public override string ToString() { return player.Name + "(" + score + ")"; }
     }
 
 }
