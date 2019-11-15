@@ -7,7 +7,7 @@
         xmlns:local="clr-namespace:WargameTournamentManager"
         mc:Ignorable="d"
         xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="Gestor de Torneos para Wargames" Height="600" Width="800">
+        Title="Gestor de Torneos para Wargames" Height="600" Width="850">
 
     <Controls:MetroWindow.Resources>
         <local:TournamentActiveConverter x:Key="TournamentActiveConverter"/>
