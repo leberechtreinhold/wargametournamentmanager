@@ -24,6 +24,7 @@ namespace WargameTournamentManager
         public int PointsPerWin { get; set; }
         public int PointsPerLoss { get; set; }
         public int PointsPerDraw { get; set; }
+        public string ScoreFormula { get; set; }
         public IList<string> Tags { get; set; }
         private string _tagsStr;
         public string TagsStr
@@ -45,6 +46,7 @@ namespace WargameTournamentManager
             PointsPerLoss = 1;
 
             TagsStr = "DiferenciaPeanas, Campamentos, Generales";
+            ScoreFormula = "Puntos * 1000 + DiferenciaPeanas * 10 + Campamentos + Generales";
         }
 
         public Configuration Clone()
@@ -55,6 +57,7 @@ namespace WargameTournamentManager
             clone.PointsPerDraw = PointsPerDraw;
             clone.PointsPerLoss = PointsPerLoss;
             clone.TagsStr = TagsStr;
+            clone.ScoreFormula = ScoreFormula;
 
             return clone;
         }

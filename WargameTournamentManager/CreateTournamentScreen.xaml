@@ -30,6 +30,7 @@
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
                     <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
                 </Grid.RowDefinitions>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto" />
@@ -44,7 +45,7 @@
                          Grid.Column="1"
                          Margin="5"
                          Text="{Binding Name}"
-                         Width="200"
+                         Width="250"
                          Controls:TextBoxHelper.Watermark="Nombre del torneo" />
                 
                 <Label Grid.Row="1"
@@ -55,7 +56,7 @@
                          Grid.Column="1"
                          Margin="5"
                          Text="{Binding Game}"
-                         Width="200"
+                         Width="250"
                          Controls:TextBoxHelper.Watermark="Nombre del juego" />
 
                 <Label Grid.Row="2"
@@ -66,7 +67,7 @@
                          Grid.Column="1"
                          Margin="5"
                          Text="{Binding Date, Mode=TwoWay}"
-                         Width="200"
+                         Width="250"
                          Controls:TextBoxHelper.Watermark="31/12/2099" />
 
                 <Label Grid.Row="3"
@@ -77,7 +78,7 @@
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="10"
-                                        Width="200"
+                                        Width="250"
                                         Margin="5"
                                         Value="{Binding Config.NumberRounds}" />
                 <Label Grid.Row="4"
@@ -88,7 +89,7 @@
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="20000"
-                                        Width="200"
+                                        Width="250"
                                         Margin="5"
                                         Value="{Binding Config.PointsPerWin}" />
                 <Label Grid.Row="5"
@@ -99,7 +100,7 @@
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="20000"
-                                        Width="200"
+                                        Width="250"
                                         Margin="5"
                                         Value="{Binding Config.PointsPerDraw}" />
                 <Label Grid.Row="6"
@@ -110,7 +111,7 @@
                                         Grid.Column="1"
                                         Minimum="0"
                                         Maximum="20000"
-                                        Width="200"
+                                        Width="250"
                                         Margin="5"
                                         Value="{Binding Config.PointsPerLoss}" />
 
@@ -122,9 +123,19 @@
                          Grid.Column="1"
                          Margin="5"
                          Text="{Binding Config.TagsStr}"
-                         Width="200" />
+                         Width="250" />
+
+                <Label Grid.Row="8"
+                       Grid.Column="0"
+                       Margin="5"
+                       Content="Fórmula de puntuación" />
+                <TextBox Grid.Row="8"
+                         Grid.Column="1"
+                         Margin="5"
+                         Text="{Binding Config.ScoreFormula}"
+                         Width="250" />
                 
-                <Button Grid.Row="8"
+                <Button Grid.Row="9"
                         Grid.Column="1"
                         Margin="20"
                         Content="Save"
