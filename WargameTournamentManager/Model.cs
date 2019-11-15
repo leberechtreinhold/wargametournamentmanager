@@ -474,6 +474,11 @@ namespace WargameTournamentManager
             Faction = data.Faction;
             Paid = data.Paid;
         }
+
+        public override string ToString()
+        {
+            return Name;
+        }
     }
 
     public class Round : INotifyPropertyChanged
