@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Jace;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -101,7 +102,8 @@ namespace WargameTournamentManager
         {
             DataTable ranking = new DataTable();
             ranking.Columns.Add("Nombre");
-            ranking.Columns.Add("Puntuación");
+            ranking.Columns.Add("Puntuación Total");
+            ranking.Columns.Add("Puntuación Partidas");
             ranking.Columns.Add("Facción");
             foreach (var tag in config.Tags)
             {
@@ -115,10 +117,11 @@ namespace WargameTournamentManager
             List<PlayerResult> results = new List<PlayerResult>();
             foreach (var player in tournament.Players)
             {
-                (int score, Dictionary<string, int> scorePerTag) = CalculatePlayerScore(tournament, player.Id);
-                results.Add(new PlayerResult(player, score, scorePerTag));
+                (int matchScore, Dictionary<string, int> scorePerTag) = CalculatePlayerScore(tournament, player.Id);
+                double totalScore = CalculatePlayerTotalScore(tournament, matchScore, scorePerTag);
+                results.Add(new PlayerResult(player, totalScore, matchScore, scorePerTag));
             }
-            results.Sort((x, y) => -1 * (x.score).CompareTo(y.score));
+            results.Sort((x, y) => -1 * (x.totalScore).CompareTo(y.totalScore));
             return results;
         }
 
@@ -151,6 +154,25 @@ namespace WargameTournamentManager
             return (score, scorePerTag);
         }
 
+        private static double CalculatePlayerTotalScore(Tournament tournament, int matchScore, Dictionary<string, int> scorePerTag)
+        {
+            Dictionary<string, double> variables = new Dictionary<string, double>();
+            variables.Add("Puntos", matchScore);
+            variables.Add("Score", matchScore);
+            foreach (var pair in scorePerTag)
+            {
+                variables.Add(pair.Key, pair.Value);
+            }
+            foreach (string tag in tournament.Config.Tags)
+            {
+                if (!variables.ContainsKey(tag))
+                {
+                    variables.Add(tag, 0);
+                }
+            }
+            CalculationEngine engine = new CalculationEngine();
+            return engine.Calculate(tournament.Config.ScoreFormula, variables);
+        }
         private static void FillRankingData(Tournament tournament, DataTable ranking, List<PlayerResult> results)
         {
             var rankedPlayers = new List<object[]>(tournament.Players.Count);
@@ -160,10 +182,11 @@ namespace WargameTournamentManager
             {
                 var rankedPlayer = new object[columns];
                 rankedPlayer[0] = playerResult.player.Name;
-                rankedPlayer[1] = playerResult.score;
-                rankedPlayer[2] = playerResult.player.Faction;
+                rankedPlayer[1] = playerResult.totalScore;
+                rankedPlayer[2] = playerResult.matchScore;
+                rankedPlayer[3] = playerResult.player.Faction;
 
-                int i = 3;
+                int i = 4;
                 foreach (var tagScore in playerResult.scorePerTag)
                 {
                     // TODO We should check that the column order is the same
@@ -203,17 +226,19 @@ namespace WargameTournamentManager
     internal class PlayerResult
     {
         public Player player { get; private set; }
-        public int score { get; private set; }
+        public double totalScore { get; private set; }
+        public int matchScore { get; private set; }
         public Dictionary<string, int> scorePerTag { get; private set; }
 
-        public PlayerResult(Player _player, int _score, Dictionary<string, int> _scorePerTag)
+        public PlayerResult(Player _player, double _totalScore, int _matchScore, Dictionary<string, int> _scorePerTag)
         {
             player = _player;
-            score = _score;
+            totalScore = _totalScore;
+            matchScore = _matchScore;
             scorePerTag = _scorePerTag;
         }
 
-        public override string ToString() { return player.Name + "(" + score + ")"; }
+        public override string ToString() { return player.Name + "(" + totalScore + ")"; }
     }
 
 }
