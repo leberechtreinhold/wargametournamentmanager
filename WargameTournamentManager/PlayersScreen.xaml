@@ -161,15 +161,29 @@
                           Style="{StaticResource AzureDataGrid}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}"
-                                            Header="Nombre" />
+                                            Header="Nombre"
+                                            MinWidth="250">
+                            <DataGridTextColumn.ElementStyle>
+                                <Style TargetType="TextBlock">
+                                    <Setter Property="HorizontalAlignment"
+                                            Value="Right" />
+                                    <Setter Property="Margin"
+                                            Value="10,0,10,0" />
+                                </Style>
+                                </DataGridTextColumn.ElementStyle>
+                        </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding City}"
-                                            Header="Ciudad" />
+                                            Header="Ciudad"
+                                            MinWidth="150"/>
                         <DataGridTextColumn Binding="{Binding Club}"
-                                            Header="Club" />
+                                            Header="Club"
+                                            MinWidth="150"/>
                         <DataGridTextColumn Binding="{Binding Contact}"
-                                            Header="Contacto" />
+                                            Header="Contacto"
+                                            MinWidth="150" />
                         <DataGridTextColumn Binding="{Binding Faction}"
-                                            Header="Facción" />
+                                            Header="Facción"
+                                            MinWidth="150" />
                         <DataGridCheckBoxColumn Binding="{Binding Paid}"
                                                 Header="Inscripción pagada" />
                         <DataGridTemplateColumn>
