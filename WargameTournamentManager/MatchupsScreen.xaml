@@ -38,6 +38,7 @@
                           Margin="10"
                           AutoGenerateColumns="True"
                           CanUserAddRows="false"
+                          AutoGeneratingColumn="GeneratingGridTagsMatchup_AutoGeneratingColumn"
                           Style="{StaticResource AzureDataGrid}">
                 </DataGrid>
                 <Button Content="Guardar"

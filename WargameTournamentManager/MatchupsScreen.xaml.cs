@@ -1,4 +1,5 @@
-﻿using MahApps.Metro.Controls.Dialogs;
+﻿using MahApps.Metro.Controls;
+using MahApps.Metro.Controls.Dialogs;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -73,6 +74,18 @@ namespace WargameTournamentManager
                 
             }
         }
+
+        private void GeneratingGridTagsMatchup_AutoGeneratingColumn(object sender, DataGridAutoGeneratingColumnEventArgs e)
+        {
+            if (e.PropertyType == typeof(int))
+            {
+                var col = new DataGridNumericUpDownColumn();
+                col.Header = e.Column.Header;
+                Binding binding = new Binding(e.PropertyName);
+                col.Binding = binding;
+                e.Column = col;
+            }
+        }
     }
 
     // The matchup is very different from view from the model, because the model is
@@ -130,9 +143,10 @@ namespace WargameTournamentManager
 
             IndexCurrentResult = (int)SourceMatchup.CurrentResult;
             Tags = new DataTable();
-            Tags.Columns.Add("Tag");
-            Tags.Columns.Add(Player1Name);
-            Tags.Columns.Add(Player2Name);
+            var column = Tags.Columns.Add("Tag", typeof(string));
+            column.ReadOnly = true;
+            Tags.Columns.Add(Player1Name, typeof(int));
+            Tags.Columns.Add(Player2Name, typeof(int));
             foreach(var tagPair in SourceMatchup.Player1Tags)
             {
                 Tags.Rows.Add(tagPair.Key, tagPair.Value, SourceMatchup.Player2Tags[tagPair.Key]);
@@ -145,8 +159,8 @@ namespace WargameTournamentManager
             foreach (DataRow row in Tags.Rows)
             {
                 var tagname = (string)row["Tag"];
-                var player1 =  int.Parse((string)row[Player1Name]);
-                var player2 = int.Parse((string)row[Player2Name]);
+                var player1 =  (int)row[Player1Name];
+                var player2 = (int)row[Player2Name];
                 SourceMatchup.Player1Tags[tagname] = player1;
                 SourceMatchup.Player2Tags[tagname] = player2;
             }
