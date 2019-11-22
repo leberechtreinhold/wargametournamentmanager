@@ -8,6 +8,7 @@
         <local:PlayerListLockedConverter x:Key="PlayerListLockedConverter" />
         <local:PlayerListUnlockedConverter x:Key="PlayerListUnlockedConverter" />
         <local:PlayerListLockToggleConverter x:Key="PlayerListLockToggleConverter" />
+        <local:PlayerListCountConverter x:Key="PlayerListCountConverter" />
     </UserControl.Resources>
     <Grid>
         <simpleChildWindow:ChildWindow x:Name="editPlayerWindow"
@@ -139,6 +140,9 @@
                         IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
                         Controls:ButtonHelper.PreserveTextCase="True"
                         Style="{StaticResource AccentedSquareButtonStyle}" />
+                <Label DockPanel.Dock="Left"
+                       Margin="20"
+                       Content="{Binding Players, Converter={StaticResource PlayerListCountConverter}}"></Label>
                 <Button Content="{Binding PlayerListLocked, Converter={StaticResource PlayerListLockToggleConverter}}"
                         DockPanel.Dock="Right"
                         Click="PlayerListLock_Click"
