@@ -106,28 +106,54 @@
                 </Button>
             </StackPanel>
         </simpleChildWindow:ChildWindow>
-        <StackPanel Margin="20">
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Name" />
-                <TextBox Text="{Binding Name}"
-                         IsEnabled="False" />
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Margin="20">
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Name" />
+                    <TextBox Text="{Binding Name}"
+                             IsEnabled="False" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Fecha" />
+                    <TextBox Text="{Binding Date}"
+                             IsEnabled="False" />
+                </StackPanel>
+                <StackPanel Orientation="Horizontal">
+                    <Label Content="Juego" />
+                    <TextBox Text="{Binding Game}"
+                             IsEnabled="False" />
+                </StackPanel>
             </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Fecha" />
-                <TextBox Text="{Binding Date}"
-                         IsEnabled="False" />
-            </StackPanel>
-            <StackPanel Orientation="Horizontal">
-                <Label Content="Juego" />
-                <TextBox Text="{Binding Game}"
-                         IsEnabled="False" />
-            </StackPanel>
-            <StackPanel>
+            <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+                <Button Content="Borrar seleccionados"
+                        DockPanel.Dock="Left"
+                        Margin="20"
+                        Click="DeleteSelected_Click"
+                        IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
+                        Controls:ButtonHelper.PreserveTextCase="True"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+                <Button Content="Añadir nuevo jugador"
+                        DockPanel.Dock="Left"
+                        Margin="20"
+                        Click="AddPlayer_Click"
+                        IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
+                        Controls:ButtonHelper.PreserveTextCase="True"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+                <Button Content="{Binding PlayerListLocked, Converter={StaticResource PlayerListLockToggleConverter}}"
+                        DockPanel.Dock="Right"
+                        Click="PlayerListLock_Click"
+                        Margin="20"
+                        Controls:ButtonHelper.PreserveTextCase="True"
+                        Style="{StaticResource AccentedSquareButtonStyle}" />
+            </DockPanel>
+
+            <ScrollViewer>
                 <DataGrid Name="PlayerListDataGrid"
                           ItemsSource="{Binding Players}"
                           Margin="10,20,10,0"
                           AutoGenerateColumns="False"
                           CanUserAddRows="false"
+                          VerticalAlignment="Stretch"
                           Style="{StaticResource AzureDataGrid}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}"
@@ -158,29 +184,7 @@
                         </DataGridTemplateColumn>
                     </DataGrid.Columns>
                 </DataGrid>
-                <DockPanel LastChildFill="False">
-                    <Button Content="Borrar seleccionados"
-                            DockPanel.Dock="Left"
-                            Margin="20"
-                            Click="DeleteSelected_Click"
-                            IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
-                            Controls:ButtonHelper.PreserveTextCase="True"
-                            Style="{StaticResource AccentedSquareButtonStyle}" />
-                    <Button Content="Añadir nuevo jugador"
-                            DockPanel.Dock="Left"
-                            Margin="20"
-                            Click="AddPlayer_Click"
-                            IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
-                            Controls:ButtonHelper.PreserveTextCase="True"
-                            Style="{StaticResource AccentedSquareButtonStyle}" />
-                    <Button Content="{Binding PlayerListLocked, Converter={StaticResource PlayerListLockToggleConverter}}"
-                            DockPanel.Dock="Right"
-                            Click="PlayerListLock_Click"
-                            Margin="20"
-                            Controls:ButtonHelper.PreserveTextCase="True"
-                            Style="{StaticResource AccentedSquareButtonStyle}" />
-                </DockPanel>
-            </StackPanel>
-        </StackPanel>
+            </ScrollViewer>
+        </DockPanel>
     </Grid>
 </UserControl>
