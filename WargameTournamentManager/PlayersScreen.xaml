@@ -147,7 +147,7 @@
                         Style="{StaticResource AccentedSquareButtonStyle}" />
             </DockPanel>
 
-            <ScrollViewer>
+            <ScrollViewer Name="PlayerListDataGridScroll">
                 <DataGrid Name="PlayerListDataGrid"
                           ItemsSource="{Binding Players}"
                           Margin="10,20,10,0"

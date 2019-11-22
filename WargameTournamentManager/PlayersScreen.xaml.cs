@@ -67,7 +67,8 @@ namespace WargameTournamentManager
                 return;
             }
 
-            if (editingPlayer.Id == -1)
+            bool is_player_creation = editingPlayer.Id == -1;
+            if (is_player_creation)
             {
                 MainWindow.gMainWindow.currentTournament.AddPlayer(editingPlayer.Clone());
             }
@@ -83,6 +84,10 @@ namespace WargameTournamentManager
             // on players, the datagrid doesnt refresh automatically...
             PlayerListDataGrid.Items.Refresh();
 
+            if (is_player_creation)
+            {
+                PlayerListDataGridScroll.ScrollToBottom();
+            }
             editPlayerWindow.IsOpen = false;
         }
 
