@@ -1,49 +1,47 @@
 ﻿<Controls:MetroWindow x:Class="WargameTournamentManager.MainWindow"
-        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
-        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
-        xmlns:local="clr-namespace:WargameTournamentManager"
-        mc:Ignorable="d"
-        xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-        Title="Gestor de Torneos para Wargames" Height="600" Width="850">
+                      xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                      xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                      xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+                      xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+                      xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+                      xmlns:local="clr-namespace:WargameTournamentManager"
+                      mc:Ignorable="d"
+                      xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
+                      Title="Gestor de Torneos para Wargames"
+                      Height="600"
+                      Width="850">
 
     <Controls:MetroWindow.Resources>
-        <local:TournamentActiveConverter x:Key="TournamentActiveConverter"/>
-        <local:TournamentInactiveConverter x:Key="TournamentInactiveConverter"/>
+        <local:TournamentActiveConverter x:Key="TournamentActiveConverter" />
+        <local:TournamentInactiveConverter x:Key="TournamentInactiveConverter" />
     </Controls:MetroWindow.Resources>
 
     <Grid>
         <TabControl x:Name="MainTab">
-            <TabItem Header="Torneo" 
+            <TabItem Header="Torneo"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentInactiveConverter}}">
-                <local:CreateTournamentScreen/>
+                <local:CreateTournamentScreen />
             </TabItem>
-            <TabItem Header="Jugadores" 
+            <TabItem Header="Jugadores"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
-                <local:PlayersScreen DataContext="{Binding currentTournament}"/>
+                <local:PlayersScreen DataContext="{Binding currentTournament}" />
             </TabItem>
             <TabItem Header="Enfrentamientos"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <local:MatchupsScreen />
             </TabItem>
-            <TabItem Header="Ranking" 
+            <TabItem Header="Ranking"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
-                <StackPanel Margin="20" DataContext="{Binding currentTournament}">
-                    <StackPanel Orientation="Horizontal" >
-                        <Label Content="Torneo"/>
-                        <TextBox Text="{Binding Name}" IsEnabled="False" />
+                <DockPanel Margin="20"
+                           DataContext="{Binding currentTournament}">
+                    <StackPanel DockPanel.Dock="Top"
+                                Orientation="Horizontal">
+                        <Label Content="Torneo" />
+                        <TextBox Text="{Binding Name}"
+                                 IsEnabled="False" />
                     </StackPanel>
-                    <StackPanel>
-                        <DataGrid ItemsSource="{Binding Ranking}"
-                                  Margin="10,20,10,0" 
-                                  AutoGenerateColumns="True" 
-                                  CanUserAddRows="false" 
-                                  Style="{StaticResource AzureDataGrid}">
-                        </DataGrid>
-                    </StackPanel>
-                    <DockPanel LastChildFill="False">
+                    <DockPanel DockPanel.Dock="Bottom"
+                               LastChildFill="False">
                         <Button DockPanel.Dock="Right"
                                 Content="Exportar Ranking"
                                 Click="ExportRanking_Click"
@@ -51,7 +49,15 @@
                                 Controls:ButtonHelper.PreserveTextCase="True"
                                 Style="{StaticResource AccentedSquareButtonStyle}" />
                     </DockPanel>
-                </StackPanel>
+                    <ScrollViewer>
+                        <DataGrid ItemsSource="{Binding Ranking}"
+                                  Margin="10,20,10,0"
+                                  AutoGenerateColumns="True"
+                                  CanUserAddRows="false"
+                                  Style="{StaticResource AzureDataGrid}">
+                        </DataGrid>
+                    </ScrollViewer>
+                </DockPanel>
             </TabItem>
         </TabControl>
     </Grid>
