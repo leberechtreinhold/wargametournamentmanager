@@ -255,35 +255,45 @@ namespace WargameTournamentManager
         private void GenerateMatchupById()
         {
             var round = Rounds[CurrentRound];
-            round.Matchups = Matchmaker.GenerateMatchupById(this, round.Number);
+            var matchups = Matchmaker.GenerateMatchupById(this, round.Number);
+            Matchmaker.UpdateMatchupsWithTables(matchups, this);
+            round.Matchups = matchups;
             round.OnPropertyChanged("Matchups");
         }
 
         private void GenerateMatchupByRandom()
         {
             var round = Rounds[CurrentRound];
-            round.Matchups = Matchmaker.GenerateMatchupByRandom(this, round.Number);
+            var matchups = Matchmaker.GenerateMatchupByRandom(this, round.Number);
+            Matchmaker.UpdateMatchupsWithTables(matchups, this);
+            round.Matchups = matchups;
             round.OnPropertyChanged("Matchups");
         }
 
         private void GenerateMatchupByStrictSwiss()
         {
             var round = Rounds[CurrentRound];
-            round.Matchups = Matchmaker.GenerateMatchupByStrictSwiss(this, round.Number);
+            var matchups = Matchmaker.GenerateMatchupByStrictSwiss(this, round.Number);
+            Matchmaker.UpdateMatchupsWithTables(matchups, this);
+            round.Matchups = matchups;
             round.OnPropertyChanged("Matchups");
         }
 
         private void GenerateMatchupBySwiss()
         {
             var round = Rounds[CurrentRound];
-            round.Matchups = Matchmaker.GenerateMatchupBySwiss(this, round.Number);
+            var matchups = Matchmaker.GenerateMatchupBySwiss(this, round.Number);
+            Matchmaker.UpdateMatchupsWithTables(matchups, this);
+            round.Matchups = matchups;
             round.OnPropertyChanged("Matchups");
         }
 
         private void GenerateMatchupByCityClub()
         {
             var round = Rounds[CurrentRound];
-            round.Matchups = Matchmaker.GenerateMatchupByCityClub(this, round.Number);
+            var matchups = Matchmaker.GenerateMatchupByCityClub(this, round.Number);
+            Matchmaker.UpdateMatchupsWithTables(matchups, this);
+            round.Matchups = matchups;
             round.OnPropertyChanged("Matchups");
         }
 
@@ -531,7 +541,7 @@ namespace WargameTournamentManager
 
     public class Matchup
     {
-        public uint Table { get; set; }
+        public int Table { get; set; }
         public int Round { get; set; }
         public Result CurrentResult { get; set; }
 

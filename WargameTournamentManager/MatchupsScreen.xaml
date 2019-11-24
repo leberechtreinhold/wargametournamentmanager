@@ -112,6 +112,8 @@
                                         </MultiBinding>
                                     </DataGridTextColumn.Binding>
                                 </DataGridTextColumn>
+                                <DataGridTextColumn Header="Tabla" Binding="{Binding Table}"> 
+                                </DataGridTextColumn>
                                 <DataGridTextColumn Header="Resultado"
                                                     IsReadOnly="True">
                                     <DataGridTextColumn.Binding>

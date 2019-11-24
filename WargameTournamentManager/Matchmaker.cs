@@ -97,7 +97,7 @@ namespace WargameTournamentManager
             }
             return matchups;
         }
-        
+
         private static bool PlayersHavePlayedTogether(Tournament t, int player1Id, int player2Id)
         {
             foreach (var round in t.Rounds)
@@ -191,6 +191,7 @@ namespace WargameTournamentManager
             CalculationEngine engine = new CalculationEngine();
             return engine.Calculate(tournament.Config.ScoreFormula, variables);
         }
+
         private static void FillRankingData(Tournament tournament, DataTable ranking, List<PlayerResult> results)
         {
             var rankedPlayers = new List<object[]>(tournament.Players.Count);
@@ -223,8 +224,83 @@ namespace WargameTournamentManager
             }
         }
 
+        public static void UpdateMatchupsWithTables(List<Matchup> matchups, Tournament tournament)
+        {
+            // First naive assignment, each gets a number depending on matchmaking
+            for (int i = 0; i < matchups.Count; i++)
+            {
+                matchups[i].Table = i + 1;
+            }
 
+            // If its the first round, no one has played in another player,
+            // therefore no conflict possible
+            if (matchups.First().Round == 0)
+            {
+                return;
+            }
 
+            // Otherwise, they may have already played in that table and we swap
+            for (int i = 0; i < matchups.Count; i++)
+            {
+                var matchup = matchups[i];
+                var player1 = matchup.Player1Id;
+                var player2 = matchup.Player2Id;
+                if (HasEitherPlayerPlayedInTable(tournament, player1, player2, matchup.Table))
+                {
+                    // Yes, search not only forward but backwards too! Some can be
+                    // swapped two times
+                    for (int j = 0; j < matchups.Count; j++)
+                    {
+                        if (i == j) continue;
+
+                        var player1_swap = matchups[j].Player1Id;
+                        var player2_swap = matchups[j].Player2Id;
+                        if (!HasEitherPlayerPlayedInTable(tournament, player1_swap, player2_swap, matchup.Table)
+                            && !HasEitherPlayerPlayedInTable(tournament, player1, player2, matchups[j].Table))
+                        {
+                            int oldTable = matchup.Table;
+                            matchup.Table = matchups[j].Table;
+                            matchups[j].Table = oldTable;
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        private static bool HasPlayerPlayedInTable(Tournament tournament, int playerId, int tableNumber)
+        {
+            foreach (var round in tournament.Rounds)
+            {
+                foreach (var matchup in round.Matchups)
+                {
+                    if (matchup.Table == tableNumber
+                        && matchup.PlayerBelongsToMatchup(playerId))
+                        return true;
+                }
+            }
+            return false;
+        }
+
+        // Version of the previous with two playerIds. Faster, and even if 
+        // it can be easily generalized with a list, we want this to be 
+        // fast because it canbe called in n^2 matchups!!!
+        // NOTE If its still slow, use a table where each player has the list
+        // of tables he already played, and do a cross check
+        private static bool HasEitherPlayerPlayedInTable(Tournament tournament, int player1Id, int player2Id, int tableNumber)
+        {
+            foreach (var round in tournament.Rounds)
+            {
+                foreach (var matchup in round.Matchups)
+                {
+                    if (matchup.Table == tableNumber
+                        && (matchup.PlayerBelongsToMatchup(player1Id)
+                            || matchup.PlayerBelongsToMatchup(player2Id)))
+                        return true;
+                }
+            }
+            return false;
+        }
         // Despite looking like a super easy problem, making a matchmaking where
         // each player has different criteria is a surprisingly complex
         // pairing problem, and we need to precalculate a lot of values.
