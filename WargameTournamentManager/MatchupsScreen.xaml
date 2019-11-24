@@ -136,7 +136,7 @@
                                                     Content="Editar enfrentamiento"
                                                     Controls:ButtonHelper.PreserveTextCase="True"
                                                     IsEnabled="{Binding 
-                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, 
+                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}}, 
                                                             Path=DataContext.Active}"
                                                     Style="{StaticResource AccentedSquareButtonStyle}" />
                                         </DataTemplate>

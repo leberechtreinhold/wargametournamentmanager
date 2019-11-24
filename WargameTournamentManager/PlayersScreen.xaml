@@ -193,7 +193,7 @@
                                             Content="Editar jugador"
                                             Controls:ButtonHelper.PreserveTextCase="True"
                                             IsEnabled="{Binding 
-                                                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type StackPanel}}, 
+                                                RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}}, 
                                                 Path=DataContext.PlayerListLocked,
                                                 Converter={StaticResource PlayerListUnlockedConverter}}"
                                             Style="{StaticResource AccentedSquareButtonStyle}" />
