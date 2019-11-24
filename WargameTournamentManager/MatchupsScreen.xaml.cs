@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -71,7 +72,7 @@ namespace WargameTournamentManager
             if (oldIndex != newIndex)
             {
                 TabRounds.SelectedIndex = newIndex;
-                
+
             }
         }
 
@@ -147,7 +148,7 @@ namespace WargameTournamentManager
             column.ReadOnly = true;
             Tags.Columns.Add(Player1Name, typeof(int));
             Tags.Columns.Add(Player2Name, typeof(int));
-            foreach(var tagPair in SourceMatchup.Player1Tags)
+            foreach (var tagPair in SourceMatchup.Player1Tags)
             {
                 Tags.Rows.Add(tagPair.Key, tagPair.Value, SourceMatchup.Player2Tags[tagPair.Key]);
             }
@@ -159,7 +160,7 @@ namespace WargameTournamentManager
             foreach (DataRow row in Tags.Rows)
             {
                 var tagname = (string)row["Tag"];
-                var player1 =  (int)row[Player1Name];
+                var player1 = (int)row[Player1Name];
                 var player2 = (int)row[Player2Name];
                 SourceMatchup.Player1Tags[tagname] = player1;
                 SourceMatchup.Player2Tags[tagname] = player2;
@@ -205,6 +206,35 @@ namespace WargameTournamentManager
                 int winner = matchup.CurrentResult == Result.PLAYER1_WIN ? matchup.Player1Id : matchup.Player2Id;
                 return string.Format("Victoria para {0}", tournament.Players[winner].Name);
             }
+        }
+
+        public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class GetMatchupTagSummaryConverter : IMultiValueConverter
+    {
+        public object Convert(object[] values, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (values.Length != 2) return null;
+
+            Matchup matchup = values[0] as Matchup;
+            Tournament tournament = values[1] as Tournament;
+            if (matchup == null || tournament == null)
+                return null;
+
+            string[] tags = new string[matchup.Player1Tags.Count];
+            int i = 0;
+            foreach (var kv in matchup.Player1Tags)
+            {
+                var tag = kv.Key;
+
+                tags[i] = string.Format("{0} {1}/{2}", tag, matchup.Player1Tags[tag], matchup.Player2Tags[tag]);
+                i++;
+            }
+            return string.Join(", ", tags);
         }
 
         public object[] ConvertBack(object value, Type[] targetTypes, object parameter, CultureInfo culture)

@@ -7,6 +7,7 @@
     <UserControl.Resources>
         <local:GetMatchupNameConverter x:Key="GetMatchupNameConverter" />
         <local:GetMatchupResultConverter x:Key="GetMatchupResultConverter" />
+        <local:GetMatchupTagSummaryConverter x:Key="GetMatchupTagSummaryConverter" />
         <local:GetRoundActiveOrNotConverter x:Key="GetRoundActiveOrNotConverter" />
         <local:PlayerListLockedConverter x:Key="PlayerListLockedConverter" />
     </UserControl.Resources>
@@ -118,6 +119,21 @@
                                                     IsReadOnly="True">
                                     <DataGridTextColumn.Binding>
                                         <MultiBinding Converter="{StaticResource GetMatchupResultConverter}">
+                                            <Binding Mode="OneWay" />
+                                            <Binding Mode="OneWay"
+                                                     Path="currentTournament">
+                                                <Binding.RelativeSource>
+                                                    <RelativeSource Mode="FindAncestor"
+                                                                    AncestorType="{x:Type Window}" />
+                                                </Binding.RelativeSource>
+                                            </Binding>
+                                        </MultiBinding>
+                                    </DataGridTextColumn.Binding>
+                                </DataGridTextColumn>
+                                <DataGridTextColumn Header="Resumen"
+                                                    IsReadOnly="True">
+                                    <DataGridTextColumn.Binding>
+                                        <MultiBinding Converter="{StaticResource GetMatchupTagSummaryConverter}">
                                             <Binding Mode="OneWay" />
                                             <Binding Mode="OneWay"
                                                      Path="currentTournament">
