@@ -11,6 +11,9 @@
         <local:PlayerListLockedConverter x:Key="PlayerListLockedConverter" />
     </UserControl.Resources>
     <Grid>
+        <Grid.Resources>
+            <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.AnimatedSingleRowTabControl.xaml" />
+        </Grid.Resources>
         <simpleChildWindow:ChildWindow x:Name="editMatchupWindow"
                                        Title="Editar enfrentamiento"
                                        Padding="20"

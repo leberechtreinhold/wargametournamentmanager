@@ -40,9 +40,9 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "Por favor, inserta el nombre del juego");
                 return;
             }
-            if (creationTournament.Config.NumberRounds < 1 || creationTournament.Config.NumberRounds > 10)
+            if (creationTournament.Config.NumberRounds < 1 || creationTournament.Config.NumberRounds > 32)
             {
-                MainWindow.gMainWindow.ShowMessageAsync("Error", "El número de rondas es inválido, debe estar entre 1 y 10.");
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "El número de rondas es inválido, debe estar entre 1 y 32.");
                 return;
             }
 

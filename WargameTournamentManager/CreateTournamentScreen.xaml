@@ -77,7 +77,7 @@
                 <Controls:NumericUpDown Grid.Row="3"
                                         Grid.Column="1"
                                         Minimum="0"
-                                        Maximum="10"
+                                        Maximum="32"
                                         Width="250"
                                         Margin="5"
                                         Value="{Binding Config.NumberRounds}" />
