@@ -39,14 +39,12 @@ namespace WargameTournamentManager
 
         public Configuration()
         {
-            NumberRounds = 5;
-
-            PointsPerWin = 3;
-            PointsPerDraw = 0;
-            PointsPerLoss = 1;
-
-            TagsStr = "DiferenciaPeanas, Campamentos, Generales";
-            ScoreFormula = "Puntos * 1000 + DiferenciaPeanas * 10 + Campamentos + Generales";
+            NumberRounds = DBA.GetDefaultRounds();
+            PointsPerWin = DBA.GetDefaultPointsPerWin();
+            PointsPerDraw = DBA.GetDefaultPointsPerDraw();
+            PointsPerLoss = DBA.GetDefaultPointsPerLoss();
+            TagsStr = DBA.GetDefaultTags();
+            ScoreFormula = DBA.GetDefaultScoreFormula();
         }
 
         public Configuration Clone()

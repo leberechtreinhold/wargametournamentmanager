@@ -97,6 +97,7 @@
     <Compile Include="CreateTournamentScreen.xaml.cs">
       <DependentUpon>CreateTournamentScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Games.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
