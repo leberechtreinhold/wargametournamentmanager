@@ -36,7 +36,7 @@
                     <ColumnDefinition Width="Auto" />
                     <ColumnDefinition Width="Auto" />
                 </Grid.ColumnDefinitions>
-                
+
                 <Label Grid.Row="0"
                        Grid.Column="0"
                        Margin="5"
@@ -47,28 +47,32 @@
                          Text="{Binding Name}"
                          Width="250"
                          Controls:TextBoxHelper.Watermark="Nombre del torneo" />
-                
+
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        Margin="5"
                        Content="Juego" />
-                <TextBox Grid.Row="1"
-                         Grid.Column="1"
-                         Margin="5"
-                         Text="{Binding Game}"
-                         Width="250"
-                         Controls:TextBoxHelper.Watermark="Nombre del juego" />
+                <ComboBox Grid.Row="1"
+                          Grid.Column="1"
+                          Margin="5"
+                          Width="250"
+                          Name="combobox_Games"
+                          SelectionChanged="ListboxGames_ChangedSelection">
+                    <ComboBoxItem Tag="DBA">De Bellis Antiquitatis</ComboBoxItem>
+                    <ComboBoxItem Tag="BoltAction">Bolt Action</ComboBoxItem>
+                    <ComboBoxItem Tag="Other">Otro</ComboBoxItem>
+                </ComboBox>
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
                        Margin="5"
                        Content="Fecha" />
                 <DatePicker Grid.Row="2"
-                         Grid.Column="1"
-                         Margin="5"
-                         Text="{Binding Date, Mode=TwoWay}"
-                         Width="250"
-                         Controls:TextBoxHelper.Watermark="31/12/2099" />
+                            Grid.Column="1"
+                            Margin="5"
+                            Text="{Binding Date, Mode=TwoWay}"
+                            Width="250"
+                            Controls:TextBoxHelper.Watermark="31/12/2099" />
 
                 <Label Grid.Row="3"
                        Grid.Column="0"
@@ -134,7 +138,7 @@
                          Margin="5"
                          Text="{Binding Config.ScoreFormula}"
                          Width="250" />
-                
+
                 <Button Grid.Row="9"
                         Grid.Column="1"
                         Margin="20"

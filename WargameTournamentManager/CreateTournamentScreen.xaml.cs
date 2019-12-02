@@ -72,5 +72,30 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.OnPropertyChanged("currentTournament");
             }
         }
+
+        private void ListboxGames_ChangedSelection(object sender, SelectionChangedEventArgs e)
+        {
+            var game = ((ComboBoxItem)combobox_Games.SelectedItem).Tag.ToString(); ;
+            if (game == "DBA")
+            {
+                creationTournament.Config.NumberRounds = 5;
+                creationTournament.Config.PointsPerWin = 3;
+                creationTournament.Config.PointsPerDraw = 0;
+                creationTournament.Config.PointsPerLoss = 1;
+                creationTournament.Config.TagsStr = "DiferenciaPeanas, Campamentos, Generales";
+                creationTournament.Config.ScoreFormula = "Puntos * 1000 + DiferenciaPeanas * 10 + Campamentos + Generales";
+                creationTournament.OnPropertyChanged("Config");
+            }
+            else if (game == "BoltAction")
+            {
+                creationTournament.Config.NumberRounds = 3;
+                creationTournament.Config.PointsPerWin = 3;
+                creationTournament.Config.PointsPerDraw = 1;
+                creationTournament.Config.PointsPerLoss = 0;
+                creationTournament.Config.TagsStr = "DiferenciaOrdenesDestruidas, ObjetivoSecundario";
+                creationTournament.Config.ScoreFormula = "Puntos * 1000 + ObjetivoSecundario * 1000 + DiferenciaOrdenesDestruidas";
+                creationTournament.OnPropertyChanged("Config");
+            }
+        }
     }
 }
