@@ -58,7 +58,7 @@
                           Width="250"
                           Name="combobox_Games"
                           SelectionChanged="ListboxGames_ChangedSelection">
-                    <ComboBoxItem Tag="DBA">De Bellis Antiquitatis</ComboBoxItem>
+                    <ComboBoxItem Tag="DBA" IsSelected="True">De Bellis Antiquitatis</ComboBoxItem>
                     <ComboBoxItem Tag="BoltAction">Bolt Action</ComboBoxItem>
                     <ComboBoxItem Tag="Other">Otro</ComboBoxItem>
                 </ComboBox>
