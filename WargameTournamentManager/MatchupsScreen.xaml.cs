@@ -168,6 +168,12 @@ namespace WargameTournamentManager
                 SourceMatchup.Player1Tags[tagname] = player1;
                 SourceMatchup.Player2Tags[tagname] = player2;
             }
+            foreach (var tag in SourceTournament.Config.Tags)
+            {
+                if (tag.Type != TagType.Calculated) continue;
+                SourceMatchup.Player1Tags[tag.Name] = Matchup.CalculateTag(tag, SourceMatchup.Player1Tags, SourceMatchup.Player2Tags);
+                SourceMatchup.Player2Tags[tag.Name] = Matchup.CalculateTag(tag, SourceMatchup.Player2Tags, SourceMatchup.Player1Tags);
+            }
             SourceTournament.UpdateRanking();
 
             SourceTournament.Save();
