@@ -92,7 +92,7 @@
                     <Controls:ToggleSwitch Grid.Row="6"
                                            Grid.Column="1"
                                            Margin="5"
-                                           IsChecked="False"
+                                           IsChecked="{Binding Paid}"
                                            OnLabel="Sí"
                                            OffLabel="No" />
 
@@ -153,6 +153,7 @@
                           AutoGenerateColumns="False"
                           CanUserAddRows="false"
                           VerticalAlignment="Stretch"
+                          IsReadOnly="True"
                           Style="{StaticResource AzureDataGrid}">
                     <DataGrid.Columns>
                         <DataGridTextColumn Binding="{Binding Name}"
