@@ -37,7 +37,7 @@ namespace WargameTournamentManager
             var players = tournament.Players.Shuffle(new Random()).ToList();
             for (int i = 0; i < players.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, players[i].Id, players[i + 1].Id, null /* TODO tournament.Config.Tags */));
+                matchups.Add(new Matchup(roundNumber, players[i].Id, players[i + 1].Id, tournament.Config.GetTagsIds()));
             }
             return matchups;
         }
