@@ -23,6 +23,15 @@ namespace WargameTournamentManager
         Number,
         Calculated
     }
+
+    public enum MatchmakingType
+    {
+        Random,
+        CityClub,
+        Swiss,
+        StrictSwiss
+    }
+
     public class Tag
     {
         public string Name { get; set; }
@@ -62,6 +71,8 @@ namespace WargameTournamentManager
         public int PointsPerDraw { get; set; }
         public string ScoreFormula { get; set; }
         public IList<Tag> Tags { get; set; }
+        public MatchmakingType FirstRoundMatchmaking { get; set; }
+        public MatchmakingType RoundMatchmaking { get; set; }
 
         public Configuration()
         {
@@ -71,6 +82,8 @@ namespace WargameTournamentManager
             PointsPerLoss = DBA.GetDefaultPointsPerLoss();
             Tags = DBA.GetDefaultTags();
             ScoreFormula = DBA.GetDefaultScoreFormula();
+            FirstRoundMatchmaking = MatchmakingType.CityClub;
+            RoundMatchmaking = MatchmakingType.Swiss;
         }
 
         public Configuration Clone()
@@ -81,6 +94,8 @@ namespace WargameTournamentManager
             clone.PointsPerDraw = PointsPerDraw;
             clone.PointsPerLoss = PointsPerLoss;
             clone.ScoreFormula = ScoreFormula;
+            clone.FirstRoundMatchmaking = FirstRoundMatchmaking;
+            clone.RoundMatchmaking = RoundMatchmaking;
 
             clone.Tags = new List<Tag>();
             foreach (var tag in Tags)
