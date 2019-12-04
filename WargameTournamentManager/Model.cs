@@ -26,6 +26,7 @@ namespace WargameTournamentManager
 
     public enum MatchmakingType
     {
+        Id,
         Random,
         CityClub,
         Swiss,
@@ -276,51 +277,29 @@ namespace WargameTournamentManager
         public void GenerateMatchup()
         {
             if (CurrentRound == 0)
-                GenerateMatchupByCityClub();
+                GenerateMatchupByType(Config.FirstRoundMatchmaking);
             else
-                GenerateMatchupBySwiss();
+                GenerateMatchupByType(Config.RoundMatchmaking);
         }
 
-        private void GenerateMatchupById()
+        private void GenerateMatchupByType(MatchmakingType type)
         {
             var round = Rounds[CurrentRound];
-            var matchups = Matchmaker.GenerateMatchupById(this, round.Number);
-            Matchmaker.UpdateMatchupsWithTables(matchups, this);
-            round.Matchups = matchups;
-            round.OnPropertyChanged("Matchups");
-        }
+            List<Matchup> matchups = null;
 
-        private void GenerateMatchupByRandom()
-        {
-            var round = Rounds[CurrentRound];
-            var matchups = Matchmaker.GenerateMatchupByRandom(this, round.Number);
-            Matchmaker.UpdateMatchupsWithTables(matchups, this);
-            round.Matchups = matchups;
-            round.OnPropertyChanged("Matchups");
-        }
+            if (type == MatchmakingType.Id)
+                matchups = Matchmaker.GenerateMatchupById(this, round.Number);
+            else if (type == MatchmakingType.Random)
+                matchups = Matchmaker.GenerateMatchupByRandom(this, round.Number);
+            else if (type == MatchmakingType.StrictSwiss)
+                matchups = Matchmaker.GenerateMatchupByStrictSwiss(this, round.Number);
+            else if (type == MatchmakingType.Swiss)
+                matchups = Matchmaker.GenerateMatchupBySwiss(this, round.Number);
+            else if (type == MatchmakingType.CityClub)
+                matchups = Matchmaker.GenerateMatchupByCityClub(this, round.Number);
+            else
+                throw new ArgumentException("Unrecognized matchmaking type: " + type);
 
-        private void GenerateMatchupByStrictSwiss()
-        {
-            var round = Rounds[CurrentRound];
-            var matchups = Matchmaker.GenerateMatchupByStrictSwiss(this, round.Number);
-            Matchmaker.UpdateMatchupsWithTables(matchups, this);
-            round.Matchups = matchups;
-            round.OnPropertyChanged("Matchups");
-        }
-
-        private void GenerateMatchupBySwiss()
-        {
-            var round = Rounds[CurrentRound];
-            var matchups = Matchmaker.GenerateMatchupBySwiss(this, round.Number);
-            Matchmaker.UpdateMatchupsWithTables(matchups, this);
-            round.Matchups = matchups;
-            round.OnPropertyChanged("Matchups");
-        }
-
-        private void GenerateMatchupByCityClub()
-        {
-            var round = Rounds[CurrentRound];
-            var matchups = Matchmaker.GenerateMatchupByCityClub(this, round.Number);
             Matchmaker.UpdateMatchupsWithTables(matchups, this);
             round.Matchups = matchups;
             round.OnPropertyChanged("Matchups");
