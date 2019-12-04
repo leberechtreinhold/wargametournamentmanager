@@ -108,7 +108,8 @@
             </StackPanel>
         </simpleChildWindow:ChildWindow>
         <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Margin="20">
+            <StackPanel DockPanel.Dock="Top"
+                        Margin="20">
                 <StackPanel Orientation="Horizontal">
                     <Label Content="Name" />
                     <TextBox Text="{Binding Name}"
@@ -120,7 +121,8 @@
                              IsEnabled="False" />
                 </StackPanel>
             </StackPanel>
-            <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
+            <DockPanel DockPanel.Dock="Bottom"
+                       LastChildFill="False">
                 <Button Content="Borrar seleccionados"
                         DockPanel.Dock="Left"
                         Margin="20"
@@ -166,14 +168,14 @@
                                     <Setter Property="Margin"
                                             Value="10,0,10,0" />
                                 </Style>
-                                </DataGridTextColumn.ElementStyle>
+                            </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
                         <DataGridTextColumn Binding="{Binding City}"
                                             Header="Ciudad"
-                                            MinWidth="150"/>
+                                            MinWidth="150" />
                         <DataGridTextColumn Binding="{Binding Club}"
                                             Header="Club"
-                                            MinWidth="150"/>
+                                            MinWidth="150" />
                         <DataGridTextColumn Binding="{Binding Contact}"
                                             Header="Contacto"
                                             MinWidth="150" />
