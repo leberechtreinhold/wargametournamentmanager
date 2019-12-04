@@ -53,6 +53,13 @@ namespace WargameTournamentManager
             Information = "";
         }
 
+        public Tag(string name, TagType type, string information)
+        {
+            Name = name;
+            Type = type;
+            Information = information;
+        }
+
         public Tag Clone()
         {
             Tag clone = new Tag();

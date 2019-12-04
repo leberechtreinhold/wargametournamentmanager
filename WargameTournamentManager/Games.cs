@@ -16,9 +16,10 @@ namespace WargameTournamentManager
         public static IList<Tag> GetDefaultTags()
         {
             return new List<Tag> {
-                new Tag("DiferenciaPeanas"),
+                new Tag("PeanasEliminadas"),
                 new Tag("Campamentos"),
-                new Tag("Generales")
+                new Tag("Generales"),
+                new Tag("DiferenciaPeanas", TagType.Calculated, "diff(PeanasEliminadas)")
             };
         }
         public static string GetDefaultScoreFormula() { return "Puntos * 1000 + DiferenciaPeanas * 10 + Campamentos + Generales"; }
@@ -34,10 +35,14 @@ namespace WargameTournamentManager
         public static IList<Tag> GetDefaultTags()
         {
             return new List<Tag> {
-                new Tag("DiferenciaOrdenesDestruidas"),
-                new Tag("ObjetivoSecundario")
+                new Tag("ObjetivoSecundario"),
+                new Tag("OrdenesDestruidas"),
+                new Tag("PuntosDestruidos"),
+                new Tag("DiferenciaOrdenes", TagType.Calculated, "diff(OrdenesDestruidas)"),
+                new Tag("DiferenciaPuntos", TagType.Calculated, "diff(PuntosDestruidos)")
+
             };
         }
-        public static string GetDefaultScoreFormula() { return "Puntos * 1000 + ObjetivoSecundario * 1000 + DiferenciaOrdenesDestruidas"; }
+        public static string GetDefaultScoreFormula() { return "Puntos * 10000 + ObjetivoSecundario * 10000 + DiferenciaPuntos"; }
     }
 }
