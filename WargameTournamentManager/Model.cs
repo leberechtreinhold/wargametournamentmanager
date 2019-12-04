@@ -332,7 +332,11 @@ namespace WargameTournamentManager
             if (loaded == true)
             {
                 string json = File.ReadAllText(openFileDialog.FileName);
-                var tournament = JsonConvert.DeserializeObject<Tournament>(json);
+
+                var settings = new JsonSerializerSettings();
+                settings.ObjectCreationHandling = ObjectCreationHandling.Replace;
+                var tournament = JsonConvert.DeserializeObject<Tournament>(json, settings);
+
                 // The user may have change the name of the file, and also the location,
                 // therefore, update it
                 tournament.FileName = Path.GetFileName(openFileDialog.FileName);
