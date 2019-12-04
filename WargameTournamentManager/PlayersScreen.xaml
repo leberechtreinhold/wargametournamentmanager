@@ -119,11 +119,6 @@
                     <TextBox Text="{Binding Date}"
                              IsEnabled="False" />
                 </StackPanel>
-                <StackPanel Orientation="Horizontal">
-                    <Label Content="Juego" />
-                    <TextBox Text="{Binding Game}"
-                             IsEnabled="False" />
-                </StackPanel>
             </StackPanel>
             <DockPanel DockPanel.Dock="Bottom" LastChildFill="False">
                 <Button Content="Borrar seleccionados"

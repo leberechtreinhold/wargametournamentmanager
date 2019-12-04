@@ -18,6 +18,42 @@ namespace WargameTournamentManager
         DRAW
     }
 
+    public enum TagType
+    {
+        Number,
+        Calculated
+    }
+    public class Tag
+    {
+        public string Name { get; set; }
+        public TagType Type { get; set; }
+        public string Information { get; set; }
+
+        public Tag()
+        {
+            Name = "Default";
+            Type = TagType.Number;
+            Information = "";
+        }
+
+        public Tag(string name)
+        {
+            Name = name;
+            Type = TagType.Number;
+            Information = "";
+        }
+
+        public Tag Clone()
+        {
+            Tag clone = new Tag();
+            clone.Name = Name;
+            clone.Type = Type;
+            clone.Information = Information;
+
+            return clone;
+        }
+    }
+    
     public class Configuration
     {
         public int NumberRounds { get; set; }
@@ -25,17 +61,7 @@ namespace WargameTournamentManager
         public int PointsPerLoss { get; set; }
         public int PointsPerDraw { get; set; }
         public string ScoreFormula { get; set; }
-        public IList<string> Tags { get; set; }
-        private string _tagsStr;
-        public string TagsStr
-        {
-            get { return _tagsStr; }
-            set
-            {
-                _tagsStr = value;
-                UpdateTags();
-            }
-        }
+        public IList<Tag> Tags { get; set; }
 
         public Configuration()
         {
@@ -43,7 +69,7 @@ namespace WargameTournamentManager
             PointsPerWin = DBA.GetDefaultPointsPerWin();
             PointsPerDraw = DBA.GetDefaultPointsPerDraw();
             PointsPerLoss = DBA.GetDefaultPointsPerLoss();
-            TagsStr = DBA.GetDefaultTags();
+            Tags = DBA.GetDefaultTags();
             ScoreFormula = DBA.GetDefaultScoreFormula();
         }
 
@@ -54,35 +80,26 @@ namespace WargameTournamentManager
             clone.PointsPerWin = PointsPerWin;
             clone.PointsPerDraw = PointsPerDraw;
             clone.PointsPerLoss = PointsPerLoss;
-            clone.TagsStr = TagsStr;
             clone.ScoreFormula = ScoreFormula;
 
+            clone.Tags = new List<Tag>();
+            foreach (var tag in Tags)
+            {
+                clone.Tags.Add(tag.Clone());
+            }
             return clone;
         }
 
-        private void UpdateTags()
+        public IList<string> GetTagsIds()
         {
-            if (Tags == null)
-            {
-                Tags = new List<string>();
-            }
-            else
-            {
-                Tags.Clear();
-            }
-
-            var tags = TagsStr.Split(',');
-            foreach (var tag in tags)
-            {
-                Tags.Add(tag.Trim());
-            }
+            return Tags.Select(x => x.Name).ToList();
         }
+
     }
 
     public class Tournament : INotifyPropertyChanged
     {
         public string Name { get; set; }
-        public string Game { get; set; }
         public string Date { get; set; }
         public int CurrentRound { get; set; }
         public IList<Player> Players { get; set; }
@@ -111,7 +128,6 @@ namespace WargameTournamentManager
         {
             Tournament clone = new Tournament();
             clone.Name = Name;
-            clone.Game = Game;
             clone.Date = Date;
             clone.CurrentRound = CurrentRound;
             clone.PlayerListLocked = PlayerListLocked;
@@ -599,16 +615,47 @@ namespace WargameTournamentManager
                  || CurrentResult == Result.PLAYER1_LOSS && playerId == Player2Id);
         }
 
-        public void UpdateTagTotalCalculation(int playerId, Dictionary<string, int> scorePerTag)
+        public void UpdateTagTotalCalculation(int playerId, IList<Tag> configTags, Dictionary<string, int> scorePerTag)
         {
             if (CurrentResult == Result.STILL_PLAYING) return;
             if (playerId != Player1Id && playerId != Player2Id) throw new ArgumentException();
 
-            var tags = playerId == Player1Id ? Player1Tags : Player2Tags;
-            foreach (var tag in tags)
+            Dictionary<string, int> tags;
+            Dictionary<string, int> tags_opponent;
+            if (playerId == Player1Id)
             {
-                if (!scorePerTag.ContainsKey(tag.Key)) scorePerTag[tag.Key] = 0;
-                scorePerTag[tag.Key] += tag.Value;
+                tags = Player1Tags;
+                tags_opponent = Player2Tags;
+            }
+            else
+            {
+                tags = Player2Tags;
+                tags_opponent = Player1Tags;
+            }
+
+            foreach (var tag in configTags)
+            {
+                if (!scorePerTag.ContainsKey(tag.Name)) scorePerTag[tag.Name] = 0;
+                scorePerTag[tag.Name] += CalculateTag(tag, tags, tags_opponent);
+            }
+        }
+
+        public static int CalculateTag(Tag tag, Dictionary<string, int> tags, Dictionary<string, int> tags_opponent)
+        {
+            if (tag.Type != TagType.Calculated)
+            {
+                return tags[tag.Name];
+            }
+            else
+            {
+                // At the moment the only function supported is diff
+                if (!tag.Information.ToLowerInvariant().StartsWith("diff("))
+                    throw new InvalidOperationException("Unrecognized function for tag " + tag.Name);
+
+                // Calculate diff(tag), so we remove diff( and ), and get the
+                // tag and substract
+                var calctag = tag.Information.Substring(5, tag.Information.Length - 6);
+                return tags[calctag] - tags_opponent[calctag];
             }
         }
     }

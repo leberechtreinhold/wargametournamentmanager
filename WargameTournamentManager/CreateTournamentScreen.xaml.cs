@@ -35,17 +35,16 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "Por favor, inserta un nombre para el torneo");
                 return;
             }
-            if (string.IsNullOrWhiteSpace(creationTournament.Game))
-            {
-                MainWindow.gMainWindow.ShowMessageAsync("Error", "Por favor, inserta el nombre del juego");
-                return;
-            }
             if (creationTournament.Config.NumberRounds < 1 || creationTournament.Config.NumberRounds > 32)
             {
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "El número de rondas es inválido, debe estar entre 1 y 32.");
                 return;
             }
-
+            if (!Matchmaker.TestPlayerScoreFormulaValid(creationTournament))
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "Las fórmulas de puntuación no son correctas. Revisa que las fórmulas sean válidas y usen los nombres que correspondan.");
+                return;
+            }
             var clone = creationTournament.Clone();
             if (clone.SaveAskingForName())
             {
@@ -82,7 +81,7 @@ namespace WargameTournamentManager
                 creationTournament.Config.PointsPerWin = DBA.GetDefaultPointsPerWin();
                 creationTournament.Config.PointsPerDraw = DBA.GetDefaultPointsPerDraw();
                 creationTournament.Config.PointsPerLoss = DBA.GetDefaultPointsPerLoss();
-                creationTournament.Config.TagsStr = DBA.GetDefaultTags();
+                creationTournament.Config.Tags = DBA.GetDefaultTags();
                 creationTournament.Config.ScoreFormula = DBA.GetDefaultScoreFormula();
                 creationTournament.OnPropertyChanged("Config");
             }
@@ -92,7 +91,7 @@ namespace WargameTournamentManager
                 creationTournament.Config.PointsPerWin = BoltAction.GetDefaultPointsPerWin();
                 creationTournament.Config.PointsPerDraw = BoltAction.GetDefaultPointsPerDraw();
                 creationTournament.Config.PointsPerLoss = BoltAction.GetDefaultPointsPerLoss();
-                creationTournament.Config.TagsStr = BoltAction.GetDefaultTags();
+                creationTournament.Config.Tags = BoltAction.GetDefaultTags();
                 creationTournament.Config.ScoreFormula = BoltAction.GetDefaultScoreFormula();
                 creationTournament.OnPropertyChanged("Config");
             }

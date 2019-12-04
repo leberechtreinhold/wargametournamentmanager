@@ -148,9 +148,12 @@ namespace WargameTournamentManager
             column.ReadOnly = true;
             Tags.Columns.Add(Player1Name, typeof(int));
             Tags.Columns.Add(Player2Name, typeof(int));
-            foreach (var tagPair in SourceMatchup.Player1Tags)
+
+            foreach (var tag in SourceTournament.Config.Tags)
             {
-                Tags.Rows.Add(tagPair.Key, tagPair.Value, SourceMatchup.Player2Tags[tagPair.Key]);
+                if (tag.Type == TagType.Calculated) continue;
+
+                Tags.Rows.Add(tag.Name, SourceMatchup.Player1Tags[tag.Name], SourceMatchup.Player2Tags[tag.Name]);
             }
         }
 
@@ -166,7 +169,7 @@ namespace WargameTournamentManager
                 SourceMatchup.Player2Tags[tagname] = player2;
             }
             SourceTournament.UpdateRanking();
-            // TODO Update tags
+
             SourceTournament.Save();
 
             // Band aid because there should be no need to execute this 

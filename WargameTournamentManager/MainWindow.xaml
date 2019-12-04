@@ -8,8 +8,8 @@
                       mc:Ignorable="d"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
                       Title="Gestor de Torneos para Wargames"
-                      Height="600"
-                      Width="850">
+                      Height="900"
+                      Width="1200">
 
     <Controls:MetroWindow.Resources>
         <local:TournamentActiveConverter x:Key="TournamentActiveConverter" />

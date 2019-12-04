@@ -13,7 +13,14 @@ namespace WargameTournamentManager
         public static int GetDefaultPointsPerWin() { return 3; }
         public static int GetDefaultPointsPerDraw() { return 0; }
         public static int GetDefaultPointsPerLoss() { return 1; }
-        public static string GetDefaultTags() { return "DiferenciaPeanas, Campamentos, Generales"; }
+        public static IList<Tag> GetDefaultTags()
+        {
+            return new List<Tag> {
+                new Tag("DiferenciaPeanas"),
+                new Tag("Campamentos"),
+                new Tag("Generales")
+            };
+        }
         public static string GetDefaultScoreFormula() { return "Puntos * 1000 + DiferenciaPeanas * 10 + Campamentos + Generales"; }
     }
 
@@ -24,7 +31,13 @@ namespace WargameTournamentManager
         public static int GetDefaultPointsPerWin() { return 3; }
         public static int GetDefaultPointsPerDraw() { return 1; }
         public static int GetDefaultPointsPerLoss() { return 0; }
-        public static string GetDefaultTags() { return "DiferenciaOrdenesDestruidas, ObjetivoSecundario"; }
+        public static IList<Tag> GetDefaultTags()
+        {
+            return new List<Tag> {
+                new Tag("DiferenciaOrdenesDestruidas"),
+                new Tag("ObjetivoSecundario")
+            };
+        }
         public static string GetDefaultScoreFormula() { return "Puntos * 1000 + ObjetivoSecundario * 1000 + DiferenciaOrdenesDestruidas"; }
     }
 }

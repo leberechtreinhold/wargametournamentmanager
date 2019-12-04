@@ -25,7 +25,7 @@ namespace WargameTournamentManager
             var matchups = new List<Matchup>();
             for (int i = 0; i < tournament.Players.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, i, i + 1, tournament.Config.Tags));
+                matchups.Add(new Matchup(roundNumber, i, i + 1, tournament.Config.GetTagsIds()));
             }
             return matchups;
         }
@@ -37,7 +37,7 @@ namespace WargameTournamentManager
             var players = tournament.Players.Shuffle(new Random()).ToList();
             for (int i = 0; i < players.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, players[i].Id, players[i + 1].Id, tournament.Config.Tags));
+                matchups.Add(new Matchup(roundNumber, players[i].Id, players[i + 1].Id, null /* TODO tournament.Config.Tags */));
             }
             return matchups;
         }
@@ -50,7 +50,7 @@ namespace WargameTournamentManager
             var results = CalculateRanking(tournament);
             for (int i = 0; i < results.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, results[i].player.Id, results[i + 1].player.Id, tournament.Config.Tags));
+                matchups.Add(new Matchup(roundNumber, results[i].player.Id, results[i + 1].player.Id, tournament.Config.GetTagsIds()));
             }
             return matchups;
         }
@@ -73,7 +73,7 @@ namespace WargameTournamentManager
                     i = 1;
                 }
                 int player2 = results[i].player.Id;
-                matchups.Add(new Matchup(roundNumber, player1, player2, tournament.Config.Tags));
+                matchups.Add(new Matchup(roundNumber, player1, player2, tournament.Config.GetTagsIds()));
                 results.RemoveAt(i);
                 results.RemoveAt(0);
             }
@@ -90,7 +90,7 @@ namespace WargameTournamentManager
             {
                 if (!matchedPlayers.Contains(pairing.Key))
                 {
-                    matchups.Add(new Matchup(roundNumber, pairing.Key.Id, pairing.Value.Id, tournament.Config.Tags));
+                    matchups.Add(new Matchup(roundNumber, pairing.Key.Id, pairing.Value.Id, tournament.Config.GetTagsIds()));
                     matchedPlayers.Add(pairing.Key);
                     matchedPlayers.Add(pairing.Value);
                 }
@@ -125,7 +125,7 @@ namespace WargameTournamentManager
             ranking.Columns.Add("Facción");
             foreach (var tag in config.Tags)
             {
-                ranking.Columns.Add(tag);
+                ranking.Columns.Add(tag.Name);
             }
             return ranking;
         }
@@ -164,7 +164,7 @@ namespace WargameTournamentManager
                             else
                                 score += tournament.Config.PointsPerLoss;
 
-                            matchup.UpdateTagTotalCalculation(playerId, scorePerTag);
+                            matchup.UpdateTagTotalCalculation(playerId, tournament.Config.Tags, scorePerTag);
                         }
                     }
                 }
@@ -181,15 +181,39 @@ namespace WargameTournamentManager
             {
                 variables.Add(pair.Key, pair.Value);
             }
-            foreach (string tag in tournament.Config.Tags)
+            foreach (var tag in tournament.Config.Tags)
             {
-                if (!variables.ContainsKey(tag))
+                if (!variables.ContainsKey(tag.Name))
                 {
-                    variables.Add(tag, 0);
+                    variables.Add(tag.Name, 0);
                 }
             }
+
             CalculationEngine engine = new CalculationEngine();
             return engine.Calculate(tournament.Config.ScoreFormula, variables);
+        }
+
+        public static bool TestPlayerScoreFormulaValid(Tournament tournament)
+        {
+            try
+            {
+                Dictionary<string, int> scorePerTag = new Dictionary<string, int>();
+                foreach(var tag in tournament.Config.Tags)
+                {
+                    scorePerTag[tag.Name] = 0;
+                }
+                // Calculated tags may depend on previous values to we have to iterate two times
+                foreach (var tag in tournament.Config.Tags)
+                {
+                    scorePerTag[tag.Name] = Matchup.CalculateTag(tag, scorePerTag, scorePerTag);
+                }
+                CalculatePlayerTotalScore(tournament, 0, scorePerTag);
+                return true;
+            }
+            catch
+            {
+                return false;
+            }
         }
 
         private static void FillRankingData(Tournament tournament, DataTable ranking, List<PlayerResult> results)
