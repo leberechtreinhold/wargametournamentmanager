@@ -18,13 +18,13 @@
     </Controls:MetroWindow.Resources>
     <Controls:MetroWindow.RightWindowCommands>
         <Controls:WindowCommands>
-            <Button Margin="4">
+            <Button x:Name="btn_lang_en" Margin="4" Click="OnChangeLanguageClick">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/WargameTournamentManager;component/Resources/flag_uk_cc0.png" />
                     <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="English" />
                 </StackPanel>
             </Button>
-            <Button Margin="4">
+            <Button x:Name="btn_lang_sp" Margin="4" Click="OnChangeLanguageClick">
                 <StackPanel Orientation="Horizontal">
                     <Image Source="/WargameTournamentManager;component/Resources/flag_sp_cc0.png" />
                     <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="Español" />

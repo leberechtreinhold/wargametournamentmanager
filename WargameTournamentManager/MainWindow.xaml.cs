@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -16,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using EasyLocalization.Localization;
 using MahApps.Metro.Controls;
 using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
@@ -55,6 +57,23 @@ namespace WargameTournamentManager
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(property));
         }
         public event PropertyChangedEventHandler PropertyChanged;
+
+        private void OnChangeLanguageClick(object sender, RoutedEventArgs e)
+        {
+            var btn = sender as Button;
+            if (btn == null) return;
+
+            if (btn.Name == "btn_lang_sp")
+            {
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("es-ES");
+                LocalizationManager.Instance.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+            }
+            else if (btn.Name == "btn_lang_en")
+            {
+                Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
+                LocalizationManager.Instance.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+            }
+        }
     }
 
     public class TournamentActiveConverter : IValueConverter
