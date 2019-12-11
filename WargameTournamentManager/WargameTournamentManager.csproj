@@ -97,6 +97,13 @@
     <Compile Include="CreateTournamentScreen.xaml.cs">
       <DependentUpon>CreateTournamentScreen.xaml</DependentUpon>
     </Compile>
+    <Compile Include="EasyLocalization\Annotations.cs" />
+    <Compile Include="EasyLocalization\Localization\LocalizationConverter.cs" />
+    <Compile Include="EasyLocalization\Localization\LocalizationEntry.cs" />
+    <Compile Include="EasyLocalization\Localization\LocalizationManager.cs" />
+    <Compile Include="EasyLocalization\Localization\LocalizeExtension.cs" />
+    <Compile Include="EasyLocalization\Readers\CharSeperatedFileReader.cs" />
+    <Compile Include="EasyLocalization\Readers\FileReader.cs" />
     <Compile Include="Games.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
@@ -145,6 +152,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\en-US.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\es-ES.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -4,10 +4,11 @@
                       xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
                       xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                       xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+                      xmlns:localization="clr-namespace:EasyLocalization.Localization"
                       xmlns:local="clr-namespace:WargameTournamentManager"
                       mc:Ignorable="d"
                       xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
-                      Title="Gestor de Torneos para Wargames"
+                      Title="{localization:Localize main_title}"
                       Height="900"
                       Width="1200">
 
