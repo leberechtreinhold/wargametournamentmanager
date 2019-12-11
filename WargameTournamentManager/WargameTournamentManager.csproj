@@ -163,5 +163,11 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\flag_uk_cc0.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Resources\flag_sp_cc0.png" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

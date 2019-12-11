@@ -16,7 +16,23 @@
         <local:TournamentActiveConverter x:Key="TournamentActiveConverter" />
         <local:TournamentInactiveConverter x:Key="TournamentInactiveConverter" />
     </Controls:MetroWindow.Resources>
-
+    <Controls:MetroWindow.RightWindowCommands>
+        <Controls:WindowCommands>
+            <Button Margin="4">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/WargameTournamentManager;component/Resources/flag_uk_cc0.png" />
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="English" />
+                </StackPanel>
+            </Button>
+            <Button Margin="4">
+                <StackPanel Orientation="Horizontal">
+                    <Image Source="/WargameTournamentManager;component/Resources/flag_sp_cc0.png" />
+                    <TextBlock Margin="4 0 0 0" VerticalAlignment="Center" Text="Español" />
+                </StackPanel>
+            </Button>
+        </Controls:WindowCommands>
+    </Controls:MetroWindow.RightWindowCommands>
+    
     <Grid>
         <TabControl x:Name="MainTab">
             <TabItem Header="Torneo"
