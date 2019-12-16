@@ -1,1 +1,29 @@
-﻿main_title;TestENG
+﻿main_title;Wargame Tournament Manager
+tournament;Tournament
+players;Players
+matchups;Matchups
+ranking;Ranking
+export_ranking;Export Ranking
+name;Name
+total_score;Total Score
+matchup_score;Score Matchups
+faction;Faction
+create_tournament;Create Tournament
+load_tournament_file;Load Tournament File
+game;Game
+other;Other
+date;Date
+number_rounds;Number of rounds
+points_per_victory;Points per Victory
+points_per_draw;Points per Draw
+points_per_loss;Points per Loss
+matchmaking_first_round;Matchmaking (first round)
+matchmaking_round2;Matchmaking (round 2+)
+matchmaking_cityclub;Avoid same city and/or club
+matchmaking_random;Random
+matchmaking_swiss;Swiss, without repeated matchups
+matchmaking_strict_swiss;Swiss, with repeated matchups
+score_formula;Score Formula
+type;Type
+information;Information
+save;Save

@@ -66,12 +66,15 @@ namespace WargameTournamentManager
             if (btn.Name == "btn_lang_sp")
             {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("es-ES");
-                LocalizationManager.Instance.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
             }
             else if (btn.Name == "btn_lang_en")
             {
                 Thread.CurrentThread.CurrentUICulture = CultureInfo.GetCultureInfo("en-US");
-                LocalizationManager.Instance.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+            }
+            LocalizationManager.Instance.CurrentCulture = Thread.CurrentThread.CurrentUICulture;
+            if (currentTournament != null)
+            {
+                currentTournament.UpdateRanking();
             }
         }
     }

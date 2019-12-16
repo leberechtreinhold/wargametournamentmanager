@@ -4,6 +4,7 @@
              xmlns:core="clr-namespace:System;assembly=mscorlib"
              xmlns:Controls="clr-namespace:MahApps.Metro.Controls;assembly=MahApps.Metro"
              xmlns:simpleChildWindow="clr-namespace:MahApps.Metro.SimpleChildWindow;assembly=MahApps.Metro.SimpleChildWindow"
+             xmlns:localization="clr-namespace:EasyLocalization.Localization"
              xmlns:local="clr-namespace:WargameTournamentManager">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="enumTagTypes"
@@ -17,7 +18,7 @@
 
     <Grid>
         <simpleChildWindow:ChildWindow x:Name="createTournamentWindow"
-                                       Title="Crear Torneo"
+                                       Title="{localization:Localize create_tournament}"
                                        Padding="20"
                                        ShowCloseButton="True"
                                        DataContext="{Binding creationTournament}">
@@ -50,7 +51,7 @@
                 <Label Grid.Row="0"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Nombre" />
+                       Content="{localization:Localize name}" />
                 <TextBox Grid.Row="0"
                          Grid.Column="1"
                          Margin="5"
@@ -61,7 +62,7 @@
                 <Label Grid.Row="1"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Juego" />
+                       Content="{localization:Localize game}" />
                 <ComboBox Grid.Row="1"
                           Grid.Column="1"
                           Margin="5"
@@ -71,13 +72,14 @@
                     <ComboBoxItem Tag="DBA"
                                   IsSelected="True">De Bellis Antiquitatis</ComboBoxItem>
                     <ComboBoxItem Tag="BoltAction">Bolt Action</ComboBoxItem>
-                    <ComboBoxItem Tag="Other">Otro</ComboBoxItem>
+                    <ComboBoxItem Tag="Other"
+                                  Content="{localization:Localize other}"></ComboBoxItem>
                 </ComboBox>
 
                 <Label Grid.Row="2"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Fecha" />
+                       Content="{localization:Localize date}" />
                 <DatePicker Grid.Row="2"
                             Grid.Column="1"
                             Margin="5"
@@ -88,7 +90,7 @@
                 <Label Grid.Row="3"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Número de rondas" />
+                       Content="{localization:Localize number_rounds}" />
                 <Controls:NumericUpDown Grid.Row="3"
                                         Grid.Column="1"
                                         Minimum="0"
@@ -99,7 +101,7 @@
                 <Label Grid.Row="4"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Puntos por victoria" />
+                       Content="{localization:Localize points_per_victory}" />
                 <Controls:NumericUpDown Grid.Row="4"
                                         Grid.Column="1"
                                         Minimum="0"
@@ -110,7 +112,7 @@
                 <Label Grid.Row="5"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Puntos por empate" />
+                       Content="{localization:Localize points_per_draw}" />
                 <Controls:NumericUpDown Grid.Row="5"
                                         Grid.Column="1"
                                         Minimum="0"
@@ -121,7 +123,7 @@
                 <Label Grid.Row="6"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Puntos por derrota" />
+                       Content="{localization:Localize points_per_loss}" />
                 <Controls:NumericUpDown Grid.Row="6"
                                         Grid.Column="1"
                                         Minimum="0"
@@ -133,7 +135,7 @@
                 <Label Grid.Row="7"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Emparejamiento (primera ronda)" />
+                       Content="{localization:Localize matchmaking_first_round}" />
                 <ComboBox Grid.Row="7"
                           Grid.Column="1"
                           Margin="5"
@@ -141,14 +143,16 @@
                                           UpdateSourceTrigger=PropertyChanged, 
                                           Mode=TwoWay}"
                           SelectedValuePath="Tag">
-                    <ComboBoxItem Tag="CityClub">Evitar misma ciudad y/o club</ComboBoxItem>
-                    <ComboBoxItem Tag="Random">Aleatorio</ComboBoxItem>
+                    <ComboBoxItem Tag="CityClub"
+                                  Content="{localization:Localize matchmaking_cityclub}"></ComboBoxItem>
+                    <ComboBoxItem Tag="Random"
+                                  Content="{localization:Localize matchmaking_random}"></ComboBoxItem>
                 </ComboBox>
 
                 <Label Grid.Row="8"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Emparejamiento (ronda 2+)" />
+                       Content="{localization:Localize matchmaking_round2}" />
                 <ComboBox Grid.Row="8"
                           Grid.Column="1"
                           Margin="5"
@@ -156,15 +160,18 @@
                                           UpdateSourceTrigger=PropertyChanged, 
                                           Mode=TwoWay}"
                           SelectedValuePath="Tag">
-                    <ComboBoxItem Tag="Swiss">Suizo, sin repetir emparejamiento</ComboBoxItem>
-                    <ComboBoxItem Tag="StrictSwiss">Suizo, repetiendo emparejamiento</ComboBoxItem>
-                    <ComboBoxItem Tag="Random">Aleatorio</ComboBoxItem>
+                    <ComboBoxItem Tag="Swiss"
+                                  Content="{localization:Localize matchmaking_swiss}"></ComboBoxItem>
+                    <ComboBoxItem Tag="StrictSwiss"
+                                  Content="{localization:Localize matchmaking_strict_swiss}"></ComboBoxItem>
+                    <ComboBoxItem Tag="Random"
+                                  Content="{localization:Localize matchmaking_random}"></ComboBoxItem>
                 </ComboBox>
 
                 <Label Grid.Row="9"
                        Grid.Column="0"
                        Margin="5"
-                       Content="Fórmula de puntuación" />
+                       Content="{localization:Localize score_formula}" />
                 <TextBox Grid.Row="9"
                          Grid.Column="1"
                          Margin="5"
@@ -184,7 +191,7 @@
                             <DataGridTextColumn Header="Tag"
                                                 Width="150"
                                                 Binding="{Binding Name}" />
-                            <DataGridComboBoxColumn Header="Tipo"
+                            <DataGridComboBoxColumn Header="{localization:Localize type}"
                                                     Width="100"
                                                     SelectedItemBinding="{Binding Type}"
                                                     ItemsSource="{Binding Source={StaticResource enumTagTypes}}">
@@ -199,7 +206,7 @@
                                     </Style>
                                 </DataGridComboBoxColumn.EditingElementStyle>
                             </DataGridComboBoxColumn>
-                            <DataGridTextColumn Header="Información"
+                            <DataGridTextColumn Header="{localization:Localize information}"
                                                 Binding="{Binding Information}" />
                         </DataGrid.Columns>
                     </DataGrid>
@@ -208,7 +215,7 @@
                 <Button Grid.Row="11"
                         Grid.Column="1"
                         Margin="20"
-                        Content="Save"
+                        Content="{localization:Localize save}"
                         Click="SaveTournament_Click">
 
                 </Button>
@@ -218,13 +225,13 @@
                     HorizontalAlignment="Center"
                     VerticalAlignment="Center">
             <Button x:Name="LoadTournamentButton"
-                    Content="Cargar fichero de Torneo"
+                    Content="{localization:Localize load_tournament_file}"
                     Margin="20"
                     Controls:ButtonHelper.PreserveTextCase="True"
                     Style="{StaticResource AccentedSquareButtonStyle}"
                     Click="LoadTournament_Click" />
             <Button x:Name="CreateNewTournamentButton"
-                    Content="Crear nuevo Torneo"
+                    Content="{localization:Localize create_tournament}"
                     Margin="20"
                     Controls:ButtonHelper.PreserveTextCase="True"
                     Style="{StaticResource AccentedSquareButtonStyle}"

@@ -1,4 +1,5 @@
-﻿using Jace;
+﻿using EasyLocalization.Localization;
+using Jace;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -119,10 +120,10 @@ namespace WargameTournamentManager
         private static DataTable CreateRankingColumns(Configuration config)
         {
             DataTable ranking = new DataTable();
-            ranking.Columns.Add("Nombre");
-            ranking.Columns.Add("Puntuación Total");
-            ranking.Columns.Add("Puntuación Partidas");
-            ranking.Columns.Add("Facción");
+            ranking.Columns.Add(LocalizationManager.Instance.GetValue("name"));
+            ranking.Columns.Add(LocalizationManager.Instance.GetValue("total_score"));
+            ranking.Columns.Add(LocalizationManager.Instance.GetValue("matchup_score"));
+            ranking.Columns.Add(LocalizationManager.Instance.GetValue("faction"));
             foreach (var tag in config.Tags)
             {
                 ranking.Columns.Add(tag.Name);

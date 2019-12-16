@@ -1,1 +1,29 @@
-﻿main_title;TestESP
+﻿main_title;Gestor de Torneos de Wargames
+tournament;Torneo
+players;Jugadores
+matchups;Enfrentamientos
+ranking;Ranking
+export_ranking;Exportar Ranking
+name;Nombre
+total_score;Puntuación Total
+matchup_score;Puntuación Partidas
+faction;Facción
+create_tournament;Crear Torneo
+load_tournament_file;Cargar fichero de torneo
+game;Juego
+other;Otro
+date;Fecha
+number_rounds;Número de rondas
+points_per_victory;Puntos por Victoria
+points_per_draw;Puntos por Empate
+points_per_loss;Puntos por Derrota
+matchmaking_first_round;Emparejamiento (primer ronda)
+matchmaking_round2;Emparejamiento (ronda 2+)
+matchmaking_cityclub;Evitar misma ciudad y/o club
+matchmaking_random;Aleatorio
+matchmaking_swiss;Suizo, sin repetir emparejamiento
+matchmaking_strict_swiss;Suizo, repetiendo emparejamiento
+score_formula;Fórmula de puntuación
+type;Tipo
+information;Información
+save;Guardar

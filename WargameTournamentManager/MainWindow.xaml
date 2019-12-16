@@ -35,32 +35,32 @@
     
     <Grid>
         <TabControl x:Name="MainTab">
-            <TabItem Header="Torneo"
+            <TabItem Header="{localization:Localize tournament}"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentInactiveConverter}}">
                 <local:CreateTournamentScreen />
             </TabItem>
-            <TabItem Header="Jugadores"
+            <TabItem Header="{localization:Localize players}"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <local:PlayersScreen DataContext="{Binding currentTournament}" />
             </TabItem>
-            <TabItem Header="Enfrentamientos"
+            <TabItem Header="{localization:Localize matchups}"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <local:MatchupsScreen />
             </TabItem>
-            <TabItem Header="Ranking"
+            <TabItem Header="{localization:Localize ranking}"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <DockPanel Margin="20"
                            DataContext="{Binding currentTournament}">
                     <StackPanel DockPanel.Dock="Top"
                                 Orientation="Horizontal">
-                        <Label Content="Torneo" />
+                        <Label Content="{localization:Localize tournament}" />
                         <TextBox Text="{Binding Name}"
                                  IsEnabled="False" />
                     </StackPanel>
                     <DockPanel DockPanel.Dock="Bottom"
                                LastChildFill="False">
                         <Button DockPanel.Dock="Right"
-                                Content="Exportar Ranking"
+                                Content="{localization:Localize export_ranking}"
                                 Click="ExportRanking_Click"
                                 Margin="20"
                                 Controls:ButtonHelper.PreserveTextCase="True"
