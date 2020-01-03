@@ -216,6 +216,8 @@
                         Grid.Column="1"
                         Margin="20"
                         Content="{localization:Localize save}"
+                        Style="{StaticResource AccentedSquareButtonStyle}"
+                        Controls:ButtonHelper.PreserveTextCase="True"
                         Click="SaveTournament_Click">
 
                 </Button>
