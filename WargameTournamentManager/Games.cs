@@ -1,4 +1,5 @@
-﻿using System;
+﻿using EasyLocalization.Localization;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -16,13 +17,19 @@ namespace WargameTournamentManager
         public static IList<Tag> GetDefaultTags()
         {
             return new List<Tag> {
-                new Tag("PeanasEliminadas"),
-                new Tag("Campamentos"),
-                new Tag("Generales"),
-                new Tag("DiferenciaPeanas", TagType.Calculated, "diff(PeanasEliminadas)")
+                new Tag(LocalizationManager.Instance.GetValue("destroyed_bases_tag")),
+                new Tag(LocalizationManager.Instance.GetValue("camps_tag")),
+                new Tag(LocalizationManager.Instance.GetValue("generals_tag")),
+                new Tag(LocalizationManager.Instance.GetValue("destroyed_bases_diff_tag"), 
+                    TagType.Calculated, 
+                    $"diff({LocalizationManager.Instance.GetValue("destroyed_bases_tag")})")
             };
         }
-        public static string GetDefaultScoreFormula() { return "Puntos * 1000 + DiferenciaPeanas * 10 + Campamentos + Generales"; }
+        public static string GetDefaultScoreFormula() { return
+            $"{LocalizationManager.Instance.GetValue("score_tag")} * 1000 "
+            + $" + {LocalizationManager.Instance.GetValue("destroyed_bases_diff_tag")} * 10 "
+            + $" + {LocalizationManager.Instance.GetValue("camps_tag")}"
+            + $" + {LocalizationManager.Instance.GetValue("generals_tag")}"; }
     }
 
     static class BoltAction
@@ -35,14 +42,21 @@ namespace WargameTournamentManager
         public static IList<Tag> GetDefaultTags()
         {
             return new List<Tag> {
-                new Tag("ObjetivoSecundario"),
-                new Tag("OrdenesDestruidas"),
-                new Tag("PuntosDestruidos"),
-                new Tag("DiferenciaOrdenes", TagType.Calculated, "diff(OrdenesDestruidas)"),
-                new Tag("DiferenciaPuntos", TagType.Calculated, "diff(PuntosDestruidos)")
+                new Tag(LocalizationManager.Instance.GetValue("secondary_objective_tag")),
+                new Tag(LocalizationManager.Instance.GetValue("destroyed_orders_tag")),
+                new Tag(LocalizationManager.Instance.GetValue("destroyed_points_tag")),
+                new Tag(LocalizationManager.Instance.GetValue("destroyed_orders_diff_tag"), 
+                    TagType.Calculated, 
+                    $"diff({LocalizationManager.Instance.GetValue("destroyed_orders_tag")})"),
+                new Tag(LocalizationManager.Instance.GetValue("destroyed_points_diff_tag"), 
+                    TagType.Calculated, 
+                    $"diff({LocalizationManager.Instance.GetValue("destroyed_points_tag")})")
 
             };
         }
-        public static string GetDefaultScoreFormula() { return "Puntos * 10000 + ObjetivoSecundario * 10000 + DiferenciaPuntos"; }
+        public static string GetDefaultScoreFormula() { return 
+                $"{LocalizationManager.Instance.GetValue("score_tag")} * 10000 "
+                + $" + {LocalizationManager.Instance.GetValue("secondary_objective_tag")} * 10000 "
+                + $" + {LocalizationManager.Instance.GetValue("destroyed_points_diff_tag")}"; }
     }
 }

@@ -24,6 +24,9 @@ namespace WargameTournamentManager
 
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
         {
+            // Always create a new one to refresh options, and also to 
+            // reflect the current localization
+            this.creationTournament = new Tournament();
             createTournamentWindow.DataContext = this.creationTournament;
             createTournamentWindow.IsOpen = true;
         }

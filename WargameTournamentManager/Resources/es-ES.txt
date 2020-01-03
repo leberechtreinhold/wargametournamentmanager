@@ -27,3 +27,13 @@ score_formula;Fórmula de puntuación
 type;Tipo
 information;Información
 save;Guardar
+secondary_objective_tag;ObjetivoSecundario
+destroyed_orders_tag;OrdenesDestruidas
+destroyed_points_tag;PuntosDestruidos
+destroyed_orders_diff_tag;DiferenciaOrdenes
+destroyed_points_diff_tag;DiferenciaPuntos
+score_tag;Puntos
+destroyed_bases_tag;PeanasEliminadas
+camps_tag;Campamentos
+generals_tag;Generales
+destroyed_bases_diff_tag;DiferenciaPeanas

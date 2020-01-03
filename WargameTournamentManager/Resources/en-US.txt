@@ -27,3 +27,13 @@ score_formula;Score Formula
 type;Type
 information;Information
 save;Save
+secondary_objective_tag;SecondaryObjectives
+destroyed_orders_tag;DestroyedOrders
+destroyed_points_tag;DestroyedPoints
+destroyed_orders_diff_tag;DifferenceOrders
+destroyed_points_diff_tag;DifferencePoints
+score_tag;Score
+destroyed_bases_tag;DestroyedUnits
+camps_tag;Camps
+generals_tag;Generals
+destroyed_bases_diff_tag;DifferenceUnits
