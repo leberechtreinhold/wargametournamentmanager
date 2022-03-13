@@ -20,7 +20,9 @@ namespace WargameTournamentManager
 
     public enum TagType
     {
+        [LocalizationText("tagtype_number")]
         Number,
+        [LocalizationText("tagtype_calculated")]
         Calculated
     }
 
@@ -70,7 +72,7 @@ namespace WargameTournamentManager
             return clone;
         }
     }
-    
+
     public class Configuration
     {
         public int NumberRounds { get; set; }

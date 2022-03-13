@@ -37,3 +37,5 @@ destroyed_bases_tag;DestroyedUnits
 camps_tag;Camps
 generals_tag;Generals
 destroyed_bases_diff_tag;DifferenceUnits
+tagtype_calculated;Calculated
+tagtype_number;Number

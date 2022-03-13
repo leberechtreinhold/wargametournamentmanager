@@ -34,12 +34,20 @@ namespace WargameTournamentManager
 
         public Tournament currentTournament { get; set; }
 
+        private List<ObjectDataProvider> providersToRefreshOnLanguage { get; set; }
+
         public MainWindow()
         {
+            providersToRefreshOnLanguage = new List<ObjectDataProvider>();
             currentTournament = null;
             InitializeComponent();
             this.DataContext = this;
             this.Loaded += OnLoad;
+        }
+
+        public void AddToRefreshOnLanguageChange(ObjectDataProvider provider)
+        {
+            providersToRefreshOnLanguage.Add(provider);
         }
 
         private void OnLoad(object sender, RoutedEventArgs e)
@@ -75,6 +83,10 @@ namespace WargameTournamentManager
             if (currentTournament != null)
             {
                 currentTournament.UpdateRanking();
+            }
+            foreach (var obj in providersToRefreshOnLanguage)
+            {
+                obj.Refresh();
             }
         }
     }

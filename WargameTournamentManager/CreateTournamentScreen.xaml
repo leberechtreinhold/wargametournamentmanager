@@ -8,10 +8,10 @@
              xmlns:local="clr-namespace:WargameTournamentManager">
     <UserControl.Resources>
         <ObjectDataProvider x:Key="enumTagTypes"
-                            MethodName="GetValues"
-                            ObjectType="{x:Type core:Enum}">
+                            MethodName="GetListOfAttributes"
+                            ObjectType="{x:Type local:LocalizationTextAttributeBasedObjectDataProvider}">
             <ObjectDataProvider.MethodParameters>
-                <x:Type Type="local:TagType" />
+                <x:Type TypeName="local:TagType" />
             </ObjectDataProvider.MethodParameters>
         </ObjectDataProvider>
     </UserControl.Resources>
@@ -204,7 +204,7 @@
                                     <Style TargetType="{x:Type ComboBox}"
                                            BasedOn="{StaticResource {x:Type ComboBox}}">
                                     </Style>
-                                </DataGridComboBoxColumn.EditingElementStyle>
+                                </DataGridComboBoxColumn.EditingElementStyle>                                
                             </DataGridComboBoxColumn>
                             <DataGridTextColumn Header="{localization:Localize information}"
                                                 Binding="{Binding Information}" />

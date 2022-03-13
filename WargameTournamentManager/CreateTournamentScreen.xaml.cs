@@ -1,10 +1,17 @@
-﻿using MahApps.Metro.Controls.Dialogs;
+﻿using EasyLocalization.Localization;
+using MahApps.Metro.Controls.Dialogs;
 using Microsoft.Win32;
 using Newtonsoft.Json;
 using System;
+using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
+using System.Linq;
+using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Data;
+using System.Windows.Markup;
 
 namespace WargameTournamentManager
 {
@@ -20,6 +27,12 @@ namespace WargameTournamentManager
             creationTournament = new Tournament();
             InitializeComponent();
             this.DataContext = creationTournament;
+            this.Loaded += OnLoad;
+        }
+
+        private void OnLoad(object sender, RoutedEventArgs e)
+        {
+            MainWindow.gMainWindow.AddToRefreshOnLanguageChange(FindResource("enumTagTypes") as ObjectDataProvider);
         }
 
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
@@ -100,4 +113,36 @@ namespace WargameTournamentManager
             }
         }
     }
+
+    public class TagTypeConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || !(value is TagType))
+            {
+                return "";
+            }
+
+            if ((TagType)value == TagType.Calculated)
+            {
+                return LocalizationManager.Instance.GetValue("tagtype_calculated");
+            }
+            return LocalizationManager.Instance.GetValue("tagtype_number");
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            if (value == null || !(value is string))
+            {
+                return TagType.Number;
+            }
+
+            if ((string)value == LocalizationManager.Instance.GetValue("tagtype_calculated"))
+            {
+                return TagType.Calculated;
+            }
+            return TagType.Number;
+        }
+    }
+
 }

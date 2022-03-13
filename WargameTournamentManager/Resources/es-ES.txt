@@ -37,3 +37,5 @@ destroyed_bases_tag;PeanasEliminadas
 camps_tag;Campamentos
 generals_tag;Generales
 destroyed_bases_diff_tag;DiferenciaPeanas
+tagtype_calculated;Calculado
+tagtype_number;Número

@@ -98,6 +98,7 @@
       <DependentUpon>CreateTournamentScreen.xaml</DependentUpon>
     </Compile>
     <Compile Include="EasyLocalization\Annotations.cs" />
+    <Compile Include="EasyLocalization\LocalizationWPFHelper.cs" />
     <Compile Include="EasyLocalization\Localization\LocalizationConverter.cs" />
     <Compile Include="EasyLocalization\Localization\LocalizationEntry.cs" />
     <Compile Include="EasyLocalization\Localization\LocalizationManager.cs" />
