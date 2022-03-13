@@ -32,7 +32,10 @@ namespace WargameTournamentManager
 
         private void OnLoad(object sender, RoutedEventArgs e)
         {
-            MainWindow.gMainWindow.AddToRefreshOnLanguageChange(FindResource("enumTagTypes") as ObjectDataProvider);
+            if (MainWindow.gMainWindow != null)
+            {
+                MainWindow.gMainWindow.AddToRefreshOnLanguageChange(FindResource("enumTagTypes") as ObjectDataProvider);
+            }
         }
 
         private void CreateNewTournament_Click(object sender, RoutedEventArgs e)
