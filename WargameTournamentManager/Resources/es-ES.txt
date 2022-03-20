@@ -39,3 +39,4 @@ generals_tag;Generales
 destroyed_bases_diff_tag;DiferenciaPeanas
 tagtype_calculated;Calculado
 tagtype_number;Número
+tables;Mesas

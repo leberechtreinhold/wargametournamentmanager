@@ -43,6 +43,10 @@
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <local:PlayersScreen DataContext="{Binding currentTournament}" />
             </TabItem>
+            <TabItem Header="{localization:Localize tables}"
+                     IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
+                <local:TableScreen DataContext="{Binding currentTournament}" />
+            </TabItem>
             <TabItem Header="{localization:Localize matchups}"
                      IsEnabled="{Binding currentTournament, Converter={StaticResource TournamentActiveConverter}}">
                 <local:MatchupsScreen />

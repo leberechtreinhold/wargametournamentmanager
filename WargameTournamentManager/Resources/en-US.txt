@@ -39,3 +39,4 @@ generals_tag;Generals
 destroyed_bases_diff_tag;DifferenceUnits
 tagtype_calculated;Calculated
 tagtype_number;Number
+tables;Tables

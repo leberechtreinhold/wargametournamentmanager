@@ -129,6 +129,7 @@ namespace WargameTournamentManager
         public int CurrentRound { get; set; }
         public IList<Player> Players { get; set; }
         public bool PlayerListLocked { get; set; }
+        public IList<Table> Tables { get; set; }
         public IList<Round> Rounds { get; set; }
         public Configuration Config { get; set; }
         public string FilePath { get; set; }
@@ -144,6 +145,7 @@ namespace WargameTournamentManager
             Config = new Configuration();
             Players = new List<Player>();
             Rounds = new List<Round>();
+            Tables = new List<Table>();
             PlayerListLocked = false;
             FilePath = GetDefaultFilePath();
             FileName = "tournament.tour";
@@ -159,6 +161,10 @@ namespace WargameTournamentManager
             foreach (var player in Players)
             {
                 clone.Players.Add(player.Clone());
+            }
+            foreach (var table in Tables)
+            {
+                clone.Tables.Add(table.Clone());
             }
             foreach (var round in Rounds)
             {
@@ -522,6 +528,35 @@ namespace WargameTournamentManager
         }
     }
 
+    public class Table
+    {
+        public string Name { get; set; }
+        public string SideLeft { get; set; }
+        public string SideRight { get; set; }
+
+        public Table()
+        {
+            Name = "Table";
+            SideLeft = "Left side";
+            SideRight = "Right side";
+        }
+
+        public Table Clone()
+        {
+            Table clone = new Table();
+            clone.Name = this.Name;
+            clone.SideLeft = this.SideLeft; 
+            clone.SideRight = this.SideRight;
+            return clone;
+        }
+
+        public override string ToString()
+        {
+            return Name;
+        }
+
+    }
+
     public class Round : INotifyPropertyChanged
     {
         public int Number { get; set; }
@@ -534,6 +569,7 @@ namespace WargameTournamentManager
             Active = false;
             Matchups = new List<Matchup>();
         }
+
         public Round(int number)
         {
             Number = number;
