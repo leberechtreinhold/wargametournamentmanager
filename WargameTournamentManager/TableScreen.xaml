@@ -11,11 +11,11 @@
         <local:PlayerListCountConverter x:Key="PlayerListCountConverter" />
     </UserControl.Resources>
     <Grid>
-        <simpleChildWindow:ChildWindow x:Name="editPlayerWindow"
-                                       Title="Editar jugador"
+        <simpleChildWindow:ChildWindow x:Name="editTableWindow"
+                                       Title="Editar mesa"
                                        Padding="20"
                                        ShowCloseButton="True"
-                                       DataContext="{Binding editingPlayer}">
+                                       DataContext="{Binding editingTable}">
 
             <simpleChildWindow:ChildWindow.OverlayBrush>
                 <SolidColorBrush Opacity="0"
@@ -25,11 +25,6 @@
             <StackPanel>
                 <Grid Margin="20">
                     <Grid.RowDefinitions>
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
-                        <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
                         <RowDefinition Height="Auto" />
@@ -51,54 +46,26 @@
                     <Label Grid.Row="1"
                            Grid.Column="0"
                            Margin="5"
-                           Content="Ciudad" />
+                           Content="Bando 1" />
                     <TextBox Grid.Row="1"
                              Grid.Column="1"
                              Margin="5"
-                             Text="{Binding City}"
+                             Text="{Binding SideLeft}"
                              Width="200" />
                     <Label Grid.Row="2"
                            Grid.Column="0"
                            Margin="5"
-                           Content="Club" />
+                           Content="Bando 2" />
                     <TextBox Grid.Row="2"
                              Grid.Column="1"
                              Margin="5"
-                             Text="{Binding Club}"
+                             Text="{Binding SideRight}"
                              Width="200" />
-                    <Label Grid.Row="3"
-                           Grid.Column="0"
-                           Margin="5"
-                           Content="Contacto" />
-                    <TextBox Grid.Row="3"
-                             Grid.Column="1"
-                             Margin="5"
-                             Text="{Binding Contact}"
-                             Width="200"
-                             Controls:TextBoxHelper.Watermark="Mail o tlf" />
-                    <Label Grid.Row="4"
-                           Grid.Column="0"
-                           Margin="5"
-                           Content="Facción" />
-                    <TextBox Grid.Row="4"
-                             Grid.Column="1"
-                             Margin="5"
-                             Text="{Binding Faction}"
-                             Width="200" />
-                    <Label Grid.Row="6"
-                           Grid.Column="0"
-                           Margin="5"
-                           Content="Pagado" />
-                    <Controls:ToggleSwitch Grid.Row="6"
-                                           Grid.Column="1"
-                                           Margin="5"
-                                           IsChecked="{Binding Paid}"
-                                           OnLabel="Sí"
-                                           OffLabel="No" />
 
                 </Grid>
                 <Button Margin="20"
-                        Content="Guardar jugador"
+                        Content="Guardar Mesa"
+                        Click="SaveTable_Click"
                         Width="150"
                         Style="{StaticResource AccentedSquareButtonStyle}"
                         Controls:ButtonHelper.PreserveTextCase="True">
@@ -123,12 +90,14 @@
             <DockPanel DockPanel.Dock="Bottom"
                        LastChildFill="False">
                 <Button Content="Borrar seleccionados"
+                        Click="DeleteSelected_Click"
                         DockPanel.Dock="Left"
                         Margin="20"
                         IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
                         Controls:ButtonHelper.PreserveTextCase="True"
                         Style="{StaticResource AccentedSquareButtonStyle}" />
                 <Button Content="Añadir nueva mesa"
+                        Click="AddTable_Click"
                         DockPanel.Dock="Left"
                         Margin="20"
                         IsEnabled="{Binding PlayerListLocked, Converter={StaticResource PlayerListUnlockedConverter}}"
@@ -137,16 +106,11 @@
                 <Label DockPanel.Dock="Left"
                        Margin="20"
                        Content="{Binding Players, Converter={StaticResource PlayerListCountConverter}}"></Label>
-                <Button Content="{Binding PlayerListLocked, Converter={StaticResource PlayerListLockToggleConverter}}"
-                        DockPanel.Dock="Right"
-                        Margin="20"
-                        Controls:ButtonHelper.PreserveTextCase="True"
-                        Style="{StaticResource AccentedSquareButtonStyle}" />
             </DockPanel>
 
-            <ScrollViewer Name="PlayerListDataGridScroll">
-                <DataGrid Name="PlayerListDataGrid"
-                          ItemsSource="{Binding Players}"
+            <ScrollViewer Name="TableListDataGridScroll">
+                <DataGrid Name="TableListDataGrid"
+                          ItemsSource="{Binding Tables}"
                           Margin="10,20,10,0"
                           AutoGenerateColumns="False"
                           CanUserAddRows="false"
@@ -166,24 +130,16 @@
                                 </Style>
                             </DataGridTextColumn.ElementStyle>
                         </DataGridTextColumn>
-                        <DataGridTextColumn Binding="{Binding City}"
-                                            Header="Ciudad"
+                        <DataGridTextColumn Binding="{Binding SideLeft}"
+                                            Header="Bando 1"
                                             MinWidth="150" />
-                        <DataGridTextColumn Binding="{Binding Club}"
-                                            Header="Club"
+                        <DataGridTextColumn Binding="{Binding SideRight}"
+                                            Header="Bando 2"
                                             MinWidth="150" />
-                        <DataGridTextColumn Binding="{Binding Contact}"
-                                            Header="Contacto"
-                                            MinWidth="150" />
-                        <DataGridTextColumn Binding="{Binding Faction}"
-                                            Header="Facción"
-                                            MinWidth="150" />
-                        <DataGridCheckBoxColumn Binding="{Binding Paid}"
-                                                Header="Inscripción pagada" />
                         <DataGridTemplateColumn>
                             <DataGridTemplateColumn.CellTemplate>
                                 <DataTemplate>
-                                    <Button Content="Editar jugador"
+                                    <Button Content="Editar mesa"
                                             Controls:ButtonHelper.PreserveTextCase="True"
                                             IsEnabled="{Binding 
                                                 RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}}, 

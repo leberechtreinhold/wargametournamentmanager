@@ -50,7 +50,6 @@ namespace WargameTournamentManager
             editPlayerWindow.IsOpen = true;
         }
 
-
         private void SavePlayer_Click(object sender, RoutedEventArgs e)
         {
             // This can be called both when creating a player and when editing

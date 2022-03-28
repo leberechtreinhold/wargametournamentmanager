@@ -203,6 +203,11 @@ namespace WargameTournamentManager
             return !Players.Any(p => p.Name == newPlayerName && p.Id != playerId);
         }
 
+        public bool CanAddTableName(string newTableName, int tableId)
+        {
+            return !Tables.Any(t => t.Name == newTableName && t.Id != tableId);
+        }
+
         public void AddPlayer(Player newPlayer)
         {
             if (Players.Count == 0)
@@ -214,6 +219,19 @@ namespace WargameTournamentManager
             OnPropertyChanged("Players");
 
             UpdateRanking();
+            Save();
+        }
+
+        public void AddTable(Table newTable)
+        {
+            if (Tables.Count == 0)
+                newTable.Id = 0;
+            else
+                newTable.Id = Tables.Max(table => table.Id) + 1;
+
+            Tables.Add(newTable);
+            OnPropertyChanged("Tables");
+
             Save();
         }
 
@@ -235,6 +253,13 @@ namespace WargameTournamentManager
         {
             var player = Players.First(p => p.Id == inputPlayer.Id);
             player.UpdateData(inputPlayer);
+            Save();
+        }
+
+        public void UpdateTableData(Table inputTable)
+        {
+            var table = Tables.First(p => p.Id == inputTable.Id);
+            table.UpdateData(inputTable);
             Save();
         }
 
@@ -530,24 +555,35 @@ namespace WargameTournamentManager
 
     public class Table
     {
+        public int Id { get; set; }
         public string Name { get; set; }
         public string SideLeft { get; set; }
         public string SideRight { get; set; }
 
-        public Table()
+        public Table(int id = -1)
         {
-            Name = "Table";
-            SideLeft = "Left side";
-            SideRight = "Right side";
+            Id = id;
+            Name = "";
+            SideLeft = "";
+            SideRight = "";
         }
 
         public Table Clone()
         {
             Table clone = new Table();
+            clone.Id = Id;
             clone.Name = this.Name;
-            clone.SideLeft = this.SideLeft; 
+            clone.SideLeft = this.SideLeft;
             clone.SideRight = this.SideRight;
             return clone;
+        }
+
+        public void UpdateData(Table data)
+        {
+            Id = data.Id;
+            Name = data.Name;
+            SideLeft = data.SideLeft;
+            SideRight = data.SideRight;
         }
 
         public override string ToString()
