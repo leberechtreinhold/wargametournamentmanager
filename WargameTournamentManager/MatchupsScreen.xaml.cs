@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
+using System.Linq;
 using System.Text;
 using System.Windows;
 using System.Windows.Controls;
@@ -258,6 +259,21 @@ namespace WargameTournamentManager
         {
             if ((bool)value) return "Ronda en curso";
             else return "NOTA: Ronda no activa, no se pueden editar los resultados de los enfrentamientos ni generar enfrentamientos.";
+        }
+
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
+
+    public sealed class GetTableNameConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            int tableId = (int)value;
+            var tour = MainWindow.gMainWindow.currentTournament;
+            return tour.Tables.First(table => table.Id == tableId).Name;
         }
 
         public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

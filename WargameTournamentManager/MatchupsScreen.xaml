@@ -6,6 +6,7 @@
              xmlns:local="clr-namespace:WargameTournamentManager">
     <UserControl.Resources>
         <local:GetMatchupNameConverter x:Key="GetMatchupNameConverter" />
+        <local:GetTableNameConverter x:Key="GetTableNameConverter" />
         <local:GetMatchupResultConverter x:Key="GetMatchupResultConverter" />
         <local:GetMatchupTagSummaryConverter x:Key="GetMatchupTagSummaryConverter" />
         <local:GetRoundActiveOrNotConverter x:Key="GetRoundActiveOrNotConverter" />
@@ -113,8 +114,10 @@
                                         </MultiBinding>
                                     </DataGridTextColumn.Binding>
                                 </DataGridTextColumn>
-                                <DataGridTextColumn Header="Mesa" Binding="{Binding Table}"> 
+                                <DataGridTextColumn Header="Mesa"
+                                                    Binding="{Binding TableId, Converter={StaticResource GetTableNameConverter}}">
                                 </DataGridTextColumn>
+                               
                                 <DataGridTextColumn Header="Resultado"
                                                     IsReadOnly="True">
                                     <DataGridTextColumn.Binding>

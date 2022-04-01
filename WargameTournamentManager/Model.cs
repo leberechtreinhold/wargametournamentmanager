@@ -269,6 +269,8 @@ namespace WargameTournamentManager
                 throw new InvalidOperationException("No se puede bloquear la lista de jugadores con un número impar.");
             if (Players.Count == 0)
                 throw new InvalidOperationException("No se puede bloquear la lista de jugadores sin tener al menos uno.");
+            if (Tables.Count * 2 < Players.Count)
+                throw new InvalidOperationException("No se puede bloquear la lista de jugadores sin tener suficientes mesas para jugar.");
 
             SaveWithBackup("prelock");
 
@@ -634,7 +636,7 @@ namespace WargameTournamentManager
 
     public class Matchup
     {
-        public int Table { get; set; }
+        public int TableId { get; set; }
         public int Round { get; set; }
         public Result CurrentResult { get; set; }
 
@@ -650,10 +652,11 @@ namespace WargameTournamentManager
             Player2Tags = new Dictionary<string, int>();
         }
 
-        public Matchup(int round, int player1Id, int player2Id, IList<string> tags)
+        public Matchup(int round, int tableId, int player1Id, int player2Id, IList<string> tags)
         {
             Round = round;
             CurrentResult = Result.STILL_PLAYING;
+            TableId = tableId;
 
             Player1Id = player1Id;
             Player2Id = player2Id;
@@ -670,7 +673,7 @@ namespace WargameTournamentManager
         public Matchup Clone()
         {
             Matchup clone = new Matchup();
-            clone.Table = Table;
+            clone.TableId = TableId;
             clone.Round = Round;
             clone.CurrentResult = CurrentResult;
             clone.Player1Id = Player1Id;

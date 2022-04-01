@@ -26,7 +26,7 @@ namespace WargameTournamentManager
             var matchups = new List<Matchup>();
             for (int i = 0; i < tournament.Players.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, i, i + 1, tournament.Config.GetTagsIds()));
+                matchups.Add(new Matchup(roundNumber, i / 2, i, i + 1, tournament.Config.GetTagsIds()));
             }
             return matchups;
         }
@@ -36,9 +36,10 @@ namespace WargameTournamentManager
             var matchups = new List<Matchup>();
             // Use current time as seed
             var players = tournament.Players.Shuffle(new Random()).ToList();
+            var tables = tournament.Tables.Shuffle(new Random()).Select(t => t.Id).ToList();
             for (int i = 0; i < players.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, players[i].Id, players[i + 1].Id, tournament.Config.GetTagsIds()));
+                matchups.Add(new Matchup(roundNumber, tables[i / 2], players[i].Id, players[i + 1].Id, tournament.Config.GetTagsIds()));
             }
             return matchups;
         }
@@ -49,9 +50,11 @@ namespace WargameTournamentManager
         {
             var matchups = new List<Matchup>();
             var results = CalculateRanking(tournament);
+            var tables = tournament.Tables.Shuffle(new Random()).Select(t => t.Id).ToList();
+
             for (int i = 0; i < results.Count; i += 2)
             {
-                matchups.Add(new Matchup(roundNumber, results[i].player.Id, results[i + 1].player.Id, tournament.Config.GetTagsIds()));
+                matchups.Add(new Matchup(roundNumber, tables[i / 2], results[i].player.Id, results[i + 1].player.Id, tournament.Config.GetTagsIds()));
             }
             return matchups;
         }
@@ -74,7 +77,8 @@ namespace WargameTournamentManager
                     i = 1;
                 }
                 int player2 = results[i].player.Id;
-                matchups.Add(new Matchup(roundNumber, player1, player2, tournament.Config.GetTagsIds()));
+                // ToDo: Calculate tables not yet played
+                matchups.Add(new Matchup(roundNumber, 1, player1, player2, tournament.Config.GetTagsIds()));
                 results.RemoveAt(i);
                 results.RemoveAt(0);
             }
@@ -85,13 +89,16 @@ namespace WargameTournamentManager
         {
             var pairings = MatchmakerCityClubHelper.MakeMatchmaking(tournament.Players);
             HashSet<Player> matchedPlayers = new HashSet<Player>();
+            var tables = tournament.Tables.Shuffle(new Random()).Select(t => t.Id).ToList();
+            int tablesUsed = 0;
 
             var matchups = new List<Matchup>();
             foreach (var pairing in pairings)
             {
                 if (!matchedPlayers.Contains(pairing.Key))
                 {
-                    matchups.Add(new Matchup(roundNumber, pairing.Key.Id, pairing.Value.Id, tournament.Config.GetTagsIds()));
+                    matchups.Add(new Matchup(roundNumber, tables[tablesUsed], pairing.Key.Id, pairing.Value.Id, tournament.Config.GetTagsIds()));
+                    tablesUsed++;
                     matchedPlayers.Add(pairing.Key);
                     matchedPlayers.Add(pairing.Value);
                 }
@@ -254,7 +261,7 @@ namespace WargameTournamentManager
             // First naive assignment, each gets a number depending on matchmaking
             for (int i = 0; i < matchups.Count; i++)
             {
-                matchups[i].Table = i + 1;
+                matchups[i].TableId = i + 1;
             }
 
             // If its the first round, no one has played in another player,
@@ -270,7 +277,7 @@ namespace WargameTournamentManager
                 var matchup = matchups[i];
                 var player1 = matchup.Player1Id;
                 var player2 = matchup.Player2Id;
-                if (HasEitherPlayerPlayedInTable(tournament, player1, player2, matchup.Table))
+                if (HasEitherPlayerPlayedInTable(tournament, player1, player2, matchup.TableId))
                 {
                     // Yes, search not only forward but backwards too! Some can be
                     // swapped two times
@@ -280,12 +287,12 @@ namespace WargameTournamentManager
 
                         var player1_swap = matchups[j].Player1Id;
                         var player2_swap = matchups[j].Player2Id;
-                        if (!HasEitherPlayerPlayedInTable(tournament, player1_swap, player2_swap, matchup.Table)
-                            && !HasEitherPlayerPlayedInTable(tournament, player1, player2, matchups[j].Table))
+                        if (!HasEitherPlayerPlayedInTable(tournament, player1_swap, player2_swap, matchup.TableId)
+                            && !HasEitherPlayerPlayedInTable(tournament, player1, player2, matchups[j].TableId))
                         {
-                            int oldTable = matchup.Table;
-                            matchup.Table = matchups[j].Table;
-                            matchups[j].Table = oldTable;
+                            int oldTable = matchup.TableId;
+                            matchup.TableId = matchups[j].TableId;
+                            matchups[j].TableId = oldTable;
                             break;
                         }
                     }
@@ -299,7 +306,7 @@ namespace WargameTournamentManager
             {
                 foreach (var matchup in round.Matchups)
                 {
-                    if (matchup.Table == tableNumber
+                    if (matchup.TableId == tableNumber
                         && matchup.PlayerBelongsToMatchup(playerId))
                         return true;
                 }
@@ -318,7 +325,7 @@ namespace WargameTournamentManager
             {
                 foreach (var matchup in round.Matchups)
                 {
-                    if (matchup.Table == tableNumber
+                    if (matchup.TableId == tableNumber
                         && (matchup.PlayerBelongsToMatchup(player1Id)
                             || matchup.PlayerBelongsToMatchup(player2Id)))
                         return true;
