@@ -740,5 +740,12 @@ namespace WargameTournamentManager
                 return tags[calctag] - tags_opponent[calctag];
             }
         }
+
+        public string GetMatchupName(Tournament tournament)
+        {
+            var player1 = tournament.Players[Player1Id];
+            var player2 = tournament.Players[Player2Id];
+            return string.Format("{0} vs {1}", player1.Name, player2.Name);
+        }
     }
 }

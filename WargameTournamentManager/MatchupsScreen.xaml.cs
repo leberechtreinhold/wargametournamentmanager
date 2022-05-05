@@ -56,6 +56,27 @@ namespace WargameTournamentManager
             MainWindow.gMainWindow.currentTournament.GenerateMatchup();
         }
 
+        private void ChangePairings_Click(object sender, RoutedEventArgs e)
+        {
+            if (!MainWindow.gMainWindow.currentTournament.PlayerListLocked)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar enfrentamientos para una ronda sin que la lista de jugadores esté cerrada.");
+                return;
+            }
+            var selectedRound = ((Button)sender).DataContext as Round;
+            if (!selectedRound.Active)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar enfrentamientos para una ronda que no está activa.");
+                return;
+            }
+            if (MainWindow.gMainWindow.currentTournament.Players.Count < 4)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar enfrentamientos con menos de 4 jugadores.");
+                return;
+            }
+            changeMatchupsWindow.IsOpen = true;
+        }
+
         private async void CloseRound_Click(object sender, RoutedEventArgs e)
         {
             var selectedRound = ((Button)sender).DataContext as Round;
@@ -189,6 +210,26 @@ namespace WargameTournamentManager
             }
             round.Matchups = updated_matchups;
             round.OnPropertyChanged("Matchups");
+        }
+    }
+
+    public class ViewChangeMatchups
+    {
+        public Tournament SourceTournament { get; set; }
+        public List<string> CurrentPairings { get; set; }
+        public int FirstPair { get; set; }
+        public int SecondPair { get; set; }
+
+        public ViewChangeMatchups(Tournament tour, Round round)
+        {
+            SourceTournament = tour;
+            CurrentPairings = new List<string>();
+            foreach (var matchup in round.Matchups)
+            {
+                CurrentPairings.Add(matchup.GetMatchupName(tour));
+            }
+            FirstPair = 0;
+            SecondPair = 1;
         }
     }
 

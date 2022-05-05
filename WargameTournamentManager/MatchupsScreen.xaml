@@ -55,6 +55,46 @@
                 </Button>
             </StackPanel>
         </simpleChildWindow:ChildWindow>
+        <simpleChildWindow:ChildWindow x:Name="changeMatchupsWindow"
+                                       Title="Cambiar enfrentamientos"
+                                       Padding="20"
+                                       ShowCloseButton="True"
+                                       DataContext="{Binding currentTournament.Rounds}">
+
+            <simpleChildWindow:ChildWindow.OverlayBrush>
+                <SolidColorBrush Opacity="0"
+                                 Color="{StaticResource Gray2}" />
+            </simpleChildWindow:ChildWindow.OverlayBrush>
+            <StackPanel>
+                <Label Content="Intercambia los jugadores de un enfrentamiento con otro"
+                       FontSize="22"
+                       HorizontalAlignment="Center"
+                       Margin="20" />
+                <StackPanel Orientation="Horizontal"
+                            Margin="10">
+                    <Label Content="Enfrentamiento 1:" />
+                    <ComboBox Width="300"
+                              ItemsSource="{Binding Results, Mode=OneWay}"
+                              SelectedIndex="{Binding IndexCurrentResult}">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="10">
+                    <Label Content="Enfrentamiento 2:" />
+                    <ComboBox Width="300"
+                              ItemsSource="{Binding Results, Mode=OneWay}"
+                              SelectedIndex="{Binding IndexCurrentResult}">
+                    </ComboBox>
+                </StackPanel>
+                <Button Content="Aplicar cambio"
+                        Margin="20"
+                        Click="SaveMatchup_Click"
+                        HorizontalAlignment="Right"
+                        Controls:ButtonHelper.PreserveTextCase="True"
+                        Style="{StaticResource AccentedSquareButtonStyle}">
+                </Button>
+            </StackPanel>
+        </simpleChildWindow:ChildWindow>
         <TabControl Margin="20"
                     Name="TabRounds"
                     ItemsSource="{Binding currentTournament.Rounds}"
@@ -76,6 +116,15 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     DockPanel.Dock="Bottom">
+                            <Button Content="Cambiar enfrentamientos"
+                                    Click="ChangePairings_Click"
+                                    Margin="20"
+                                    Controls:ButtonHelper.PreserveTextCase="True"
+                                    IsEnabled="{Binding 
+                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, 
+                                        Path=DataContext.currentTournament.PlayerListLocked, 
+                                        Converter={StaticResource PlayerListLockedConverter}}"
+                                    Style="{StaticResource AccentedSquareButtonStyle}" />
                             <Button Content="Calcular emparejamientos"
                                     Click="GeneratePairings_Click"
                                     Margin="20"

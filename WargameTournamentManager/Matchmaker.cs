@@ -77,7 +77,7 @@ namespace WargameTournamentManager
                     i = 1;
                 }
                 int player2 = results[i].player.Id;
-                // ToDo: Calculate tables not yet played
+                // We put the tableId as 1 by default because it needs to be updated later
                 matchups.Add(new Matchup(roundNumber, 1, player1, player2, tournament.Config.GetTagsIds()));
                 results.RemoveAt(i);
                 results.RemoveAt(0);
