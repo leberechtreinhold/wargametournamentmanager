@@ -327,6 +327,7 @@ namespace WargameTournamentManager
         private void GenerateMatchupByType(MatchmakingType type)
         {
             var round = Rounds[CurrentRound];
+            round.Matchups.Clear();
             List<Matchup> matchups = null;
 
             if (type == MatchmakingType.Id)
