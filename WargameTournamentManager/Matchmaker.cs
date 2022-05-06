@@ -261,7 +261,7 @@ namespace WargameTournamentManager
             // First naive assignment, each gets a number depending on matchmaking
             for (int i = 0; i < matchups.Count; i++)
             {
-                matchups[i].TableId = i + 1;
+                matchups[i].TableId = i;
             }
 
             // If its the first round, no one has played in another player,
@@ -271,32 +271,51 @@ namespace WargameTournamentManager
                 return;
             }
 
-            // Otherwise, they may have already played in that table and we swap
+            var table_ids = tournament.GetTableIds();
+            var tables_available_per_matchup = new Dictionary<Matchup, List<int>>();
             for (int i = 0; i < matchups.Count; i++)
             {
                 var matchup = matchups[i];
+                tables_available_per_matchup[matchup] = table_ids.Where(table_id =>
+                    !HasEitherPlayerPlayedInTable(tournament, matchup.Player1Id, matchup.Player2Id, table_id)
+                ).ToList();
                 var player1 = matchup.Player1Id;
                 var player2 = matchup.Player2Id;
-                if (HasEitherPlayerPlayedInTable(tournament, player1, player2, matchup.TableId))
-                {
-                    // Yes, search not only forward but backwards too! Some can be
-                    // swapped two times
-                    for (int j = 0; j < matchups.Count; j++)
-                    {
-                        if (i == j) continue;
+            }
+            var used_tables = new HashSet<int>();
+            var pending_matchups = new List<Matchup>(matchups);
+            var matchups_by_least_tables = pending_matchups.OrderBy(m => tables_available_per_matchup[m].Count);
+            while (matchups_by_least_tables.Any())
+            {
+                var matchup = matchups_by_least_tables.First();
 
-                        var player1_swap = matchups[j].Player1Id;
-                        var player2_swap = matchups[j].Player2Id;
-                        if (!HasEitherPlayerPlayedInTable(tournament, player1_swap, player2_swap, matchup.TableId)
-                            && !HasEitherPlayerPlayedInTable(tournament, player1, player2, matchups[j].TableId))
-                        {
-                            int oldTable = matchup.TableId;
-                            matchup.TableId = matchups[j].TableId;
-                            matchups[j].TableId = oldTable;
-                            break;
-                        }
-                    }
+                if (tables_available_per_matchup[matchup].Count > 0)
+                {
+                    // TODO assign the tables that are available to the least amount
+                    // of other tables instead of random. This does however has the 
+                    // side effect of assigning not used tables which are available to
+                    // anyone, so rethink?
+
+                    // Select randomly one of the available ones
+                    var available = tables_available_per_matchup[matchup];
+                    var table_id = available.ElementAt(new Random().Next(0, available.Count));
+                    matchup.TableId = table_id;
                 }
+                else
+                {
+                    // No tables left, so assign whatever is not used yet
+                    var free_ids = table_ids.Where(id => !used_tables.Contains(id)).ToList();
+                    var table_id = free_ids.ElementAt(new Random().Next(0, free_ids.Count));
+                    matchup.TableId = table_id;
+                }
+                used_tables.Add(matchup.TableId);
+                pending_matchups.Remove(matchup);
+                foreach (var pending_matchup in pending_matchups)
+                {
+                    var available = tables_available_per_matchup[pending_matchup];
+                    available.Remove(matchup.TableId);
+                }
+                matchups_by_least_tables = pending_matchups.OrderBy(m => tables_available_per_matchup[m].Count);
             }
         }
 

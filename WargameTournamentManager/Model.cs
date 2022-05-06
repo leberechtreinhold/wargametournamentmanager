@@ -235,6 +235,11 @@ namespace WargameTournamentManager
             Save();
         }
 
+        public List<int> GetTableIds()
+        {
+            return Tables.Select(t=> t.Id).ToList();
+        }
+
         public void DeletePlayer(int playerId)
         {
             // Assume that there is no matchup going on, otherwise this
