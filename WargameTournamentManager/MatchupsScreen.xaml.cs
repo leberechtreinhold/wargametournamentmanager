@@ -18,6 +18,7 @@ namespace WargameTournamentManager
     public partial class MatchupsScreen : UserControl
     {
         public ViewMatchup EditingMatchup { get; set; }
+        public ViewChangeMatchups SwappingMatchup { get; set; }
 
         public MatchupsScreen()
         {
@@ -74,6 +75,9 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar enfrentamientos con menos de 4 jugadores.");
                 return;
             }
+
+            SwappingMatchup = new ViewChangeMatchups(MainWindow.gMainWindow.currentTournament, selectedRound);
+            changeMatchupsWindow.DataContext = SwappingMatchup;
             changeMatchupsWindow.IsOpen = true;
         }
 

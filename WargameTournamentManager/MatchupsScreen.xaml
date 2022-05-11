@@ -59,7 +59,7 @@
                                        Title="Cambiar enfrentamientos"
                                        Padding="20"
                                        ShowCloseButton="True"
-                                       DataContext="{Binding currentTournament.Rounds}">
+                                       DataContext="{Binding SwappingMatchup}">
 
             <simpleChildWindow:ChildWindow.OverlayBrush>
                 <SolidColorBrush Opacity="0"
@@ -74,16 +74,16 @@
                             Margin="10">
                     <Label Content="Enfrentamiento 1:" />
                     <ComboBox Width="300"
-                              ItemsSource="{Binding Results, Mode=OneWay}"
-                              SelectedIndex="{Binding IndexCurrentResult}">
+                              ItemsSource="{Binding CurrentPairings, Mode=OneWay}"
+                              SelectedIndex="{Binding FirstPair}">
                     </ComboBox>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal"
                             Margin="10">
                     <Label Content="Enfrentamiento 2:" />
                     <ComboBox Width="300"
-                              ItemsSource="{Binding Results, Mode=OneWay}"
-                              SelectedIndex="{Binding IndexCurrentResult}">
+                              ItemsSource="{Binding CurrentPairings, Mode=OneWay}"
+                              SelectedIndex="{Binding SecondPair}">
                     </ComboBox>
                 </StackPanel>
                 <Button Content="Aplicar cambio"
