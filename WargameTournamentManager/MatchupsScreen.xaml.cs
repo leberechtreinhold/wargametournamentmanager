@@ -140,11 +140,21 @@ namespace WargameTournamentManager
             var tables = ((Button)sender).DataContext as ViewChangeTables;
             if (tables == null) return;
             var tour = tables.SourceTournament;
+
+            // Note that Ids are not necessarily sequential and
+            // may be a bigger number than the count!
+            // First and SecondTable referer to the index in the
+            // ViewChangeTable array which is the same as the Table
+            // array in tour
+            var table1Id = tour.Tables[tables.FirstTable].Id;
+            var table2Id = tour.Tables[tables.SecondTable].Id;
+
             var matchups = tour.Rounds[tour.CurrentRound].Matchups;
-            var matchup1 = matchups.First(m => m.TableId == tables.FirstTable);
-            var matchup2 = matchups.First(m => m.TableId == tables.SecondTable);
-            matchup1.TableId = tables.SecondTable;
-            matchup2.TableId = tables.FirstTable;
+            var matchup1 = matchups.First(m => m.TableId == table1Id);
+            var matchup2 = matchups.First(m => m.TableId == table2Id);
+            matchup1.TableId = table1Id;
+            matchup2.TableId = table2Id;
+
             tables.UpdateMatchupWithView();
             changeTablesWindow.IsOpen = false;
         }
