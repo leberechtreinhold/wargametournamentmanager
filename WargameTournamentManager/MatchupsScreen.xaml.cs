@@ -150,10 +150,17 @@ namespace WargameTournamentManager
             var table2Id = tour.Tables[tables.SecondTable].Id;
 
             var matchups = tour.Rounds[tour.CurrentRound].Matchups;
-            var matchup1 = matchups.First(m => m.TableId == table1Id);
-            var matchup2 = matchups.First(m => m.TableId == table2Id);
-            matchup1.TableId = table1Id;
-            matchup2.TableId = table2Id;
+            var matchup1 = matchups.FirstOrDefault(m => m.TableId == table1Id);
+            var matchup2 = matchups.FirstOrDefault(m => m.TableId == table2Id);
+
+            if (matchup1 != null)
+            {
+                matchup1.TableId = table2Id;
+            }
+            if (matchup2 != null)
+            {
+                matchup2.TableId = table1Id;
+            }
 
             tables.UpdateMatchupWithView();
             changeTablesWindow.IsOpen = false;
