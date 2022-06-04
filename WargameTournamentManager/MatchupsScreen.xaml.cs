@@ -56,19 +56,6 @@ namespace WargameTournamentManager
             editMatchupWindow.IsOpen = false;
         }
 
-        private void ApplyChangePairing_Click(object sender, RoutedEventArgs e)
-        {
-            var pairs = ((Button)sender).DataContext as ViewChangeMatchups;
-            if (pairs == null) return;
-            var tour = pairs.SourceTournament;
-            var matchups = tour.Rounds[tour.CurrentRound].Matchups;
-            var matchup1 = matchups[pairs.FirstPair];
-            var matchup2 = matchups[pairs.SecondPair];
-            matchup1.SwapSecondPlayer(matchup2);
-            pairs.UpdateMatchupWithView();
-            changeMatchupsWindow.IsOpen = false;
-        }
-
         private void GeneratePairings_Click(object sender, RoutedEventArgs e)
         {
             if (!MainWindow.gMainWindow.currentTournament.PlayerListLocked)
@@ -108,6 +95,19 @@ namespace WargameTournamentManager
             SwappingMatchup = new ViewChangeMatchups(MainWindow.gMainWindow.currentTournament, selectedRound);
             changeMatchupsWindow.DataContext = SwappingMatchup;
             changeMatchupsWindow.IsOpen = true;
+        }
+
+        private void ApplyChangePairing_Click(object sender, RoutedEventArgs e)
+        {
+            var pairs = ((Button)sender).DataContext as ViewChangeMatchups;
+            if (pairs == null) return;
+            var tour = pairs.SourceTournament;
+            var matchups = tour.Rounds[tour.CurrentRound].Matchups;
+            var matchup1 = matchups[pairs.FirstPair];
+            var matchup2 = matchups[pairs.SecondPair];
+            matchup1.SwapSecondPlayer(matchup2);
+            pairs.UpdateMatchupWithView();
+            changeMatchupsWindow.IsOpen = false;
         }
 
         private async void CloseRound_Click(object sender, RoutedEventArgs e)
