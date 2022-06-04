@@ -20,6 +20,7 @@ namespace WargameTournamentManager
     {
         public ViewMatchup EditingMatchup { get; set; }
         public ViewChangeMatchups SwappingMatchup { get; set; }
+        public ViewChangeTables SwappingTables { get; set; }
 
         public MatchupsScreen()
         {
@@ -107,7 +108,45 @@ namespace WargameTournamentManager
             var matchup2 = matchups[pairs.SecondPair];
             matchup1.SwapSecondPlayer(matchup2);
             pairs.UpdateMatchupWithView();
+        }
+
+        private void ChangeTables_Click(object sender, RoutedEventArgs e)
+        {
+            if (!MainWindow.gMainWindow.currentTournament.PlayerListLocked)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar mesas para una ronda sin que la lista de jugadores esté cerrada.");
+                return;
+            }
+            var selectedRound = ((Button)sender).DataContext as Round;
+            if (!selectedRound.Active)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar mesas para una ronda que no está activa.");
+                return;
+            }
+            if (MainWindow.gMainWindow.currentTournament.Tables.Count < 2)
+            {
+                MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden cambiar mesas con menos de 2 mesas.");
+                return;
+            }
+
+            SwappingTables = new ViewChangeTables(MainWindow.gMainWindow.currentTournament, selectedRound);
+            changeTablesWindow.DataContext = SwappingTables;
+            changeTablesWindow.IsOpen = true;
+        }
+
+        private void ApplyChangeTables_Click(object sender, RoutedEventArgs e)
+        {
             changeMatchupsWindow.IsOpen = false;
+            var tables = ((Button)sender).DataContext as ViewChangeTables;
+            if (tables == null) return;
+            var tour = tables.SourceTournament;
+            var matchups = tour.Rounds[tour.CurrentRound].Matchups;
+            var matchup1 = matchups.First(m => m.TableId == tables.FirstTable);
+            var matchup2 = matchups.First(m => m.TableId == tables.SecondTable);
+            matchup1.TableId = tables.SecondTable;
+            matchup2.TableId = tables.FirstTable;
+            tables.UpdateMatchupWithView();
+            changeTablesWindow.IsOpen = false;
         }
 
         private async void CloseRound_Click(object sender, RoutedEventArgs e)
@@ -263,6 +302,52 @@ namespace WargameTournamentManager
             }
             FirstPair = 0;
             SecondPair = 1;
+        }
+
+        public void UpdateMatchupWithView()
+        {
+            SourceTournament.UpdateRanking();
+
+            SourceTournament.Save();
+
+            // We can only do this on the current round!
+            var round = SourceTournament.Rounds[SourceTournament.CurrentRound];
+            var updated_matchups = new List<Matchup>();
+            foreach (var matchup in round.Matchups)
+            {
+                updated_matchups.Add(matchup);
+            }
+            round.Matchups = updated_matchups;
+            round.OnPropertyChanged("Matchups");
+        }
+    }
+
+    public class ViewChangeTables
+    {
+        public Tournament SourceTournament { get; set; }
+        public List<string> CurrentTables { get; set; }
+        public int FirstTable { get; set; }
+        public int SecondTable { get; set; }
+
+        public ViewChangeTables(Tournament tour, Round round)
+        {
+            SourceTournament = tour;
+            CurrentTables = new List<string>();
+            foreach (var table in tour.Tables)
+            {
+                var matchup = round.Matchups.FirstOrDefault(m => m.TableId == table.Id);
+                if (matchup != null)
+                {
+                    var desc = matchup.GetMatchupName(tour);
+                    CurrentTables.Add($"{table.Name} ({desc})");
+                }
+                else
+                {
+                    CurrentTables.Add($"{table.Name}");
+                }
+            }
+            FirstTable = 0;
+            SecondTable = 1;
         }
 
         public void UpdateMatchupWithView()

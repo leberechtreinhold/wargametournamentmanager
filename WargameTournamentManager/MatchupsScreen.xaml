@@ -95,6 +95,46 @@
                 </Button>
             </StackPanel>
         </simpleChildWindow:ChildWindow>
+        <simpleChildWindow:ChildWindow x:Name="changeTablesWindow"
+                                       Title="Cambiar mesas"
+                                       Padding="20"
+                                       ShowCloseButton="True"
+                                       DataContext="{Binding SwappingTables}">
+
+            <simpleChildWindow:ChildWindow.OverlayBrush>
+                <SolidColorBrush Opacity="0"
+                                 Color="{StaticResource Gray2}" />
+            </simpleChildWindow:ChildWindow.OverlayBrush>
+            <StackPanel>
+                <Label Content="Intercambia las mesas de un enfrentamiento a otro"
+                       FontSize="22"
+                       HorizontalAlignment="Center"
+                       Margin="20" />
+                <StackPanel Orientation="Horizontal"
+                            Margin="10">
+                    <Label Content="Mesa 1:" />
+                    <ComboBox Width="300"
+                              ItemsSource="{Binding CurrentTables, Mode=OneWay}"
+                              SelectedIndex="{Binding FirstTable}">
+                    </ComboBox>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal"
+                            Margin="10">
+                    <Label Content="Mesa 2:" />
+                    <ComboBox Width="300"
+                              ItemsSource="{Binding CurrentTables, Mode=OneWay}"
+                              SelectedIndex="{Binding SecondTable}">
+                    </ComboBox>
+                </StackPanel>
+                <Button Content="Aplicar cambio"
+                        Margin="20"
+                        Click="ApplyChangeTables_Click"
+                        HorizontalAlignment="Right"
+                        Controls:ButtonHelper.PreserveTextCase="True"
+                        Style="{StaticResource AccentedSquareButtonStyle}">
+                </Button>
+            </StackPanel>
+        </simpleChildWindow:ChildWindow>
         <TabControl Margin="20"
                     Name="TabRounds"
                     ItemsSource="{Binding currentTournament.Rounds}"
@@ -116,6 +156,12 @@
                         <StackPanel Orientation="Horizontal"
                                     HorizontalAlignment="Right"
                                     DockPanel.Dock="Bottom">
+                            <Button Content="Cambiar mesa"
+                                    Click="ChangeTables_Click"
+                                    Margin="20"
+                                    Controls:ButtonHelper.PreserveTextCase="True"
+                                    IsEnabled="{Binding Active}"
+                                    Style="{StaticResource AccentedSquareButtonStyle}" />
                             <Button Content="Cambiar enfrentamientos"
                                     Click="ChangePairings_Click"
                                     Margin="20"
