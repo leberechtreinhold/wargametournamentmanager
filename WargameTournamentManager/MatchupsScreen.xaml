@@ -120,10 +120,7 @@
                                     Click="ChangePairings_Click"
                                     Margin="20"
                                     Controls:ButtonHelper.PreserveTextCase="True"
-                                    IsEnabled="{Binding 
-                                        RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Controls:MetroWindow}}, 
-                                        Path=DataContext.currentTournament.PlayerListLocked, 
-                                        Converter={StaticResource PlayerListLockedConverter}}"
+                                    IsEnabled="{Binding Active}"
                                     Style="{StaticResource AccentedSquareButtonStyle}" />
                             <Button Content="Calcular emparejamientos"
                                     Click="GeneratePairings_Click"
@@ -203,9 +200,6 @@
                                             <Button Click="EditMatchup_Click"
                                                     Content="Editar enfrentamiento"
                                                     Controls:ButtonHelper.PreserveTextCase="True"
-                                                    IsEnabled="{Binding 
-                                                            RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type DockPanel}}, 
-                                                            Path=DataContext.Active}"
                                                     Style="{StaticResource AccentedSquareButtonStyle}" />
                                         </DataTemplate>
                                     </DataGridTemplateColumn.CellTemplate>

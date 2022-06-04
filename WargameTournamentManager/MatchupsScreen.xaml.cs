@@ -9,6 +9,7 @@ using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
+using System.Threading.Tasks;
 
 namespace WargameTournamentManager
 {
@@ -25,12 +26,26 @@ namespace WargameTournamentManager
             InitializeComponent();
         }
 
-        private void EditMatchup_Click(object sender, RoutedEventArgs e)
+        private async void EditMatchup_Click(object sender, RoutedEventArgs e)
         {
             var matchup = ((Button)e.Source).DataContext as Matchup;
             if (matchup == null) return;
 
-            EditingMatchup = new ViewMatchup(matchup, MainWindow.gMainWindow.currentTournament);
+            var tour = MainWindow.gMainWindow.currentTournament;
+            if (matchup.Round != tour.CurrentRound)
+            {
+                var confirm = await MainWindow.gMainWindow.ShowMessageAsync("Aviso",
+                    "Estás editando el enfrentamiento de una ronda no activa. "
+                    + "Si lo haces, los enfrentamientos generados actualmente "
+                    + "no corresponderán con el ranking. ¿Estás seguro?",
+                    MessageDialogStyle.AffirmativeAndNegative);
+                if (confirm == MessageDialogResult.Negative)
+                {
+                    return;
+                }
+
+            }
+            EditingMatchup = new ViewMatchup(matchup, tour);
             editMatchupWindow.DataContext = EditingMatchup;
             editMatchupWindow.IsOpen = true;
         }
