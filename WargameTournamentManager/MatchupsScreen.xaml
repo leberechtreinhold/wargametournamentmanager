@@ -88,7 +88,7 @@
                 </StackPanel>
                 <Button Content="Aplicar cambio"
                         Margin="20"
-                        Click="SaveMatchup_Click"
+                        Click="ApplyChangePairing_Click"
                         HorizontalAlignment="Right"
                         Controls:ButtonHelper.PreserveTextCase="True"
                         Style="{StaticResource AccentedSquareButtonStyle}">

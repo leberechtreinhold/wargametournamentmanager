@@ -690,6 +690,33 @@ namespace WargameTournamentManager
             return clone;
         }
 
+        public int SwapSecondPlayer(int newPlayer2Id)
+        {
+            int old2nd = Player2Id;
+            Player2Id = newPlayer2Id;
+
+            // Same round and table, but the result has to be
+            // set again to avoid mistakes!
+            CurrentResult = Result.STILL_PLAYING;
+
+            // Reset any tag FOR BOTH players
+            // Note that since this is before .NET 5, we cannot
+            // use keys directly because the dict is touched in
+            // the inside loop
+            foreach (var tag in Player1Tags.Keys.ToList())
+            {
+                Player1Tags[tag] = 0;
+                Player2Tags[tag] = 0;
+            }
+            return old2nd;
+        }
+
+        public void SwapSecondPlayer(Matchup matchup)
+        {
+            var playerSwapped = this.SwapSecondPlayer(matchup.Player2Id);
+            matchup.SwapSecondPlayer(playerSwapped);
+        }
+
         public bool PlayerBelongsToMatchup(int playerId)
         {
             return playerId == Player1Id || playerId == Player2Id;

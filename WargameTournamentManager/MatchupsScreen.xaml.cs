@@ -41,6 +41,19 @@ namespace WargameTournamentManager
             editMatchupWindow.IsOpen = false;
         }
 
+        private void ApplyChangePairing_Click(object sender, RoutedEventArgs e)
+        {
+            var pairs = ((Button)sender).DataContext as ViewChangeMatchups;
+            if (pairs == null) return;
+            var tour = pairs.SourceTournament;
+            var matchups = tour.Rounds[tour.CurrentRound].Matchups;
+            var matchup1 = matchups[pairs.FirstPair];
+            var matchup2 = matchups[pairs.SecondPair];
+            matchup1.SwapSecondPlayer(matchup2);
+            pairs.UpdateMatchupWithView();
+            changeMatchupsWindow.IsOpen = false;
+        }
+
         private void GeneratePairings_Click(object sender, RoutedEventArgs e)
         {
             if (!MainWindow.gMainWindow.currentTournament.PlayerListLocked)
@@ -54,6 +67,7 @@ namespace WargameTournamentManager
                 MainWindow.gMainWindow.ShowMessageAsync("Error", "No se pueden generar enfrentamientos para una ronda que no está activa.");
                 return;
             }
+            // TODO ASK!!!
             MainWindow.gMainWindow.currentTournament.GenerateMatchup();
         }
 
@@ -234,6 +248,23 @@ namespace WargameTournamentManager
             }
             FirstPair = 0;
             SecondPair = 1;
+        }
+
+        public void UpdateMatchupWithView()
+        {
+            SourceTournament.UpdateRanking();
+
+            SourceTournament.Save();
+
+            // We can only do this on the current round!
+            var round = SourceTournament.Rounds[SourceTournament.CurrentRound];
+            var updated_matchups = new List<Matchup>();
+            foreach (var matchup in round.Matchups)
+            {
+                updated_matchups.Add(matchup);
+            }
+            round.Matchups = updated_matchups;
+            round.OnPropertyChanged("Matchups");
         }
     }
 
